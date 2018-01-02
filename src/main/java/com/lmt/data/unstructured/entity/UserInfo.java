@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.entity;
 
+import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Date;
  * @apiNote 用户信息表
  */
 @Entity(name = "user_info")
-public class UserInfo extends BaseEntity{
+public class UserInfo extends BaseEntity {
 
     /**
      * 地址
@@ -49,6 +50,12 @@ public class UserInfo extends BaseEntity{
     @Temporal(TemporalType.DATE)
     @Column(name="birthday")
     private Date birthday;
+
+    /**
+     * 用户类型
+     */
+    @Column(name = "user_type", nullable = false, length = 6)
+    private String userType;
 
     /**
      * 职位
@@ -122,6 +129,14 @@ public class UserInfo extends BaseEntity{
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getPost() {

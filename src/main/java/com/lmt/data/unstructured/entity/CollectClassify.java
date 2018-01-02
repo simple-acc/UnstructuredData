@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.entity;
 
+import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;

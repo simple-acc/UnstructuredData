@@ -1,4 +1,4 @@
-package com.lmt.data.unstructured.entity;
+package com.lmt.data.unstructured.base;
 
 import org.hibernate.annotations.GenericGenerator;
 

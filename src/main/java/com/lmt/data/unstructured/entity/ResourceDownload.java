@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.entity;
 
+import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,7 +16,7 @@ import java.util.Date;
  * @apiNote 资源下载表
  */
 @Entity(name = "resource_download")
-public class ResourceDownload extends BaseEntity{
+public class ResourceDownload extends BaseEntity {
 
     /**
      * 资源ID

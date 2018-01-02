@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.entity;
 
+import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Date;
  * @apiNote 资源表
  */
 @Entity(name = "resource")
-public class Resource extends BaseEntity{
+public class Resource extends BaseEntity {
 
     /**
      * 作者

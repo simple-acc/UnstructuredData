@@ -1,5 +1,7 @@
 package com.lmt.data.unstructured.entity;
 
+import com.lmt.data.unstructured.base.BaseEntity;
+
 import javax.persistence.*;
 
 /**
@@ -8,7 +10,7 @@ import javax.persistence.*;
  * @apiNote 数字字典表
  */
 @Entity(name = "digital_dictionary")
-public class DigitalDictionary extends BaseEntity{
+public class DigitalDictionary extends BaseEntity {
 
     /**
      * 名称

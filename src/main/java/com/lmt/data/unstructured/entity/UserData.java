@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.entity;
 
+import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -14,7 +15,7 @@ import java.util.Date;
  * @apiNote 用户数据表
  */
 @Entity(name = "user_data")
-public class UserData extends BaseEntity{
+public class UserData extends BaseEntity {
 
     /**
      * 用户ID
