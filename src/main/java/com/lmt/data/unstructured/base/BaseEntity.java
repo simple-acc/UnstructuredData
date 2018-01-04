@@ -7,13 +7,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author MT-Lin
  * @date 2018/1/1 23:27
  */
 @MappedSuperclass
-public class BaseEntity implements Serializable{
+public class BaseEntity extends BaseToString implements Serializable{
 
     @Id
     @GeneratedValue(generator = "uuid2" )
