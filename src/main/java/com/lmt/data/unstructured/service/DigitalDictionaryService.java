@@ -1,6 +1,5 @@
 package com.lmt.data.unstructured.service;
 
-import com.lmt.data.unstructured.base.BasePageRequest;
 import com.lmt.data.unstructured.entity.DigitalDictionary;
 import com.lmt.data.unstructured.entity.search.DigitalDictionarySearch;
 
@@ -23,9 +22,9 @@ public interface DigitalDictionaryService {
     /**
      * @apiNote 查询所有数据字典
      * @return Map
-     * @param basePageRequest 查询条件
+     * @param digitalDictionarySearch 查询条件
      */
-    Map findAll(BasePageRequest basePageRequest);
+    Map findAll(DigitalDictionarySearch digitalDictionarySearch);
 
     /**
      * @apiNote 根据ID获取字典

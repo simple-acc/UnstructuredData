@@ -6,7 +6,7 @@ import java.util.List;
  * @author MT-Lin
  * @date 2018/1/4 14:36
  */
-public class BasePageRequest extends BaseToString{
+public class BaseSearch extends BaseToString{
 
     /**
      * 当前页
@@ -27,6 +27,11 @@ public class BasePageRequest extends BaseToString{
      * 排序
      */
     private List<String> sort;
+
+    /**
+     * 用户tokenId
+     */
+    private String tokenId;
 
     public int getCurrentPage() {
         return currentPage;
@@ -50,5 +55,21 @@ public class BasePageRequest extends BaseToString{
 
     public void setTotalPage(int totalPage) {
         this.totalPage = totalPage;
+    }
+
+    public List<String> getSort() {
+        return sort;
+    }
+
+    public void setSort(List<String> sort) {
+        this.sort = sort;
+    }
+
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
     }
 }

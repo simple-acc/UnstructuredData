@@ -1,5 +1,8 @@
 package com.lmt.data.unstructured;
 
+import com.lmt.data.unstructured.base.BaseEntity;
+import com.lmt.data.unstructured.base.BaseSearch;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -9,6 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author MT-Lin
@@ -27,8 +31,21 @@ public class WebControllerAop {
     public void doBefore(JoinPoint joinPoint){
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        // TODO 在请求参数中添加tokenId
+        HttpSession session = request.getSession();
+        Object tokenId = session.getAttribute("tokenId");
+        // TODO url要过滤掉登录页面需要的连接请求（未完成）只有在登录页面需要的连接不需要tokenId其他的请求都要
         // URL
         logger.info("url = {}", request.getRequestURI());
+        if (null != tokenId) {
+            Object o = joinPoint.getArgs()[0];
+            if (o instanceof BaseSearch) {
+                ((BaseSearch) joinPoint.getArgs()[0]).setTokenId(tokenId.toString());
+            } else if (o instanceof BaseEntity) {
+                ((BaseEntity) joinPoint.getArgs()[0]).setTokenId(tokenId.toString());
+            }
+        }
+
         // 请求方法
         logger.info("request method = {}", request.getMethod());
         // 类

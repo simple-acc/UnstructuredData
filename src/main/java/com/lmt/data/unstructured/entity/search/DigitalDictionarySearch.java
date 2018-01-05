@@ -1,12 +1,12 @@
 package com.lmt.data.unstructured.entity.search;
 
-import com.lmt.data.unstructured.base.BasePageRequest;
+import com.lmt.data.unstructured.base.BaseSearch;
 
 /**
  * @author MT-Lin
  * @date 2018/1/4 9:50
  */
-public class DigitalDictionarySearch extends BasePageRequest{
+public class DigitalDictionarySearch extends BaseSearch {
 
     private String id;
 

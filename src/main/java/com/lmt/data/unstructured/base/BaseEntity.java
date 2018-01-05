@@ -2,10 +2,8 @@ package com.lmt.data.unstructured.base;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,11 +21,22 @@ public class BaseEntity extends BaseToString implements Serializable{
     @Column(name="id", nullable = false, length = 36)
     private String id;
 
+    @Transient
+    private String tokenId;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
     }
 }

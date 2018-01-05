@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author MT-Lin
@@ -23,13 +24,13 @@ public class UserInfo extends BaseEntity {
     /**
      * 用户名
      */
-    @Column(name="user_name", nullable = false, length = 8)
+    @Column(name="user_name", nullable = false, unique = true, length = 8)
     private String userName;
 
     /**
      * 密码
      */
-    @Column(name="user_password", nullable = false, length = 16)
+    @Column(name="user_password", nullable = false, length = 32)
     private String userPassword;
 
     /**
@@ -88,6 +89,9 @@ public class UserInfo extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="register_time", nullable = false, updatable = false)
     private Date registerTime;
+
+    @Transient
+    private String sessionId;
 
     public String getAddressCode() {
         return addressCode;
@@ -183,5 +187,13 @@ public class UserInfo extends BaseEntity {
 
     public void setRegisterTime(Date registerTime) {
         this.registerTime = registerTime;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

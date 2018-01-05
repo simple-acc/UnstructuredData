@@ -1,6 +1,5 @@
 package com.lmt.data.unstructured.service.impl;
 
-import com.lmt.data.unstructured.base.BasePageRequest;
 import com.lmt.data.unstructured.entity.DigitalDictionary;
 import com.lmt.data.unstructured.entity.search.DigitalDictionarySearch;
 import com.lmt.data.unstructured.repository.DigitalDictionaryRepository;
@@ -38,9 +37,9 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     }
 
     @Override
-    public Map findAll(BasePageRequest basePageRequest) {
-        int currentPage = basePageRequest.getCurrentPage() - 1;
-        int pageSize = basePageRequest.getPageSize();
+    public Map findAll(DigitalDictionarySearch digitalDictionarySearch) {
+        int currentPage = digitalDictionarySearch.getCurrentPage() - 1;
+        int pageSize = digitalDictionarySearch.getPageSize();
 //        Order idOrder = new Order(Sort.Direction.ASC, "id");
 //        List<Order> orders = new ArrayList<>();
 //        Sort sort = new Sort(orders);

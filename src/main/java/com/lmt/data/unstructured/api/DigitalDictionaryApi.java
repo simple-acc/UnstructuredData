@@ -3,6 +3,7 @@ package com.lmt.data.unstructured.api;
 import com.lmt.data.unstructured.entity.DigitalDictionary;
 import com.lmt.data.unstructured.entity.search.DigitalDictionarySearch;
 import com.lmt.data.unstructured.service.DigitalDictionaryService;
+import com.lmt.data.unstructured.util.RedisCache;
 import com.lmt.data.unstructured.util.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,20 +25,15 @@ public class DigitalDictionaryApi {
     private DigitalDictionaryService digitalDictionaryService;
 
     /**
-     * TODO 从缓存中获取创建人信息还未实现
+     * TODO 从缓存中获取当前登陆人信息的功能已完成
      * @apiNote 保存数据字典
      * @param digitalDictionary 保存的数据字典
      * @return Map
      */
     @RequestMapping("/save")
     public Map save(@RequestBody DigitalDictionary digitalDictionary){
-        digitalDictionary.setCreator("admin");
+        digitalDictionary.setCreator(RedisCache.getUserName(digitalDictionary));
         return this.digitalDictionaryService.save(digitalDictionary);
-    }
-
-    @RequestMapping("/findAll")
-    public Map findAll(@RequestBody DigitalDictionarySearch digitalDictionarySearch){
-        return this.digitalDictionaryService.findAll(digitalDictionarySearch);
     }
 
     @RequestMapping("/findOneById")
