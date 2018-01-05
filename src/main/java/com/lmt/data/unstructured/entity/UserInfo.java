@@ -17,8 +17,8 @@ public class UserInfo extends BaseEntity {
     /**
      * 地址
      */
-    @Column(name="address_id", nullable = false, length = 36)
-    private String addressId;
+    @Column(name="address_code", nullable = false, length = 36)
+    private String addressCode;
 
     /**
      * 用户名
@@ -33,10 +33,10 @@ public class UserInfo extends BaseEntity {
     private String userPassword;
 
     /**
-     * 个人简介
+     * 用户状态
      */
-    @Column(name="description", nullable = false, length = 100)
-    private String description;
+    @Column(name = "status", nullable = false, length = 6)
+    private String status;
 
     /**
      * 性别
@@ -52,16 +52,22 @@ public class UserInfo extends BaseEntity {
     private Date birthday;
 
     /**
+     * 个人简介
+     */
+    @Column(name="description", length = 100)
+    private String description;
+
+    /**
      * 用户类型
      */
     @Column(name = "user_type", nullable = false, length = 6)
     private String userType;
 
     /**
-     * 职位
+     * 职业
      */
-    @Column(name="post", nullable = false, length = 6)
-    private String post;
+    @Column(name="profession", nullable = false, length = 6)
+    private String profession;
 
     /**
      * 邮箱
@@ -72,23 +78,23 @@ public class UserInfo extends BaseEntity {
     /**
      * 电话号码
      */
-    @Column(name="phone_number", nullable = false, length = 11)
+    @Column(name="phone_number", length = 11)
     private String phoneNumber;
 
     /**
      * 注册时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name="register_time", nullable = false, updatable = false)
     private Date registerTime;
 
-    public String getAddressId() {
-        return addressId;
+    public String getAddressCode() {
+        return addressCode;
     }
 
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
+    public void setAddressCode(String addressCode) {
+        this.addressCode = addressCode;
     }
 
     public String getUserName() {
@@ -105,6 +111,14 @@ public class UserInfo extends BaseEntity {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDescription() {
@@ -139,12 +153,12 @@ public class UserInfo extends BaseEntity {
         this.userType = userType;
     }
 
-    public String getPost() {
-        return post;
+    public String getProfession() {
+        return profession;
     }
 
-    public void setPost(String post) {
-        this.post = post;
+    public void setProfession(String profession) {
+        this.profession = profession;
     }
 
     public String getEmail() {

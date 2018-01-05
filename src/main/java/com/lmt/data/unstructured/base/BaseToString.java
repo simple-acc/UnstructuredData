@@ -23,7 +23,6 @@ public class BaseToString {
                 sb.append(name);
                 sb.append("=");
                 name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                // 如果type是类类型，则前面包含"class "，后面跟类名
                 Method method = clazz.getMethod("get" + name);
                 // 调用getter方法获取属性值
                 Object value = method.invoke(this);

@@ -92,7 +92,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 //        PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
         PageRequest pageRequest = new PageRequest(currentPage, pageSize);
         if (null != keyword){
-            Page result = this.digitalDictionaryRepository.findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLike
+            Page result = this.digitalDictionaryRepository.findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLikeOrderByCodeAsc
                     (keyword, keyword, keyword, keyword, pageRequest);
             return ResultData.newOk("查询成功", result).toMap();
         }
