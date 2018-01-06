@@ -1,5 +1,7 @@
 package com.lmt.data.unstructured.base;
 
+import org.springframework.util.StringUtils;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,21 @@ import java.util.List;
  * @date 2018/1/4 14:36
  */
 public class BaseSearch extends BaseToString{
+
+    /**
+     * 实体ID
+     */
+    private String id;
+
+    /**
+     * 关键词
+     */
+    private String keyword;
+
+    /**
+     * 用户tokenId
+     */
+    private String tokenId;
 
     /**
      * 当前页
@@ -24,14 +41,34 @@ public class BaseSearch extends BaseToString{
     private int totalPage;
 
     /**
+     * 数据总数
+     */
+    private int totalElements;
+
+    /**
      * 排序
      */
     private List<String> sort;
 
-    /**
-     * 用户tokenId
-     */
-    private String tokenId;
+    public String getKeyword() {
+        if (!StringUtils.isEmpty(this.keyword)){
+            return "%" + this.keyword + "%";
+        } else {
+            return this.keyword;
+        }
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public int getCurrentPage() {
         return currentPage;
@@ -71,5 +108,13 @@ public class BaseSearch extends BaseToString{
 
     public void setTokenId(String tokenId) {
         this.tokenId = tokenId;
+    }
+
+    public int getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(int totalElements) {
+        this.totalElements = totalElements;
     }
 }

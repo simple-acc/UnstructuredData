@@ -1,16 +1,16 @@
 package com.lmt.data.unstructured.api;
 
 import com.lmt.data.unstructured.entity.UserInfo;
+import com.lmt.data.unstructured.entity.search.UserInfoSearch;
 import com.lmt.data.unstructured.service.UserInfoService;
-import com.lmt.data.unstructured.util.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author MT-Lin
@@ -25,9 +25,9 @@ public class UserInfoApi {
 
     @RequestMapping("/register")
     public Map register(@RequestBody UserInfo userInfo){
-        userInfo.setStatus("007001");
+        // 用户注册
         userInfo.setUserType("008002");
-        return this.userInfoService.register(userInfo);
+        return this.userInfoService.save(userInfo);
     }
 
     @RequestMapping("/login")
@@ -35,16 +35,35 @@ public class UserInfoApi {
         return this.userInfoService.login(userInfo, session);
     }
 
-    @RequestMapping("/test")
-    public Map test(@RequestBody UserInfo userInfo, HttpSession session) {
-        System.err.println(userInfo);
-        UUID uuid = (UUID) session.getAttribute("uuid");
-        if (uuid == null){
-            uuid = UUID.randomUUID();
-        }
-        System.err.println("uuid:" + uuid);
-        System.err.println("sessionId: " + session.getId());
+    @RequestMapping("/search")
+    public Map search(@RequestBody UserInfoSearch userInfoSearch) {
+        return this.userInfoService.search(userInfoSearch);
+    }
 
-        return null;
+    @RequestMapping("/addAdmin")
+    public Map addAdmin(@RequestBody UserInfo userInfo){
+        // 管理员添加管理员
+        userInfo.setUserType("008001");
+        return this.userInfoService.save(userInfo);
+    }
+
+    @RequestMapping("/delete")
+    public Map delete(@RequestBody List<UserInfo> userInfoList){
+        return this.userInfoService.delete(userInfoList);
+    }
+
+    @RequestMapping("/freeze")
+    public Map freeze(@RequestBody List<UserInfo> userInfoList){
+        return this.userInfoService.freeze(userInfoList);
+    }
+
+    @RequestMapping("/unfreeze")
+    public Map unfreeze(@RequestBody List<UserInfo> userInfoList){
+        return this.userInfoService.unfreeze(userInfoList);
+    }
+
+    @RequestMapping("/resetPassword")
+    public Map resetPassword(@RequestBody List<UserInfo> userInfoList){
+        return this.userInfoService.resetPassword(userInfoList);
     }
 }

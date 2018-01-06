@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -31,6 +32,7 @@ public class UserInfo extends BaseEntity {
      * 密码
      */
     @Column(name="user_password", nullable = false, length = 32)
+    @JSONField(serialize = false)
     private String userPassword;
 
     /**
@@ -38,6 +40,12 @@ public class UserInfo extends BaseEntity {
      */
     @Column(name = "status", nullable = false, length = 6)
     private String status;
+
+    /**
+     * 密码错误次数
+     */
+    @Column(name = "password_error_time")
+    private int passwordErrorTime;
 
     /**
      * 性别
@@ -123,6 +131,14 @@ public class UserInfo extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getPasswordErrorTime() {
+        return passwordErrorTime;
+    }
+
+    public void setPasswordErrorTime(int passwordErrorTime) {
+        this.passwordErrorTime = passwordErrorTime;
     }
 
     public String getDescription() {

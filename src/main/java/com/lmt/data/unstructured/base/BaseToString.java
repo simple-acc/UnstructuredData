@@ -26,7 +26,7 @@ public class BaseToString {
                 Method method = clazz.getMethod("get" + name);
                 // 调用getter方法获取属性值
                 Object value = method.invoke(this);
-                if (value == null) {
+                if (null == value) {
                     sb.append("null");
                 } else {
                     sb.append(value);
@@ -36,7 +36,9 @@ public class BaseToString {
         } catch (Exception e){
             e.printStackTrace();
         }
-        sb.setLength(sb.length() - 2);
+        if (declaredFields.length > 1) {
+            sb.setLength(sb.length() - 2);
+        }
         sb.append("}");
         return sb.toString();
     }

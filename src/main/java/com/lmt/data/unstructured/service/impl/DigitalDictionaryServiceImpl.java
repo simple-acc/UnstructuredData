@@ -7,9 +7,13 @@ import com.lmt.data.unstructured.service.DigitalDictionaryService;
 import com.lmt.data.unstructured.util.ResultData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,11 +44,11 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     public Map findAll(DigitalDictionarySearch digitalDictionarySearch) {
         int currentPage = digitalDictionarySearch.getCurrentPage() - 1;
         int pageSize = digitalDictionarySearch.getPageSize();
-//        Order idOrder = new Order(Sort.Direction.ASC, "id");
-//        List<Order> orders = new ArrayList<>();
-//        Sort sort = new Sort(orders);
-//        PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
-        PageRequest pageRequest = new PageRequest(currentPage, pageSize);
+        Order codeOrder = new Order(Sort.Direction.ASC, "code");
+        List<Order> orders = new ArrayList<>();
+        orders.add(codeOrder);
+        Sort sort = new Sort(orders);
+        PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
         Page<DigitalDictionary> page = this.digitalDictionaryRepository.findAll(pageRequest);
         return ResultData.newOk("查询成功", page).toMap();
     }
@@ -85,13 +89,13 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         String keyword = digitalDictionarySearch.getKeyword();
         int currentPage = digitalDictionarySearch.getCurrentPage() - 1;
         int pageSize = digitalDictionarySearch.getPageSize();
-//        Order idOrder = new Order(Sort.Direction.ASC, "id");
-//        List<Order> orders = new ArrayList<>();
-//        Sort sort = new Sort(orders);
-//        PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
-        PageRequest pageRequest = new PageRequest(currentPage, pageSize);
-        if (null != keyword){
-            Page result = this.digitalDictionaryRepository.findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLikeOrderByCodeAsc
+        Order codeOrder = new Order(Sort.Direction.ASC, "code");
+        List<Order> orders = new ArrayList<>();
+        orders.add(codeOrder);
+        Sort sort = new Sort(orders);
+        PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
+        if (!StringUtils.isEmpty(keyword)){
+            Page result = this.digitalDictionaryRepository.findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLike
                     (keyword, keyword, keyword, keyword, pageRequest);
             return ResultData.newOk("查询成功", result).toMap();
         }
@@ -100,7 +104,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
     @Override
     public Map delete(List<DigitalDictionary> digitalDictionaries) {
-        this.digitalDictionaryRepository.deleteInBatch(digitalDictionaries);
+        this.digitalDictionaryRepository.delete(digitalDictionaries);
         return ResultData.newOK("删除成功").toMap();
     }
 }

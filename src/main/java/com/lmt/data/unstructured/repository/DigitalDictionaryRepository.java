@@ -24,7 +24,7 @@ public interface DigitalDictionaryRepository extends JpaRepository<DigitalDictio
      * @param pageable 分页
      * @return Page
      */
-    Page<DigitalDictionary> findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLikeOrderByCodeAsc
+    Page<DigitalDictionary> findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLike
             (String code, String description, String designation, String creator, Pageable pageable);
 
     /**

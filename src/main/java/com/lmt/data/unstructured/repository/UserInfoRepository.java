@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.repository;
 
+import com.lmt.data.unstructured.base.BaseJdbcFind;
 import com.lmt.data.unstructured.entity.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

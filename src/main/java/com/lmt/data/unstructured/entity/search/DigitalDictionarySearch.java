@@ -8,19 +8,7 @@ import com.lmt.data.unstructured.base.BaseSearch;
  */
 public class DigitalDictionarySearch extends BaseSearch {
 
-    private String id;
-
     private String parentCode;
-
-    private String keyword;
-
-    public String getKeyword() {
-        return "%" + keyword + "%";
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
 
     public String getParentCode() {
         return parentCode;
@@ -28,13 +16,5 @@ public class DigitalDictionarySearch extends BaseSearch {
 
     public void setParentCode(String parentCode) {
         this.parentCode = parentCode;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

@@ -1,8 +1,10 @@
 package com.lmt.data.unstructured.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +15,9 @@ import java.util.Map;
 public class BaseJdbcFind {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private EntityManager entityManager;
 
     public List<Map<String, Object>> find(){
-        List<Map<String, Object>> result = jdbcTemplate.queryForList("SELECT designation FROM digital_dictionary");
-        return result;
+        return null;
     }
 }

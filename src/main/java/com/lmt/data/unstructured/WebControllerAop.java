@@ -53,7 +53,7 @@ public class WebControllerAop {
         // 方法
         logger.info("method name = {}", joinPoint.getSignature().getName());
         // 参数
-        logger.info("parameters = {}",joinPoint.getArgs());
+        logger.info("parameters = {}", joinPoint.getArgs());
     }
 
     @After("controllerPointCut()")
