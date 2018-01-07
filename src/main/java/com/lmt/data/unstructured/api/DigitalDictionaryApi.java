@@ -55,9 +55,14 @@ public class DigitalDictionaryApi {
         return this.digitalDictionaryService.search(digitalDictionarySearch);
     }
 
-    @RequestMapping("/findChildrenForTree")
-    public Map findChildrenForTree(@RequestBody DigitalDictionarySearch digitalDictionarySearch){
-        return this.digitalDictionaryService.findChildrenForTree(digitalDictionarySearch.getParentCode());
+    @RequestMapping("/getChildrenForSelect")
+    public Map getChildrenForSelect(@RequestBody DigitalDictionarySearch digitalDictionarySearch){
+        return this.digitalDictionaryService.getChildrenForSelect(digitalDictionarySearch.getParentCode());
+    }
+
+    @RequestMapping("/getParentCodeTree")
+    public Map findChildrenForTree(){
+        return this.digitalDictionaryService.getParentCodeTree();
     }
 
     @RequestMapping("/delete")

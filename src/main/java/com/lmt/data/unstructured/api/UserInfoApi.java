@@ -3,6 +3,7 @@ package com.lmt.data.unstructured.api;
 import com.lmt.data.unstructured.entity.UserInfo;
 import com.lmt.data.unstructured.entity.search.UserInfoSearch;
 import com.lmt.data.unstructured.service.UserInfoService;
+import com.lmt.data.unstructured.util.UdConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class UserInfoApi {
     @RequestMapping("/register")
     public Map register(@RequestBody UserInfo userInfo){
         // 用户注册
-        userInfo.setUserType("008002");
+        userInfo.setUserType(UdConstant.USER_TYPE_USER_CODE);
         return this.userInfoService.save(userInfo);
     }
 
@@ -43,7 +44,7 @@ public class UserInfoApi {
     @RequestMapping("/addAdmin")
     public Map addAdmin(@RequestBody UserInfo userInfo){
         // 管理员添加管理员
-        userInfo.setUserType("008001");
+        userInfo.setUserType(UdConstant.USER_TYPE_ADMIN_CODE);
         return this.userInfoService.save(userInfo);
     }
 

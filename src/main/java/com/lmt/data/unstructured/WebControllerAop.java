@@ -2,6 +2,7 @@ package com.lmt.data.unstructured;
 
 import com.lmt.data.unstructured.base.BaseEntity;
 import com.lmt.data.unstructured.base.BaseSearch;
+import com.lmt.data.unstructured.util.UdConstant;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -33,11 +34,11 @@ public class WebControllerAop {
         HttpServletRequest request = attributes.getRequest();
         // TODO 在请求参数中添加tokenId
         HttpSession session = request.getSession();
-        Object tokenId = session.getAttribute("tokenId");
+        Object tokenId = session.getAttribute(UdConstant.USER_LOGIN_EVIDENCE);
         // TODO url要过滤掉登录页面需要的连接请求（未完成）只有在登录页面需要的连接不需要tokenId其他的请求都要
         // URL
         logger.info("url = {}", request.getRequestURI());
-        if (null != tokenId) {
+        if (null != tokenId && joinPoint.getArgs().length > 0) {
             Object o = joinPoint.getArgs()[0];
             if (o instanceof BaseSearch) {
                 ((BaseSearch) joinPoint.getArgs()[0]).setTokenId(tokenId.toString());

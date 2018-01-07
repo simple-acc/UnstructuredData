@@ -40,13 +40,6 @@ public interface DigitalDictionaryService {
     Map update(DigitalDictionary digitalDictionary);
 
     /**
-     * @apiNote 根据父类编码获取子类，根据子类懒加载父类编码选择器
-     * @param parentCode 父类编码
-     * @return Map
-     */
-    Map findChildrenForTree(String parentCode);
-
-    /**
      * @apiNote 根据关键词查找
      * @param digitalDictionarySearch 查找条件
      * @return Map
@@ -59,4 +52,17 @@ public interface DigitalDictionaryService {
      * @return Map
      */
     Map delete(List<DigitalDictionary> digitalDictionaries);
+
+    /**
+     * @apiNote 获取父节点选择树
+     * @return Map
+     */
+    Map getParentCodeTree();
+
+    /**
+     * @apiNote 获取选项
+     * @return Map
+     * @param parentCode
+     */
+    Map getChildrenForSelect(String parentCode);
 }

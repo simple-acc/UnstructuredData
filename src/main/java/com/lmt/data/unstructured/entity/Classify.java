@@ -33,10 +33,10 @@ public class Classify extends BaseEntity {
     private String designation;
 
     /**
-     * 备注
+     * 描述
      */
-    @Column(name = "remark", length = 300)
-    private String remark;
+    @Column(name = "description", length = 300)
+    private String description;
 
     /**
      * 分类类型（代码表006）
@@ -94,12 +94,12 @@ public class Classify extends BaseEntity {
         this.designation = designation;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getDescription() {
+        return description;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getClassifyType() {

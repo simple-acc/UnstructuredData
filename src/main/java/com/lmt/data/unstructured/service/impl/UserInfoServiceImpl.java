@@ -7,6 +7,7 @@ import com.lmt.data.unstructured.service.UserInfoService;
 import com.lmt.data.unstructured.util.EncryptUtil;
 import com.lmt.data.unstructured.util.RedisCache;
 import com.lmt.data.unstructured.util.ResultData;
+import com.lmt.data.unstructured.util.UdConstant;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,10 @@ public class UserInfoServiceImpl implements UserInfoService{
     @Override
     public Map save(UserInfo userInfo) {
         String newPassword = EncryptUtil.encrypt(userInfo.getUserPassword());
-        String userType = "008001".equals(userInfo.getUserType()) ? "管理员" : "用户";
+        String userType = UdConstant.USER_TYPE_ADMIN_CODE.equals(userInfo.getUserType()) ? "管理员" : "用户";
         userInfo.setUserPassword(newPassword);
-        userInfo.setPasswordErrorTime(1);
-        userInfo.setStatus("007001");
+        userInfo.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
+        userInfo.setStatus(UdConstant.COUNT_UNFREEZE_CODE);
         UserInfo exitUser = this.userInfoRepository.findByUserName(userInfo.getUserName());
         if (null != exitUser){
             return ResultData.newError("该用户名已存在").toMap();
@@ -49,7 +50,6 @@ public class UserInfoServiceImpl implements UserInfoService{
         if (null == userInfo.getId()){
             return ResultData.newError(userType + "注册失败").toMap();
         }
-
         return ResultData.newOK(userType + "注册成功").toMap();
     }
 
@@ -57,19 +57,35 @@ public class UserInfoServiceImpl implements UserInfoService{
     public Map login(UserInfo userInfo, HttpSession session) {
         UserInfo loginUser = this.userInfoRepository.findByUserName(userInfo.getUserName());
         if (null != loginUser){
+            // TODO 在判断密码前应该先判断该用户的密码错误次数是否可以冻结用户，密码错误出错5次或者被管理员冻结
+            if (loginUser.getPasswordErrorTime() >= UdConstant.PASSWORD_ERROR_TIME
+                    || UdConstant.COUNT_FREEZE_CODE.equals(loginUser.getStatus())){
+                return ResultData.newError("该帐号已被冻结").toMap();
+            }
             String newPassword = EncryptUtil.encrypt(userInfo.getUserPassword());
-            // TODO 在判断密码前应该先判断该用户的密码错误次数是否可以冻结用户，密码错误次数大于6
             if (newPassword.equals(loginUser.getUserPassword())){
                 // TODO 登陆成功，将用户信息包括tokenId和sessionId缓存到Redis
                 UUID uuid = UUID.randomUUID();
                 String tokenId = uuid.toString();
-                session.setAttribute("tokenId", tokenId);
+                session.setAttribute(UdConstant.USER_LOGIN_EVIDENCE, tokenId);
                 loginUser.setTokenId(tokenId);
                 loginUser.setSessionId(session.getId());
                 RedisCache.cacheUserInfo(loginUser);
-                return ResultData.newOK("成功登录").toMap();
+                // 将密码错误次数改成默认值
+                if (loginUser.getPasswordErrorTime() != UdConstant.DEFAULT_PASSWORD_ERROR_TIME){
+                    loginUser.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
+                    this.userInfoRepository.save(loginUser);
+                }
+                return ResultData.newOK("登录成功").toMap();
             }
-            // TODO 密码错误，更新该帐号的密码错误次数，未完成
+            // TODO 密码错误，更新该帐号的密码错误次数
+            loginUser.setPasswordErrorTime(loginUser.getPasswordErrorTime() + 1);
+            this.userInfoRepository.save(loginUser);
+            if (loginUser.getPasswordErrorTime() >= UdConstant.PASSWORD_ERROR_TIME){
+                loginUser.setStatus(UdConstant.COUNT_FREEZE_CODE);
+                this.userInfoRepository.save(loginUser);
+                return ResultData.newError("密码错误次数达到 5 次，该帐号已被冻结，请联系管理员解冻！").toMap();
+            }
         }
         return ResultData.newError("密码或用户名错误").toMap();
     }
@@ -113,8 +129,8 @@ public class UserInfoServiceImpl implements UserInfoService{
         nativeQuery.setMaxResults(pageSize);
         List resultList = nativeQuery.getResultList();
         Map<String, Object> resultMap = new HashMap<>(2);
-        resultMap.put("totalElements", totalElements);
-        resultMap.put("content", resultList);
+        resultMap.put(UdConstant.TOTAL_ELEMENTS, totalElements);
+        resultMap.put(UdConstant.CONTENT, resultList);
         return ResultData.newOk("查询成功", resultMap).toMap();
     }
 
@@ -131,7 +147,7 @@ public class UserInfoServiceImpl implements UserInfoService{
         UserInfo userInfoFreeze;
         for (UserInfo userInfo : userInfoList) {
             userInfoFreeze = this.userInfoRepository.findOne(userInfo.getId());
-            userInfoFreeze.setStatus("007002");
+            userInfoFreeze.setStatus(UdConstant.COUNT_FREEZE_CODE);
             this.userInfoRepository.save(userInfoFreeze);
         }
         return ResultData.newOK("冻结成功").toMap();
@@ -142,7 +158,8 @@ public class UserInfoServiceImpl implements UserInfoService{
         UserInfo userInfoUnfreeze;
         for (UserInfo userInfo : userInfoList) {
             userInfoUnfreeze = this.userInfoRepository.findOne(userInfo.getId());
-            userInfoUnfreeze.setStatus("007001");
+            userInfoUnfreeze.setStatus(UdConstant.COUNT_UNFREEZE_CODE);
+            userInfoUnfreeze.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
             this.userInfoRepository.save(userInfoUnfreeze);
         }
         return ResultData.newOK("解冻成功").toMap();
@@ -151,10 +168,12 @@ public class UserInfoServiceImpl implements UserInfoService{
     @Override
     public Map resetPassword(List<UserInfo> userInfoList) {
         UserInfo userInfoResetPassword;
-        String newPassword = EncryptUtil.encrypt("aaaaaa");
+        String newPassword = EncryptUtil.encrypt(UdConstant.DEFAULT_PASSWORD);
         for (UserInfo userInfo : userInfoList) {
             userInfoResetPassword = this.userInfoRepository.findOne(userInfo.getId());
             userInfoResetPassword.setUserPassword(newPassword);
+            userInfoResetPassword.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
+            userInfoResetPassword.setStatus(UdConstant.COUNT_UNFREEZE_CODE);
             this.userInfoRepository.save(userInfoResetPassword);
         }
         return ResultData.newOK("密码重置成功").toMap();

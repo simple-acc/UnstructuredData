@@ -5,6 +5,8 @@ import com.lmt.data.unstructured.entity.search.DigitalDictionarySearch;
 import com.lmt.data.unstructured.repository.DigitalDictionaryRepository;
 import com.lmt.data.unstructured.service.DigitalDictionaryService;
 import com.lmt.data.unstructured.util.ResultData;
+import com.lmt.data.unstructured.util.UdConstant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -12,8 +14,8 @@ import org.springframework.data.domain.Sort.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ import java.util.Map;
 @Service("DigitalDictionaryServiceImpl")
 public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
-    @Resource
+    @Autowired
     private DigitalDictionaryRepository digitalDictionaryRepository;
 
     @Override
@@ -59,7 +61,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         if (null == result){
             return ResultData.newError("该数据字典不存在").toMap();
         } else {
-            return ResultData.newOk("数据字典获取成功", result).toMap();
+            return ResultData.newOk("成功获取数据字典", result).toMap();
         }
     }
 
@@ -70,18 +72,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
             return ResultData.newError("修改的数据字典不存在").toMap();
         }
         this.digitalDictionaryRepository.save(digitalDictionary);
-        return ResultData.newOK("修改成功").toMap();
-    }
-
-    @Override
-    public Map findChildrenForTree(String parentCode) {
-        List result;
-        if (null == parentCode){
-            result = this.digitalDictionaryRepository.findByParentCodeIsNull();
-            return ResultData.newOk("查询成功", result).toMap();
-        }
-        result = this.digitalDictionaryRepository.findByParentCode(parentCode);
-        return ResultData.newOk("查询成功", result).toMap();
+        return ResultData.newOK("修改数据字典成功").toMap();
     }
 
     @Override
@@ -105,6 +96,35 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     @Override
     public Map delete(List<DigitalDictionary> digitalDictionaries) {
         this.digitalDictionaryRepository.delete(digitalDictionaries);
-        return ResultData.newOK("删除成功").toMap();
+        return ResultData.newOK("删除数据字典成功").toMap();
+    }
+
+    @Override
+    public Map getParentCodeTree() {
+        List<Map<String, Object>> result = this.getChildren(null);
+        return ResultData.newOk("成功获取父节点选择树", result).toMap();
+    }
+
+    @Override
+    public Map getChildrenForSelect(String parentCode) {
+        List<DigitalDictionary> options = this.digitalDictionaryRepository.findByParentCode(parentCode);
+        return ResultData.newOk("成功获取选项", options).toMap();
+    }
+
+    private List<Map<String, Object>> getChildren(String code) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        List<DigitalDictionary> currentLevel;
+        if (null == code){
+            currentLevel = this.digitalDictionaryRepository.findByParentCodeIsNull();
+        } else {
+            currentLevel = this.digitalDictionaryRepository.findByParentCode(code);
+        }
+        for (DigitalDictionary child : currentLevel) {
+            Map<String, Object> children = new HashMap<>(2);
+            children.put(UdConstant.TREE_PROPS_LABEL, child.getDesignation());
+            children.put(UdConstant.TREE_PROPS_CHILDREN, this.getChildren(child.getCode()));
+            result.add(children);
+        }
+        return result;
     }
 }

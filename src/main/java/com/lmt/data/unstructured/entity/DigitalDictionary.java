@@ -30,7 +30,7 @@ public class DigitalDictionary extends BaseEntity {
     /**
      * 父类编码
      */
-    @Column(name = "parent_code", nullable = false, length = 6)
+    @Column(name = "parent_code", length = 6)
     private String parentCode;
 
     /**
