@@ -5,7 +5,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -28,12 +27,12 @@ public class EntityManagerQuery {
         String keyword = baseSearch.getKeyword();
         int currentPage = baseSearch.getCurrentPage() - 1;
         int pageSize = baseSearch.getPageSize();
-        // 获取表中数据的数量
-        String countSql = "select count(id) as totalElements from " + tableName;
+        // 获取表中数据的总数量
+        String countSql = "SELECT count(id) AS totalElements FROM " + tableName;
         Query countQuery = entityManager.createNativeQuery(countSql);
         Object totalElements = countQuery.getResultList().get(0);
-        // 开始查询，拼接SQL查询语句
         Query nativeQuery = entityManager.createNativeQuery(sql.toString());
+        // 设置参数
         for (int i = 0; i < baseSearch.getParamsCount(); i++) {
             nativeQuery.setParameter(i + 1, keyword);
         }

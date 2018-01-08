@@ -3,6 +3,7 @@ package com.lmt.data.unstructured.service.impl;
 import com.lmt.data.unstructured.entity.Classify;
 import com.lmt.data.unstructured.entity.search.ClassifySearch;
 import com.lmt.data.unstructured.repository.ClassifyRepository;
+import com.lmt.data.unstructured.repository.DigitalDictionaryRepository;
 import com.lmt.data.unstructured.service.ClassifyService;
 import com.lmt.data.unstructured.util.EntityManagerQuery;
 import com.lmt.data.unstructured.util.RedisCache;
@@ -31,8 +32,8 @@ public class ClassifyServiceImpl implements ClassifyService {
     private EntityManagerQuery entityManagerQuery;
 
     @Override
-    public Map getParentTree() {
-        List result = this.getChildren();
+    public Map getParentTree(String classifyType) {
+        List result = this.getChildren(classifyType);
         return ResultData.newOk("成功获取父节点选择树", result);
     }
 
@@ -57,7 +58,9 @@ public class ClassifyServiceImpl implements ClassifyService {
         sql.append("c.upload_num AS uploadNum, ");
         sql.append("c.create_time AS createTime, ");
         sql.append("(SELECT tc.designation FROM classify AS tc WHERE tc.id = c.parent_id) ");
-        sql.append("AS parent ");
+        sql.append("AS parent, ");
+        sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = c.classify_type) ");
+        sql.append("AS classifyType ");
         sql.append("FROM classify AS c WHERE 1=1 ");
         if (!StringUtils.isEmpty(classifySearch.getKeyword())){
             sql.append("AND c.designation LIKE ? ");
@@ -67,14 +70,41 @@ public class ClassifyServiceImpl implements ClassifyService {
         return ResultData.newOk("查询成功", result);
     }
 
+    @Override
+    public Map findOneById(String id) {
+        Classify result = this.classifyRepository.findOne(id);
+        if (null == result){
+            return ResultData.newError("该分类不存在");
+        }
+        return ResultData.newOk("查询成功", result);
+    }
+
+    @Override
+    public Map update(Classify classify) {
+        Classify old = this.classifyRepository.findOne(classify.getId());
+        if (null == old){
+            ResultData.newError("修改的分类不存在");
+        }
+        this.classifyRepository.save(classify);
+        return ResultData.newOK("修改成功");
+    }
+
+    @Override
+    public Map delete(List<Classify> classifies) {
+        for (Classify classify : classifies) {
+            this.classifyRepository.delete(classify.getId());
+        }
+        return ResultData.newOK("删除成功");
+    }
+
     // TODO 获取树形数据
 
     @SuppressWarnings("unchecked")
-    private List getChildren() {
+    private List getChildren(String classifyType) {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Classify> firstLevel = new ArrayList<>();
         List<Classify> children = new ArrayList<>();
-        List<Classify> all = this.classifyRepository.findAll();
+        List<Classify> all = this.classifyRepository.findByClassifyType(classifyType);
         Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
         for (Classify classify : all) {
             Map<String, Object> tempOption = new HashMap<>(3);

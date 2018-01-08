@@ -48,7 +48,7 @@ public interface DigitalDictionaryService {
 
     /**
      * @apiNote 删除数据字典
-     * @param digitalDictionaries 要删除的数据字典
+     * @param digitalDictionaries 要删除的数据字典集合
      * @return Map
      */
     Map delete(List<DigitalDictionary> digitalDictionaries);

@@ -46,6 +46,10 @@ public class DigitalDictionaryApi {
 
     @RequestMapping("/update")
     public Map update(@RequestBody DigitalDictionary digitalDictionary){
+        String id = digitalDictionary.getId();
+        if (null == id){
+            return ResultData.newError("传入的数据字典ID为空");
+        }
         return this.digitalDictionaryService.update(digitalDictionary);
     }
 
@@ -68,4 +72,5 @@ public class DigitalDictionaryApi {
     public Map delete(@RequestBody List<DigitalDictionary> digitalDictionaries){
         return this.digitalDictionaryService.delete(digitalDictionaries);
     }
+
 }

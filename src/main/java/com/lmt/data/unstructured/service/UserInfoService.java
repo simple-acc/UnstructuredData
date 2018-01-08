@@ -36,7 +36,7 @@ public interface UserInfoService {
 
     /**
      * @apiNote 删除用户
-     * @param userInfoList 要删除的用户
+     * @param userInfoList 要删除的用户集合
      * @return Map
      */
     Map delete(List<UserInfo> userInfoList);

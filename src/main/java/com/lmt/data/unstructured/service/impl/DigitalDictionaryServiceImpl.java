@@ -100,7 +100,9 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
     @Override
     public Map delete(List<DigitalDictionary> digitalDictionaries) {
-        this.digitalDictionaryRepository.delete(digitalDictionaries);
+        for (DigitalDictionary digitalDictionary : digitalDictionaries) {
+            this.digitalDictionaryRepository.delete(digitalDictionary.getId());
+        }
         return ResultData.newOK("删除数据字典成功");
     }
 

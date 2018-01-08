@@ -12,17 +12,10 @@ import java.util.List;
 public interface ClassifyRepository extends JpaRepository<Classify, String> {
 
     /**
-     * @apiNote 获取父ID为空的数据
+     * @apiNote 根据分类类型查找
      * @return List
      */
-    List<Classify> findByParentIdIsNull();
-
-    /**
-     * @apiNote 根据父节点ID获取数据
-     * @param parentId 父节点ID
-     * @return List
-     */
-    List<Classify> findByParentId(String parentId);
+    List<Classify> findByClassifyType(String classifyType);
 
     /**
      * @apiNote 根据分类名称查找

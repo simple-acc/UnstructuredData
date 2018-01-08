@@ -4,11 +4,14 @@ import com.lmt.data.unstructured.entity.Classify;
 import com.lmt.data.unstructured.entity.search.ClassifySearch;
 import com.lmt.data.unstructured.service.ClassifyService;
 import com.lmt.data.unstructured.util.RedisCache;
+import com.lmt.data.unstructured.util.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,13 +31,36 @@ public class ClassifyApi {
     }
 
     @RequestMapping("/getParentTree")
-    public Map getParentTree(){
-        return this.classifyService.getParentTree();
+    public Map getParentTree(@RequestBody ClassifySearch classifySearch){
+        return this.classifyService.getParentTree(classifySearch.getClassifyType());
     }
 
     @RequestMapping("/search")
     public Map search(@RequestBody ClassifySearch classifySearch){
         return this.classifyService.search(classifySearch);
+    }
+
+    @RequestMapping("/findOneById")
+    public Map findOneById(@RequestBody ClassifySearch classifySearch){
+        String id = classifySearch.getId();
+        if (StringUtils.isEmpty(id)){
+            return ResultData.newError("传入的分类ID为空");
+        }
+        return this.classifyService.findOneById(id);
+    }
+
+    @RequestMapping("/update")
+    public Map update(@RequestBody Classify classify){
+        String id = classify.getId();
+        if (StringUtils.isEmpty(id)){
+            return ResultData.newError("传入的分类ID为空");
+        }
+        return this.classifyService.update(classify);
+    }
+
+    @RequestMapping("/delete")
+    public Map delete(@RequestBody List<Classify> classifies){
+        return this.classifyService.delete(classifies);
     }
 
 }

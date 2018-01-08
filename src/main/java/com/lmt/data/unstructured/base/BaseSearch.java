@@ -1,8 +1,8 @@
 package com.lmt.data.unstructured.base;
 
+import com.lmt.data.unstructured.entity.search.ClassifySearch;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
