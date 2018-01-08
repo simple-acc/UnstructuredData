@@ -35,12 +35,6 @@ public interface DigitalDictionaryRepository extends JpaRepository<DigitalDictio
     List<DigitalDictionary> findByParentCode(String parentCode);
 
     /**
-     * @apiNote 查找一级
-     * @return List
-     */
-    List<DigitalDictionary> findByParentCodeIsNull();
-
-    /**
      * @apiNote 根据编码查询数据
      * @param Code 编码
      * @return Map

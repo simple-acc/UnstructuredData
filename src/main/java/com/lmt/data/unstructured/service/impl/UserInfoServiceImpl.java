@@ -103,8 +103,8 @@ public class UserInfoServiceImpl implements UserInfoService{
         sql.append("AS status ");
         sql.append("FROM user_info AS ui WHERE 1=1 ");
         if (!StringUtils.isEmpty(userInfoSearch.getKeyword())){
-            sql.append("AND ui.user_name LIKE ? AND ui.description LIKE ? ");
-            userInfoSearch.setParamsCount(2);
+            sql.append("AND ui.user_name LIKE ? AND ui.description LIKE ? AND ui.creator LIKE ? ");
+            userInfoSearch.setParamsCount(3);
         }
         Map searchResult = entityManagerQuery.paginationSearch("user_info", sql, userInfoSearch);
         return ResultData.newOk("查询成功", searchResult);

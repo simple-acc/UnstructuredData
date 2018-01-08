@@ -31,6 +31,12 @@ public class Dissertation extends BaseEntity {
     private String designation;
 
     /**
+     * 父专题
+     */
+    @Column(name = "parent_id", length = 36)
+    private String parentId;
+
+    /**
      * 专题描述
      */
     @Column(name = "description", length = 100)
@@ -88,6 +94,14 @@ public class Dissertation extends BaseEntity {
 
     public void setClassifyId(String classifyId) {
         this.classifyId = classifyId;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getDesignation() {

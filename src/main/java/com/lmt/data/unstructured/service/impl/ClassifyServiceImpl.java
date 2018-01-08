@@ -3,7 +3,6 @@ package com.lmt.data.unstructured.service.impl;
 import com.lmt.data.unstructured.entity.Classify;
 import com.lmt.data.unstructured.entity.search.ClassifySearch;
 import com.lmt.data.unstructured.repository.ClassifyRepository;
-import com.lmt.data.unstructured.repository.DigitalDictionaryRepository;
 import com.lmt.data.unstructured.service.ClassifyService;
 import com.lmt.data.unstructured.util.EntityManagerQuery;
 import com.lmt.data.unstructured.util.RedisCache;
@@ -33,7 +32,7 @@ public class ClassifyServiceImpl implements ClassifyService {
 
     @Override
     public Map getParentTree(String classifyType) {
-        List result = this.getChildren(classifyType);
+        List result = this.getTreeOptions(classifyType);
         return ResultData.newOk("成功获取父节点选择树", result);
     }
 
@@ -46,7 +45,10 @@ public class ClassifyServiceImpl implements ClassifyService {
         }
         classify.setCreator(redisCache.getUserName(classify));
         this.classifyRepository.save(classify);
-        return ResultData.newOK("添加成功");
+        if (null == classify.getId()){
+            return ResultData.newError("添加分类失败");
+        }
+        return ResultData.newOK("添加分类成功");
     }
 
     @Override
@@ -63,8 +65,8 @@ public class ClassifyServiceImpl implements ClassifyService {
         sql.append("AS classifyType ");
         sql.append("FROM classify AS c WHERE 1=1 ");
         if (!StringUtils.isEmpty(classifySearch.getKeyword())){
-            sql.append("AND c.designation LIKE ? ");
-            classifySearch.setParamsCount(1);
+            sql.append("AND c.designation LIKE ? AND c.description LIKE ? AND c.creator LIKE ? ");
+            classifySearch.setParamsCount(3);
         }
         Map<String, Object> result = entityManagerQuery.paginationSearch("classify", sql, classifySearch);
         return ResultData.newOk("查询成功", result);
@@ -100,7 +102,7 @@ public class ClassifyServiceImpl implements ClassifyService {
     // TODO 获取树形数据
 
     @SuppressWarnings("unchecked")
-    private List getChildren(String classifyType) {
+    private List getTreeOptions(String classifyType) {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Classify> firstLevel = new ArrayList<>();
         List<Classify> children = new ArrayList<>();

@@ -35,16 +35,15 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
     @Override
     public Map save(DigitalDictionary digitalDictionary) {
-        digitalDictionary.setCreator(redisCache.getUserName(digitalDictionary));
         if (null != this.digitalDictionaryRepository.findByCode(digitalDictionary.getCode())){
             return ResultData.newError("该编码已经存在：" + digitalDictionary.getCode());
         }
+        digitalDictionary.setCreator(redisCache.getUserName(digitalDictionary));
         this.digitalDictionaryRepository.save(digitalDictionary);
         if (null != digitalDictionary.getId()){
             return ResultData.newOK("添加数据字典成功");
-        } else {
-            return ResultData.newError("添加数据字典失败");
         }
+        return ResultData.newError("添加数据字典失败");
     }
 
     @Override
@@ -108,7 +107,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
     @Override
     public Map getParentCodeTree() {
-        List<Map<String, Object>> result = this.getChildren();
+        List<Map<String, Object>> result = this.getTreeOptions();
         return ResultData.newOk("成功获取父节点选择树", result);
     }
 
@@ -119,7 +118,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     }
 
     @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> getChildren() {
+    private List<Map<String, Object>> getTreeOptions() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<DigitalDictionary> firstLevel = new ArrayList<>();
         List<DigitalDictionary> children = new ArrayList<>();
