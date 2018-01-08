@@ -2,6 +2,7 @@ package com.lmt.data.unstructured.base;
 
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +45,11 @@ public class BaseSearch extends BaseToString{
      * 数据总数
      */
     private int totalElements;
+
+    /**
+     * EntityManager查询参数数目
+     */
+    private int paramsCount;
 
     /**
      * 排序
@@ -116,5 +122,13 @@ public class BaseSearch extends BaseToString{
 
     public void setTotalElements(int totalElements) {
         this.totalElements = totalElements;
+    }
+
+    public int getParamsCount() {
+        return paramsCount;
+    }
+
+    public void setParamsCount(int paramsCount) {
+        this.paramsCount = paramsCount;
     }
 }

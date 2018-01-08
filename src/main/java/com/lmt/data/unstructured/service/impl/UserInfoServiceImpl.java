@@ -4,20 +4,12 @@ import com.lmt.data.unstructured.entity.UserInfo;
 import com.lmt.data.unstructured.entity.search.UserInfoSearch;
 import com.lmt.data.unstructured.repository.UserInfoRepository;
 import com.lmt.data.unstructured.service.UserInfoService;
-import com.lmt.data.unstructured.util.EncryptUtil;
-import com.lmt.data.unstructured.util.RedisCache;
-import com.lmt.data.unstructured.util.ResultData;
-import com.lmt.data.unstructured.util.UdConstant;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
+import com.lmt.data.unstructured.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,7 +25,10 @@ public class UserInfoServiceImpl implements UserInfoService{
     private UserInfoRepository userInfoRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerQuery entityManagerQuery;
+    
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public Map save(UserInfo userInfo) {
@@ -70,7 +65,7 @@ public class UserInfoServiceImpl implements UserInfoService{
                 session.setAttribute(UdConstant.USER_LOGIN_EVIDENCE, tokenId);
                 loginUser.setTokenId(tokenId);
                 loginUser.setSessionId(session.getId());
-                RedisCache.cacheUserInfo(loginUser);
+                redisCache.cacheUserInfo(loginUser);
                 // 将密码错误次数改成默认值
                 if (loginUser.getPasswordErrorTime() != UdConstant.DEFAULT_PASSWORD_ERROR_TIME){
                     loginUser.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
@@ -93,14 +88,6 @@ public class UserInfoServiceImpl implements UserInfoService{
     @Override
     public Map search(UserInfoSearch userInfoSearch) {
         String keyword = userInfoSearch.getKeyword();
-        int currentPage = userInfoSearch.getCurrentPage() - 1;
-        int pageSize = userInfoSearch.getPageSize();
-        // 获取表中数据的数量
-        String countSql = "select count(id) as totalElements from user_info";
-        Query countQuery = entityManager.createNativeQuery(countSql);
-        Object totalElements = countQuery.getResultList().get(0);
-        // 开始查询，拼接SQL查询语句
-        Query nativeQuery;
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT ui.id, ui.birthday, ui.description, ui.email, ");
         sql.append("ui.address_code AS addressCode, ");
@@ -118,20 +105,10 @@ public class UserInfoServiceImpl implements UserInfoService{
         sql.append("FROM user_info AS ui WHERE 1=1 ");
         if (!StringUtils.isEmpty(keyword)){
             sql.append("AND ui.user_name LIKE ? AND ui.description LIKE ? ");
-            nativeQuery = entityManager.createNativeQuery(sql.toString());
-            nativeQuery.setParameter(1, keyword);
-            nativeQuery.setParameter(2, keyword);
-        } else {
-            nativeQuery = entityManager.createNativeQuery(sql.toString());
+            userInfoSearch.setParamsCount(2);
         }
-        nativeQuery.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        nativeQuery.setFirstResult(currentPage * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List resultList = nativeQuery.getResultList();
-        Map<String, Object> resultMap = new HashMap<>(2);
-        resultMap.put(UdConstant.TOTAL_ELEMENTS, totalElements);
-        resultMap.put(UdConstant.CONTENT, resultList);
-        return ResultData.newOk("查询成功", resultMap).toMap();
+        Map searchResult = entityManagerQuery.paginationSearch("user_info", sql, userInfoSearch);
+        return ResultData.newOk("查询成功", searchResult).toMap();
     }
 
     @Override

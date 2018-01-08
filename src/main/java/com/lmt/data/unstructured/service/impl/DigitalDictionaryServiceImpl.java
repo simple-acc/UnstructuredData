@@ -4,6 +4,7 @@ import com.lmt.data.unstructured.entity.DigitalDictionary;
 import com.lmt.data.unstructured.entity.search.DigitalDictionarySearch;
 import com.lmt.data.unstructured.repository.DigitalDictionaryRepository;
 import com.lmt.data.unstructured.service.DigitalDictionaryService;
+import com.lmt.data.unstructured.util.RedisCache;
 import com.lmt.data.unstructured.util.ResultData;
 import com.lmt.data.unstructured.util.UdConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,12 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     @Autowired
     private DigitalDictionaryRepository digitalDictionaryRepository;
 
+    @Autowired
+    private RedisCache redisCache;
+
     @Override
     public Map save(DigitalDictionary digitalDictionary) {
+        digitalDictionary.setCreator(redisCache.getUserName(digitalDictionary));
         if (null != this.digitalDictionaryRepository.findByCode(digitalDictionary.getCode())){
             return ResultData.newError("该编码已经存在：" + digitalDictionary.getCode()).toMap();
         }
@@ -113,17 +118,39 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
     private List<Map<String, Object>> getChildren(String code) {
         List<Map<String, Object>> result = new ArrayList<>();
-        List<DigitalDictionary> currentLevel;
-        if (null == code){
-            currentLevel = this.digitalDictionaryRepository.findByParentCodeIsNull();
-        } else {
-            currentLevel = this.digitalDictionaryRepository.findByParentCode(code);
+//        List<DigitalDictionary> currentLevel;
+//        if (null == code){
+//            currentLevel = this.digitalDictionaryRepository.findByParentCodeIsNull();
+//        } else {
+//            currentLevel = this.digitalDictionaryRepository.findByParentCode(code);
+//        }
+//        for (DigitalDictionary child : currentLevel) {
+//            Map<String, Object> children = new HashMap<>(2);
+//            children.put(UdConstant.TREE_PROPS_LABEL, child.getDesignation());
+//            children.put(UdConstant.TREE_PROPS_CHILDREN, this.getChildren(child.getCode()));
+//            result.add(children);
+//        }
+        List<DigitalDictionary> firstLevel = new ArrayList<>();
+        List<DigitalDictionary> children = new ArrayList<>();
+        List<DigitalDictionary> all = this.digitalDictionaryRepository.findAll();
+        Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
+        for (DigitalDictionary classify : all) {
+            Map<String, Object> a = new HashMap<>(3);
+            a.put(UdConstant.TREE_PROPS_CODE, classify.getCode());
+            a.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
+            a.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
+            temp.put(classify.getCode(), a);
+            if (null == classify.getParentCode()){
+                firstLevel.add(classify);
+            } else {
+                children.add(classify);
+            }
         }
-        for (DigitalDictionary child : currentLevel) {
-            Map<String, Object> children = new HashMap<>(2);
-            children.put(UdConstant.TREE_PROPS_LABEL, child.getDesignation());
-            children.put(UdConstant.TREE_PROPS_CHILDREN, this.getChildren(child.getCode()));
-            result.add(children);
+        for (DigitalDictionary child : children) {
+            ((List)temp.get(child.getParentCode()).get(UdConstant.TREE_PROPS_CHILDREN)).add(temp.get(child.getCode()));
+        }
+        for (DigitalDictionary classify : firstLevel) {
+            result.add(temp.get(classify.getCode()));
         }
         return result;
     }

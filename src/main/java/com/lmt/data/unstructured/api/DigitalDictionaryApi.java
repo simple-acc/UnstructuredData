@@ -32,7 +32,6 @@ public class DigitalDictionaryApi {
      */
     @RequestMapping("/save")
     public Map save(@RequestBody DigitalDictionary digitalDictionary){
-        digitalDictionary.setCreator(RedisCache.getUserName(digitalDictionary));
         return this.digitalDictionaryService.save(digitalDictionary);
     }
 

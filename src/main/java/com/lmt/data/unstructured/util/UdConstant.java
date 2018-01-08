@@ -7,6 +7,16 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
+     * 树形控件的子节点的ID标识
+     */
+    public static final String TREE_PROPS_ID = "id";
+
+    /**
+     * 树形控件的子节点的CODE标识
+     */
+    public static final String TREE_PROPS_CODE = "code";
+
+    /**
      * 树形控件的子节点属性名称
      */
     public static final String TREE_PROPS_CHILDREN = "children";
