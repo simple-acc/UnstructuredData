@@ -58,11 +58,11 @@ public class ClassifyServiceImpl implements ClassifyService {
         List<Classify> all = this.classifyRepository.findAll();
         Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
         for (Classify classify : all) {
-            Map<String, Object> a = new HashMap<>(3);
-            a.put(UdConstant.TREE_PROPS_ID, classify.getId());
-            a.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
-            a.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
-            temp.put(classify.getId(), a);
+            Map<String, Object> tempOption = new HashMap<>(3);
+            tempOption.put(UdConstant.TREE_PROPS_ID, classify.getId());
+            tempOption.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
+            tempOption.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
+            temp.put(classify.getId(), tempOption);
             if (null == classify.getParentId()){
                 firstLevel.add(classify);
             } else {

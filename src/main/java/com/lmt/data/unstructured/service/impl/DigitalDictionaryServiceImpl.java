@@ -106,7 +106,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
 
     @Override
     public Map getParentCodeTree() {
-        List<Map<String, Object>> result = this.getChildren(null);
+        List<Map<String, Object>> result = this.getChildren();
         return ResultData.newOk("成功获取父节点选择树", result).toMap();
     }
 
@@ -116,30 +116,19 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         return ResultData.newOk("成功获取选项", options).toMap();
     }
 
-    private List<Map<String, Object>> getChildren(String code) {
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> getChildren() {
         List<Map<String, Object>> result = new ArrayList<>();
-//        List<DigitalDictionary> currentLevel;
-//        if (null == code){
-//            currentLevel = this.digitalDictionaryRepository.findByParentCodeIsNull();
-//        } else {
-//            currentLevel = this.digitalDictionaryRepository.findByParentCode(code);
-//        }
-//        for (DigitalDictionary child : currentLevel) {
-//            Map<String, Object> children = new HashMap<>(2);
-//            children.put(UdConstant.TREE_PROPS_LABEL, child.getDesignation());
-//            children.put(UdConstant.TREE_PROPS_CHILDREN, this.getChildren(child.getCode()));
-//            result.add(children);
-//        }
         List<DigitalDictionary> firstLevel = new ArrayList<>();
         List<DigitalDictionary> children = new ArrayList<>();
         List<DigitalDictionary> all = this.digitalDictionaryRepository.findAll();
         Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
         for (DigitalDictionary classify : all) {
-            Map<String, Object> a = new HashMap<>(3);
-            a.put(UdConstant.TREE_PROPS_CODE, classify.getCode());
-            a.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
-            a.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
-            temp.put(classify.getCode(), a);
+            Map<String, Object> tempOption = new HashMap<>(3);
+            tempOption.put(UdConstant.TREE_PROPS_CODE, classify.getCode());
+            tempOption.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
+            tempOption.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
+            temp.put(classify.getCode(), tempOption);
             if (null == classify.getParentCode()){
                 firstLevel.add(classify);
             } else {
