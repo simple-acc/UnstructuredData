@@ -39,7 +39,7 @@ public class DigitalDictionaryApi {
     public Map findOneById(@RequestBody DigitalDictionarySearch digitalDictionarySearch){
         String id = digitalDictionarySearch.getId();
         if (null == id){
-            return ResultData.newError("传入的数据字典ID为空").toMap();
+            return ResultData.newError("传入的数据字典ID为空");
         }
         return this.digitalDictionaryService.findOneById(id);
     }

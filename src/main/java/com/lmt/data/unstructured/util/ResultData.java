@@ -11,38 +11,32 @@ public class ResultData {
 
     private static final int CORRECT_CODE = 3;
     private static final int ERROR_CODE = 0;
-    private Map returnMap;
+    private Map<String, Object> returnMap;
 
     private ResultData(String message, int code){
         super();
-        returnMap = new HashMap<String, Object>();
+        returnMap = new HashMap<>();
         returnMap.put("code", code);
         returnMap.put("msg", message);
         returnMap.put("data", null);
     }
 
-    public static ResultData newOK(String message){
-        return new ResultData(message, CORRECT_CODE);
+    public static Map newOK(String message){
+        return new ResultData(message, CORRECT_CODE).toMap();
     }
 
-    public static ResultData newOk(String message, Object data){
+    public static Map newOk(String message, Object data){
         ResultData resultData = new ResultData(message, CORRECT_CODE);
         resultData.returnMap.replace("data", data);
-        return resultData;
+        return resultData.toMap();
     }
 
 
-    public static ResultData newError(String message){
-        return new ResultData(message, ERROR_CODE);
+    public static Map newError(String message){
+        return new ResultData(message, ERROR_CODE).toMap();
     }
 
-    public static ResultData newError(String message, Object data){
-        ResultData resultData = new ResultData(message, ERROR_CODE);
-        resultData.returnMap.replace("data", data);
-        return resultData;
-    }
-
-    public Map toMap() {
+    private Map toMap() {
         return returnMap;
     }
 }

@@ -4,11 +4,13 @@ import com.lmt.data.unstructured.entity.Classify;
 import com.lmt.data.unstructured.entity.search.ClassifySearch;
 import com.lmt.data.unstructured.repository.ClassifyRepository;
 import com.lmt.data.unstructured.service.ClassifyService;
+import com.lmt.data.unstructured.util.EntityManagerQuery;
 import com.lmt.data.unstructured.util.RedisCache;
 import com.lmt.data.unstructured.util.ResultData;
 import com.lmt.data.unstructured.util.UdConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -24,11 +26,14 @@ public class ClassifyServiceImpl implements ClassifyService {
 
     @Autowired
     private RedisCache redisCache;
+    
+    @Autowired
+    private EntityManagerQuery entityManagerQuery;
 
     @Override
     public Map getParentTree() {
         List result = this.getChildren();
-        return ResultData.newOk("成功获取父节点选择树", result).toMap();
+        return ResultData.newOk("成功获取父节点选择树", result);
     }
 
     @Override
@@ -36,16 +41,30 @@ public class ClassifyServiceImpl implements ClassifyService {
         Classify existClassify = this.classifyRepository
                 .findByClassifyTypeAndDesignation(classify.getClassifyType(), classify.getDesignation());
         if (null != existClassify){
-            return ResultData.newError("添加的分类类型中已存在该名称").toMap();
+            return ResultData.newError("添加的分类类型中已存在该名称");
         }
         classify.setCreator(redisCache.getUserName(classify));
         this.classifyRepository.save(classify);
-        return ResultData.newOK("添加成功").toMap();
+        return ResultData.newOK("添加成功");
     }
 
     @Override
     public Map search(ClassifySearch classifySearch) {
-        return null;
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT c.id, c.designation, c.description, c.creator, ");
+        sql.append("c.collection_num AS collectionNum, "); 
+        sql.append("c.download_num AS downloadNum, ");
+        sql.append("c.upload_num AS uploadNum, ");
+        sql.append("c.create_time AS createTime, ");
+        sql.append("(SELECT tc.designation FROM classify AS tc WHERE tc.id = c.parent_id) ");
+        sql.append("AS parent ");
+        sql.append("FROM classify AS c WHERE 1=1 ");
+        if (!StringUtils.isEmpty(classifySearch.getKeyword())){
+            sql.append("AND c.designation LIKE ? ");
+            classifySearch.setParamsCount(1);
+        }
+        Map<String, Object> result = entityManagerQuery.paginationSearch("classify", sql, classifySearch);
+        return ResultData.newOk("查询成功", result);
     }
 
     // TODO 获取树形数据

@@ -37,13 +37,13 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     public Map save(DigitalDictionary digitalDictionary) {
         digitalDictionary.setCreator(redisCache.getUserName(digitalDictionary));
         if (null != this.digitalDictionaryRepository.findByCode(digitalDictionary.getCode())){
-            return ResultData.newError("该编码已经存在：" + digitalDictionary.getCode()).toMap();
+            return ResultData.newError("该编码已经存在：" + digitalDictionary.getCode());
         }
         this.digitalDictionaryRepository.save(digitalDictionary);
         if (null != digitalDictionary.getId()){
-            return ResultData.newOK("添加数据字典成功").toMap();
+            return ResultData.newOK("添加数据字典成功");
         } else {
-            return ResultData.newError("添加数据字典失败").toMap();
+            return ResultData.newError("添加数据字典失败");
         }
     }
 
@@ -57,16 +57,16 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         Sort sort = new Sort(orders);
         PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
         Page<DigitalDictionary> page = this.digitalDictionaryRepository.findAll(pageRequest);
-        return ResultData.newOk("查询成功", page).toMap();
+        return ResultData.newOk("查询成功", page);
     }
 
     @Override
     public Map findOneById(String id) {
         DigitalDictionary result = this.digitalDictionaryRepository.findOne(id);
         if (null == result){
-            return ResultData.newError("该数据字典不存在").toMap();
+            return ResultData.newError("该数据字典不存在");
         } else {
-            return ResultData.newOk("成功获取数据字典", result).toMap();
+            return ResultData.newOk("成功获取数据字典", result);
         }
     }
 
@@ -74,10 +74,10 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     public Map update(DigitalDictionary digitalDictionary) {
         DigitalDictionary old = this.digitalDictionaryRepository.findOne(digitalDictionary.getId());
         if (null == old){
-            return ResultData.newError("修改的数据字典不存在").toMap();
+            return ResultData.newError("修改的数据字典不存在");
         }
         this.digitalDictionaryRepository.save(digitalDictionary);
-        return ResultData.newOK("修改数据字典成功").toMap();
+        return ResultData.newOK("修改数据字典成功");
     }
 
     @Override
@@ -93,7 +93,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         if (!StringUtils.isEmpty(keyword)){
             Page result = this.digitalDictionaryRepository.findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLike
                     (keyword, keyword, keyword, keyword, pageRequest);
-            return ResultData.newOk("查询成功", result).toMap();
+            return ResultData.newOk("查询成功", result);
         }
         return this.findAll(digitalDictionarySearch);
     }
@@ -101,19 +101,19 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     @Override
     public Map delete(List<DigitalDictionary> digitalDictionaries) {
         this.digitalDictionaryRepository.delete(digitalDictionaries);
-        return ResultData.newOK("删除数据字典成功").toMap();
+        return ResultData.newOK("删除数据字典成功");
     }
 
     @Override
     public Map getParentCodeTree() {
         List<Map<String, Object>> result = this.getChildren();
-        return ResultData.newOk("成功获取父节点选择树", result).toMap();
+        return ResultData.newOk("成功获取父节点选择树", result);
     }
 
     @Override
     public Map getChildrenForSelect(String parentCode) {
         List<DigitalDictionary> options = this.digitalDictionaryRepository.findByParentCode(parentCode);
-        return ResultData.newOk("成功获取选项", options).toMap();
+        return ResultData.newOk("成功获取选项", options);
     }
 
     @SuppressWarnings("unchecked")

@@ -23,6 +23,7 @@ public class EntityManagerQuery {
     @Autowired
     private EntityManager entityManager;
 
+    @SuppressWarnings({"SqlNoDataSourceInspection", "SqlDialectInspection"})
     public Map<String, Object> paginationSearch(String tableName, StringBuffer sql, BaseSearch baseSearch){
         String keyword = baseSearch.getKeyword();
         int currentPage = baseSearch.getCurrentPage() - 1;

@@ -39,13 +39,13 @@ public class UserInfoServiceImpl implements UserInfoService{
         userInfo.setStatus(UdConstant.COUNT_UNFREEZE_CODE);
         UserInfo exitUser = this.userInfoRepository.findByUserName(userInfo.getUserName());
         if (null != exitUser){
-            return ResultData.newError("该用户名已存在").toMap();
+            return ResultData.newError("该用户名已存在");
         }
         this.userInfoRepository.save(userInfo);
         if (null == userInfo.getId()){
-            return ResultData.newError(userType + "注册失败").toMap();
+            return ResultData.newError(userType + "注册失败");
         }
-        return ResultData.newOK(userType + "注册成功").toMap();
+        return ResultData.newOK(userType + "注册成功");
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UserInfoServiceImpl implements UserInfoService{
             // TODO 在判断密码前应该先判断该用户的密码错误次数是否可以冻结用户，密码错误出错5次或者被管理员冻结
             if (loginUser.getPasswordErrorTime() >= UdConstant.PASSWORD_ERROR_TIME
                     || UdConstant.COUNT_FREEZE_CODE.equals(loginUser.getStatus())){
-                return ResultData.newError("该帐号已被冻结").toMap();
+                return ResultData.newError("该帐号已被冻结");
             }
             String newPassword = EncryptUtil.encrypt(userInfo.getUserPassword());
             if (newPassword.equals(loginUser.getUserPassword())){
@@ -71,7 +71,7 @@ public class UserInfoServiceImpl implements UserInfoService{
                     loginUser.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
                     this.userInfoRepository.save(loginUser);
                 }
-                return ResultData.newOK("登录成功").toMap();
+                return ResultData.newOK("登录成功");
             }
             // TODO 密码错误，更新该帐号的密码错误次数
             loginUser.setPasswordErrorTime(loginUser.getPasswordErrorTime() + 1);
@@ -79,15 +79,14 @@ public class UserInfoServiceImpl implements UserInfoService{
             if (loginUser.getPasswordErrorTime() >= UdConstant.PASSWORD_ERROR_TIME){
                 loginUser.setStatus(UdConstant.COUNT_FREEZE_CODE);
                 this.userInfoRepository.save(loginUser);
-                return ResultData.newError("密码错误次数达到 5 次，该帐号已被冻结，请联系管理员解冻！").toMap();
+                return ResultData.newError("密码错误次数达到 5 次，该帐号已被冻结，请联系管理员解冻！");
             }
         }
-        return ResultData.newError("密码或用户名错误").toMap();
+        return ResultData.newError("密码或用户名错误");
     }
 
     @Override
     public Map search(UserInfoSearch userInfoSearch) {
-        String keyword = userInfoSearch.getKeyword();
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT ui.id, ui.birthday, ui.description, ui.email, ");
         sql.append("ui.address_code AS addressCode, ");
@@ -103,12 +102,12 @@ public class UserInfoServiceImpl implements UserInfoService{
         sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = ui.status) ");
         sql.append("AS status ");
         sql.append("FROM user_info AS ui WHERE 1=1 ");
-        if (!StringUtils.isEmpty(keyword)){
+        if (!StringUtils.isEmpty(userInfoSearch.getKeyword())){
             sql.append("AND ui.user_name LIKE ? AND ui.description LIKE ? ");
             userInfoSearch.setParamsCount(2);
         }
         Map searchResult = entityManagerQuery.paginationSearch("user_info", sql, userInfoSearch);
-        return ResultData.newOk("查询成功", searchResult).toMap();
+        return ResultData.newOk("查询成功", searchResult);
     }
 
     @Override
@@ -116,7 +115,7 @@ public class UserInfoServiceImpl implements UserInfoService{
         for (UserInfo userInfo : userInfoList) {
             this.userInfoRepository.delete(userInfo.getId());
         }
-        return ResultData.newOK("删除成功").toMap();
+        return ResultData.newOK("删除成功");
     }
 
     @Override
@@ -127,7 +126,7 @@ public class UserInfoServiceImpl implements UserInfoService{
             userInfoFreeze.setStatus(UdConstant.COUNT_FREEZE_CODE);
             this.userInfoRepository.save(userInfoFreeze);
         }
-        return ResultData.newOK("冻结成功").toMap();
+        return ResultData.newOK("冻结成功");
     }
 
     @Override
@@ -139,7 +138,7 @@ public class UserInfoServiceImpl implements UserInfoService{
             userInfoUnfreeze.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
             this.userInfoRepository.save(userInfoUnfreeze);
         }
-        return ResultData.newOK("解冻成功").toMap();
+        return ResultData.newOK("解冻成功");
     }
 
     @Override
@@ -153,6 +152,6 @@ public class UserInfoServiceImpl implements UserInfoService{
             userInfoResetPassword.setStatus(UdConstant.COUNT_UNFREEZE_CODE);
             this.userInfoRepository.save(userInfoResetPassword);
         }
-        return ResultData.newOK("密码重置成功").toMap();
+        return ResultData.newOK("密码重置成功");
     }
 }
