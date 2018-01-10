@@ -35,6 +35,11 @@ public class WebControllerAop {
         // TODO 在请求参数中添加tokenId
         HttpSession session = request.getSession();
         Object tokenId = session.getAttribute(UdConstant.USER_LOGIN_EVIDENCE);
+        if (null == tokenId){
+            logger.error("tokenId is NULL");
+        } else {
+            logger.info("tokenId is " + tokenId);
+        }
         // TODO url要过滤掉登录页面需要的连接请求（未完成）只有在登录页面需要的连接不需要tokenId其他的请求都要
         // URL
         logger.info("url = {}", request.getRequestURI());

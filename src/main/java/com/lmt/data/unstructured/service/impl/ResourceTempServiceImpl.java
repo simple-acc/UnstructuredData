@@ -35,7 +35,7 @@ public class ResourceTempServiceImpl implements ResourceTempService {
         if (null == resourceTemp.getId()){
             return ResultData.newError("资源信息保存失败");
         }
-        return ResultData.newOK("资源上传成功，请等待审核");
+        return ResultData.newOk("资源上传成功，请等待审核", resourceTemp.getId());
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 
 /**
+ * @apiNote 获取MD5值工具 from:http://hw1287789687.iteye.com/blog/1924190
  * @author MT-Lin
  * @date 2018/1/9 21:29
  */
@@ -49,8 +50,8 @@ public class Md5Util {
         /***
          * Get MD5 of one file！test ok!
          *
-         * @param filePath
-         * @return
+         * @param filePath 文件路径
+         * @return String
          */
         public static String getFileMD5(String filePath) {
             File file = new File(filePath);

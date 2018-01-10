@@ -22,6 +22,11 @@ public class UdConstant {
     public static final String RESULT_MSG = "msg";
 
     /**
+     * 返回结果数据标识
+     */
+    public static final String RESULT_DATA = "data";
+
+    /**
      * 操作姐夫哦成功编码
      */
     public static final int RESULT_CORRECT_CODE = 3;

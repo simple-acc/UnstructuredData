@@ -17,8 +17,8 @@ public class ResultData {
         super();
         returnMap = new HashMap<>();
         returnMap.put(UdConstant.RESULT_CODE, code);
-        returnMap.put("msg", message);
-        returnMap.put("data", null);
+        returnMap.put(UdConstant.RESULT_MSG, message);
+        returnMap.put(UdConstant.RESULT_DATA, null);
     }
 
     public static Map newOK(String message){
@@ -27,7 +27,7 @@ public class ResultData {
 
     public static Map newOk(String message, Object data){
         ResultData resultData = new ResultData(message, CORRECT_CODE);
-        resultData.returnMap.replace("data", data);
+        resultData.returnMap.replace(UdConstant.RESULT_DATA, data);
         return resultData.toMap();
     }
 

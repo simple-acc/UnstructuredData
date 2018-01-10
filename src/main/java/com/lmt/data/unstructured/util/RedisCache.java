@@ -3,6 +3,8 @@ package com.lmt.data.unstructured.util;
 import com.lmt.data.unstructured.base.BaseEntity;
 import com.lmt.data.unstructured.base.BaseSearch;
 import com.lmt.data.unstructured.entity.UserInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -21,6 +23,8 @@ public class RedisCache {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    private Logger logger = LoggerFactory.getLogger(RedisCache.class);
+
     /**
      * @apiNote 将用户信息缓存到Redis
      * @param userInfo 要缓存的用户信息
@@ -37,7 +41,11 @@ public class RedisCache {
      */
     public UserInfo getUserInfoFromCache(String tokenId){
         ValueOperations<String, UserInfo> userInfoValueOperations = redisTemplate.opsForValue();
-        return userInfoValueOperations.get(tokenId);
+        if (null == userInfoValueOperations){
+            logger.error("userInfoValueOperations is NULL");
+        }
+        UserInfo user = userInfoValueOperations.get(tokenId);
+        return user;
     }
 
     /**
