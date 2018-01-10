@@ -7,6 +7,16 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
+     * 待审核资源的状态编码
+     */
+    public static final String AUDIT_STATUS_WAIT = "005003";
+
+    /**
+     * 新增资源操作的审核编码
+     */
+    public static final String OPERATION_ADD_RESOURCE = "004001";
+
+    /**
      * 文件流一次读取的长度
      */
     public static final int FILE_READ_BUFFER_LENGTH = 3096;

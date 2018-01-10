@@ -26,7 +26,7 @@ public class TagTemp extends BaseEntity {
     /**
      * 标签
      */
-    @Column(name = "tags", length = 60)
+    @Column(name = "tags", length = 300)
     private String tags;
 
     /**

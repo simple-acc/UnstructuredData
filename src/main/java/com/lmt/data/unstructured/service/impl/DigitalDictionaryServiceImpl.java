@@ -56,7 +56,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         Sort sort = new Sort(orders);
         PageRequest pageRequest = new PageRequest(currentPage, pageSize, sort);
         Page<DigitalDictionary> page = this.digitalDictionaryRepository.findAll(pageRequest);
-        return ResultData.newOk("查询成功", page);
+        return ResultData.newOK("查询成功", page);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         if (null == result){
             return ResultData.newError("该数据字典不存在");
         } else {
-            return ResultData.newOk("成功获取数据字典", result);
+            return ResultData.newOK("成功获取数据字典", result);
         }
     }
 
@@ -92,7 +92,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         if (!StringUtils.isEmpty(keyword)){
             Page result = this.digitalDictionaryRepository.findByCodeLikeOrDescriptionLikeOrDesignationLikeOrCreatorLike
                     (keyword, keyword, keyword, keyword, pageRequest);
-            return ResultData.newOk("查询成功", result);
+            return ResultData.newOK("查询成功", result);
         }
         return this.findAll(digitalDictionarySearch);
     }
@@ -108,13 +108,13 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
     @Override
     public Map getParentCodeTree() {
         List<Map<String, Object>> result = this.getTreeOptions();
-        return ResultData.newOk("成功获取父节点选择树", result);
+        return ResultData.newOK("成功获取父节点选择树", result);
     }
 
     @Override
     public Map getChildrenForSelect(String parentCode) {
         List<DigitalDictionary> options = this.digitalDictionaryRepository.findByParentCode(parentCode);
-        return ResultData.newOk("成功获取选项", options);
+        return ResultData.newOK("成功获取选项", options);
     }
 
     @SuppressWarnings("unchecked")

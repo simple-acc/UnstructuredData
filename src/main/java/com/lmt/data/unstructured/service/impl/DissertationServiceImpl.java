@@ -67,7 +67,7 @@ public class DissertationServiceImpl implements DissertationService{
         }
         Map<String, Object> result =
                 entityManagerQuery.paginationSearch("dissertation", sql, dissertationSearch);
-        return ResultData.newOk("查询专题成功", result);
+        return ResultData.newOK("查询专题成功", result);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DissertationServiceImpl implements DissertationService{
         if (null == result){
             return ResultData.newError("该专题不存在");
         }
-        return ResultData.newOk("查询专题成功", result);
+        return ResultData.newOK("查询专题成功", result);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DissertationServiceImpl implements DissertationService{
     @Override
     public Map getParentTree() {
         List result = this.getTreeOptions();
-        return ResultData.newOk("父主题树选项获取成功", result);
+        return ResultData.newOK("父主题树选项获取成功", result);
     }
 
     @SuppressWarnings({"unchecked"})

@@ -25,7 +25,7 @@ public class ResultData {
         return new ResultData(message, CORRECT_CODE).toMap();
     }
 
-    public static Map newOk(String message, Object data){
+    public static Map newOK(String message, Object data){
         ResultData resultData = new ResultData(message, CORRECT_CODE);
         resultData.returnMap.replace(UdConstant.RESULT_DATA, data);
         return resultData.toMap();

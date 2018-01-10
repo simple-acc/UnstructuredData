@@ -3,11 +3,9 @@ package com.lmt.data.unstructured.entity;
 import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author MT-Lin
@@ -20,7 +18,7 @@ public class Audit extends BaseEntity {
     /**
      * 审核人
      */
-    @Column(name = "auditor", nullable = false, length = 36)
+    @Column(name = "auditor", length = 36)
     private String auditor;
 
     /**
@@ -38,8 +36,8 @@ public class Audit extends BaseEntity {
     /**
      * 审核状态
      */
-    @Column(name = "state", nullable = false, length = 6)
-    private String state;
+    @Column(name = "status", nullable = false, length = 6)
+    private String status;
 
     /**
      * 备注
@@ -61,6 +59,9 @@ public class Audit extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time", nullable = false, updatable = false)
     private Date createTime;
+
+    @Transient
+    private List<ResourceTemp> resourceTemps;
 
     public String getAuditor() {
         return auditor;
@@ -86,12 +87,12 @@ public class Audit extends BaseEntity {
         this.operation = operation;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getRemark() {
@@ -116,5 +117,13 @@ public class Audit extends BaseEntity {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public List<ResourceTemp> getResourceTemps() {
+        return resourceTemps;
+    }
+
+    public void setResourceTemps(List<ResourceTemp> resourceTemps) {
+        this.resourceTemps = resourceTemps;
     }
 }

@@ -107,7 +107,7 @@ public class UserInfoServiceImpl implements UserInfoService{
             userInfoSearch.setParamsCount(3);
         }
         Map searchResult = entityManagerQuery.paginationSearch("user_info", sql, userInfoSearch);
-        return ResultData.newOk("查询成功", searchResult);
+        return ResultData.newOK("查询成功", searchResult);
     }
 
     @Override

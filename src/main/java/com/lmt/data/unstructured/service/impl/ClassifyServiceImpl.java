@@ -33,7 +33,7 @@ public class ClassifyServiceImpl implements ClassifyService {
     @Override
     public Map getParentTree(String classifyType) {
         List result = this.getTreeOptions(classifyType);
-        return ResultData.newOk("成功获取父节点选择树", result);
+        return ResultData.newOK("成功获取父节点选择树", result);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ClassifyServiceImpl implements ClassifyService {
             classifySearch.setParamsCount(3);
         }
         Map<String, Object> result = entityManagerQuery.paginationSearch("classify", sql, classifySearch);
-        return ResultData.newOk("查询成功", result);
+        return ResultData.newOK("查询成功", result);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ClassifyServiceImpl implements ClassifyService {
         if (null == result){
             return ResultData.newError("该分类不存在");
         }
-        return ResultData.newOk("查询成功", result);
+        return ResultData.newOK("查询成功", result);
     }
 
     @Override

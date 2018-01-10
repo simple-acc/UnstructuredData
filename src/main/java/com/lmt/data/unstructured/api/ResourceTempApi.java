@@ -1,8 +1,10 @@
 package com.lmt.data.unstructured.api;
 
+import com.lmt.data.unstructured.entity.Audit;
 import com.lmt.data.unstructured.entity.ResourceTemp;
 import com.lmt.data.unstructured.entity.TagTemp;
 import com.lmt.data.unstructured.entity.search.ResourceTempSearch;
+import com.lmt.data.unstructured.service.AuditService;
 import com.lmt.data.unstructured.service.ResourceTempService;
 import com.lmt.data.unstructured.service.TagTempService;
 import com.lmt.data.unstructured.util.*;
@@ -41,6 +43,9 @@ public class ResourceTempApi {
     @Autowired
     private TagTempService tagTempService;
 
+    @Autowired
+    private AuditService auditService;
+
     @RequestMapping("search")
     public Map search(@RequestBody ResourceTempSearch resourceTempSearch){
         return this.resourceTempService.search(resourceTempSearch);
@@ -49,7 +54,7 @@ public class ResourceTempApi {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @RequestMapping("/upload")
     public Map upload(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request){
-        // 保存待审核资源数据
+        // 保存待审核的资源数据
         String resourceMd5 = fileUtil.saveFile(multipartFile);
         if (null == resourceMd5){
             return ResultData.newError("资源保存失败，请从重试或联系管理员");
@@ -58,30 +63,62 @@ public class ResourceTempApi {
         if (saveResourceTempResult instanceof Map){
             return (Map) saveResourceTempResult;
         }
-        String resourceId = (String) saveResourceTempResult;
-        this.saveResourceTempTags(request, resourceId);
-        if (!fileUtil.renameFile(multipartFile, resourceId)){
+        String resourceTempId = (String) saveResourceTempResult;
+        this.saveResourceTempTags(request, resourceTempId);
+        Map saveAuditDataResult = this.saveAuditData(resourceTempId);
+        if (Integer.valueOf(saveAuditDataResult.get(UdConstant.RESULT_CODE).toString())
+                != UdConstant.RESULT_CORRECT_CODE){
+            return saveAuditDataResult;
+        }
+        if (!fileUtil.renameFile(multipartFile, resourceTempId)){
             return ResultData.newError("文件重命名失败，请联系管理员");
         }
         return ResultData.newOK("上传资源成功");
     }
 
-    private void saveResourceTempTags(HttpServletRequest request, String resourceId) {
+    /**
+     * @apiNote 保存待审核数据
+     * @param resourceTempId 待审核资源ID
+     * @return Map
+     */
+    private Map saveAuditData(String resourceTempId) {
+        Audit audit = new Audit();
+        audit.setObjId(resourceTempId);
+        audit.setOperation(UdConstant.OPERATION_ADD_RESOURCE);
+        audit.setStatus(UdConstant.AUDIT_STATUS_WAIT);
+        return this.auditService.save(audit);
+    }
+
+    /**
+     * @apiNote 保存待审核资源的标签
+     * @param request 包含标签参数的request
+     * @param resourceTempId 待审核资源ID
+     */
+    private void saveResourceTempTags(HttpServletRequest request, String resourceTempId) {
         // 保存待审核资源的标签
         String tags = request.getParameter("tags");
+        if (StringUtils.isEmpty(tags)){
+            return;
+        }
         if (!StringUtils.isEmpty(tags)){
             TagTemp tagTemp = new TagTemp();
-            tagTemp.setResourceTempId(resourceId);
+            tagTemp.setResourceTempId(resourceTempId);
             tagTemp.setTags(tags);
             Map saveTagsResult = this.tagTempService.save(tagTemp);
             if (Integer.valueOf(saveTagsResult.get(UdConstant.RESULT_CODE).toString())
                     != UdConstant.RESULT_CORRECT_CODE){
-                logger.error("待审核资源 [ id = " + resourceId
+                logger.error("待审核资源 [ id = " + resourceTempId
                         +" ] 标签保存失败：" + saveTagsResult.get(UdConstant.RESULT_MSG));
             }
         }
     }
 
+    /**
+     * @apiNote 保存待审核资源
+     * @param resourceMd5 资源文件的MD5值
+     * @param request 带有待审核资源数据的request
+     * @return 保存成功返回待审核资源ID，保存失败返回Map
+     */
     private Object saveResourceTemp(String resourceMd5, HttpServletRequest request) {
         ResourceTemp resourceTemp = new ResourceTemp();
         String tokenId = request.getSession().getAttribute(UdConstant.USER_LOGIN_EVIDENCE).toString();
