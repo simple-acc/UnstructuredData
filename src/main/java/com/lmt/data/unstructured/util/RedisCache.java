@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.util;
 
 import com.lmt.data.unstructured.base.BaseEntity;
+import com.lmt.data.unstructured.base.BaseSearch;
 import com.lmt.data.unstructured.entity.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -46,5 +47,29 @@ public class RedisCache {
      */
     public String getUserName(BaseEntity baseEntity){
         return this.getUserInfoFromCache(baseEntity.getTokenId()).getUserName();
+    }
+
+    /**
+     * @apiNote 从Redis缓存中获取用户名
+     * @param tokenId tokenId
+     * @return 用户名
+     */
+    public String getUserName(String tokenId){
+        return this.getUserInfoFromCache(tokenId).getUserName();
+    }
+
+    /**
+     * @apiNote 获取用户ID
+     * @param object tokenId或者BaseEntity
+     * @return 用户ID或null
+     */
+    public String getUserId(Object object){
+        if (object instanceof String){
+            return this.getUserInfoFromCache((String) object).getId();
+        }
+        if (object instanceof BaseEntity){
+            return this.getUserInfoFromCache(((BaseEntity)object).getTokenId()).getId();
+        }
+        return null;
     }
 }

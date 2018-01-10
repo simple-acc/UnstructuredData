@@ -21,7 +21,8 @@ public interface ClassifyRepository extends JpaRepository<Classify, String> {
      * @apiNote 根据分类名称查找
      * @param classifyType 分类类型
      * @param designation 分类名称
+     * @param parentId 父类ID
      * @return Classify
      */
-    Classify findByClassifyTypeAndDesignation(String classifyType, String designation);
+    Classify findByClassifyTypeAndDesignationAndParentId(String classifyType, String designation, String parentId);
 }

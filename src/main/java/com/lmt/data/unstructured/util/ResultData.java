@@ -9,14 +9,14 @@ import java.util.Map;
  */
 public class ResultData {
 
-    private static final int CORRECT_CODE = 3;
-    private static final int ERROR_CODE = 0;
+    private static final int CORRECT_CODE = UdConstant.RESULT_CORRECT_CODE;
+    private static final int ERROR_CODE = UdConstant.RESULT_ERROR_CODE;
     private Map<String, Object> returnMap;
 
     private ResultData(String message, int code){
         super();
         returnMap = new HashMap<>();
-        returnMap.put("code", code);
+        returnMap.put(UdConstant.RESULT_CODE, code);
         returnMap.put("msg", message);
         returnMap.put("data", null);
     }

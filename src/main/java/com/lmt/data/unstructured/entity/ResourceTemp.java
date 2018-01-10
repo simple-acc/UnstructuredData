@@ -20,8 +20,8 @@ public class ResourceTemp extends BaseEntity {
     /**
      * 作者
      */
-    @Column(name="author_id", nullable = false, length = 36)
-    private String authorId;
+    @Column(name="author", nullable = false, length = 36)
+    private String author;
 
     /**
      * 所属分类ID
@@ -38,13 +38,13 @@ public class ResourceTemp extends BaseEntity {
     /**
      * 资源名称
      */
-    @Column(name="resource_name", nullable = false, length = 32)
-    private String resourceName;
+    @Column(name="designation", nullable = false, length = 32)
+    private String designation;
 
     /**
      * 资源描述
      */
-    @Column(name="description", length = 100)
+    @Column(name="description", length = 300)
     private String description;
 
     /**
@@ -54,19 +54,31 @@ public class ResourceTemp extends BaseEntity {
     private String resourceType;
 
     /**
+     * 资源大小（单位KB）
+     */
+    @Column(name = "resource_size", nullable = false, columnDefinition = "double(10,2) default '0.00'")
+    private double resourceSize;
+
+    /**
+     * 资源 MD5 值
+     */
+    @Column(name = "md5", nullable = false, length = 32)
+    private String md5;
+
+    /**
      * 上传时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time", nullable = false, updatable = false)
     private Date createTime;
 
-    public String getAuthorId() {
-        return authorId;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getClassifyId() {
@@ -85,12 +97,12 @@ public class ResourceTemp extends BaseEntity {
         this.resourceId = resourceId;
     }
 
-    public String getResourceName() {
-        return resourceName;
+    public String getDesignation() {
+        return designation;
     }
 
-    public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 
     public String getDescription() {
@@ -107,6 +119,22 @@ public class ResourceTemp extends BaseEntity {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
+    }
+
+    public double getResourceSize() {
+        return resourceSize;
+    }
+
+    public void setResourceSize(double resourceSize) {
+        this.resourceSize = resourceSize;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
     public Date getCreateTime() {

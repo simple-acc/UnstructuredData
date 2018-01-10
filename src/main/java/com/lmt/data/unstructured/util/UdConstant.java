@@ -7,6 +7,36 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
+     * 文件流一次读取的长度
+     */
+    public static final int FILE_READ_BUFFER_LENGTH = 3096;
+
+    /**
+     * 返回结果编码标识
+     */
+    public static final String RESULT_CODE = "code";
+
+    /**
+     * 返回结果信息标识
+     */
+    public static final String RESULT_MSG = "msg";
+
+    /**
+     * 操作姐夫哦成功编码
+     */
+    public static final int RESULT_CORRECT_CODE = 3;
+
+    /**
+     * 操作结果出错（失败）编码
+     */
+    public static final int RESULT_ERROR_CODE = 0;
+
+    /**
+     * 文件上传保存路径
+     */
+    public static final String RESOURCE_TEMP = "unstructured.data.resource.upload";
+
+    /**
      * 树形控件的子节点的ID标识
      */
     public static final String TREE_PROPS_ID = "id";
@@ -75,5 +105,12 @@ public class UdConstant {
      * 用户登录凭证
      */
     public static final String USER_LOGIN_EVIDENCE = "tokenId";
+
+    public static final char[] HEX_CHAR = { '0', '1', '2', '3', '4', '5', '6',
+            '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+    public static final String KEY_MD5 = "MD5";
+
+    public static final String CHARSET_ISO88591 = "ISO-8859-1";
 
 }

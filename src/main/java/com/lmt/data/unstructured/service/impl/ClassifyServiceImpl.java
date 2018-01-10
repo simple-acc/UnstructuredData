@@ -39,9 +39,10 @@ public class ClassifyServiceImpl implements ClassifyService {
     @Override
     public Map save(Classify classify) {
         Classify existClassify = this.classifyRepository
-                .findByClassifyTypeAndDesignation(classify.getClassifyType(), classify.getDesignation());
+                .findByClassifyTypeAndDesignationAndParentId(
+                        classify.getClassifyType(), classify.getDesignation(), classify.getParentId());
         if (null != existClassify){
-            return ResultData.newError("添加的分类类型中已存在该名称");
+            return ResultData.newError("父类中已存在该名称或者添加的分类类型中已存在该名称");
         }
         classify.setCreator(redisCache.getUserName(classify));
         this.classifyRepository.save(classify);
