@@ -26,14 +26,8 @@ public class Tag extends BaseEntity {
     /**
      * 标签
      */
-    @Column(name = "tag", length = 60)
+    @Column(name = "tag", length = 300)
     private String tag;
-
-    /**
-     * 创建者
-     */
-    @Column(name = "creator", nullable = false, length = 36)
-    private String creator;
 
     /**
      * 创建时间
@@ -57,14 +51,6 @@ public class Tag extends BaseEntity {
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
     }
 
     public void setCreateTime(Date createTime) {

@@ -41,9 +41,11 @@ public class ResourceTempServiceImpl implements ResourceTempService {
     @Override
     public Map search(ResourceTempSearch resourceTempSearch) {
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT rt.id, rt.author, rt.designation, rt.description, ");
+        sql.append("SELECT rt.id, rt.designation, rt.description, ");
         sql.append("rt.resource_size AS resourceSize, ");
-        sql.append("rt.create_time AS createTime, ");
+        sql.append("rt.upload_time AS uploadTime, ");
+        sql.append("(SELECT uf.user_name FROM user_info AS uf WHERE uf.id = rt.author_id) ");
+        sql.append("AS author, ");
         sql.append("(SELECT c.designation FROM classify AS c WHERE c.id = rt.classify_id) ");
         sql.append("AS classify, ");
         sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = rt.resource_type) ");

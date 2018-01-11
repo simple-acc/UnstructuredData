@@ -103,7 +103,7 @@ public class ResourceTempApi {
         if (!StringUtils.isEmpty(tags)){
             TagTemp tagTemp = new TagTemp();
             tagTemp.setResourceTempId(resourceTempId);
-            tagTemp.setTags(tags);
+            tagTemp.setTag(tags);
             Map saveTagsResult = this.tagTempService.save(tagTemp);
             if (Integer.valueOf(saveTagsResult.get(UdConstant.RESULT_CODE).toString())
                     != UdConstant.RESULT_CORRECT_CODE){
@@ -122,7 +122,7 @@ public class ResourceTempApi {
     private Object saveResourceTemp(String resourceMd5, HttpServletRequest request) {
         ResourceTemp resourceTemp = new ResourceTemp();
         String tokenId = request.getSession().getAttribute(UdConstant.USER_LOGIN_EVIDENCE).toString();
-        resourceTemp.setAuthor(redisCache.getUserName(tokenId));
+        resourceTemp.setAuthorId(redisCache.getUserId(tokenId));
         resourceTemp.setMd5(resourceMd5);
         resourceTemp.setDesignation(request.getParameter("designation"));
         resourceTemp.setResourceType(request.getParameter("resourceType"));

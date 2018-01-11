@@ -21,6 +21,12 @@ public class FileUtil {
     @Autowired
     private Environment environment;
 
+    public boolean existResourceFile(String resourceFileName){
+        String filePath = environment.getProperty(UdConstant.RESOURCE_TEMP);
+        File resourceFile = new File(filePath + resourceFileName);
+        return resourceFile.exists();
+    }
+
     public boolean renameFile(MultipartFile multipartFile, String resourceId){
         String oldFileName = multipartFile.getOriginalFilename();
         String newFileName =  resourceId + oldFileName.substring(oldFileName.lastIndexOf("."));

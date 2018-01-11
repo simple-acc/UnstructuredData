@@ -7,9 +7,14 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
-     * 待审核资源的状态编码
+     * 待审核的状态编码
      */
     public static final String AUDIT_STATUS_WAIT = "005003";
+
+    /**
+     * 审核通过的状态编码
+     */
+    public static final String AUDIT_STATUS_PASS = "005001";
 
     /**
      * 新增资源操作的审核编码

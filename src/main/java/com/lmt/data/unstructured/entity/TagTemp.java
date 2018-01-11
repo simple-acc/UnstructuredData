@@ -26,8 +26,8 @@ public class TagTemp extends BaseEntity {
     /**
      * 标签
      */
-    @Column(name = "tags", length = 300)
-    private String tags;
+    @Column(name = "tag", length = 300)
+    private String tag;
 
     /**
      * 创建时间
@@ -45,12 +45,12 @@ public class TagTemp extends BaseEntity {
         this.resourceTempId = resourceTempId;
     }
 
-    public String getTags() {
-        return tags;
+    public String getTag() {
+        return tag;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public Date getCreateTime() {

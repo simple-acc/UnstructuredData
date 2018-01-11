@@ -2,6 +2,7 @@ package com.lmt.data.unstructured.entity;
 
 import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -48,6 +49,7 @@ public class Audit extends BaseEntity {
     /**
      * 审核时间
      */
+    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "audit_time")
     private Date auditTime;

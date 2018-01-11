@@ -17,26 +17,32 @@ public class Resource extends BaseEntity {
     /**
      * 作者
      */
-    @Column(name="author_id",nullable = false, length = 36)
+    @Column(name="author_id", nullable = false, length = 36)
     private String authorId;
 
     /**
      * 所属分类ID
      */
-    @Column(name="classify_id",nullable = false, length = 36)
+    @Column(name="classify_id", nullable = false, length = 36)
     private String classifyId;
 
     /**
      * 所属专题ID
      */
-    @Column(name="dissertation_id",nullable = false, length = 36)
+    @Column(name="dissertation_id", length = 36)
     private String dissertationId;
 
     /**
      * 资源名称
      */
-    @Column(name="resource_name",nullable = false, length = 32)
-    private String resourceName;
+    @Column(name="designation", nullable = false, length = 32)
+    private String designation;
+
+    /**
+     * 资源文件名
+     */
+    @Column(name="resource_file_name", nullable = false, unique = true, length = 50)
+    private String resourceFileName;
 
     /**
      * 资源描述
@@ -47,8 +53,14 @@ public class Resource extends BaseEntity {
     /**
      * 资源类型
      */
-    @Column(name="resource_type",nullable = false, length = 6)
+    @Column(name="resource_type", nullable = false, length = 6)
     private String resourceType;
+
+    /**
+     * 资源大小（单位KB）
+     */
+    @Column(name = "resource_size", nullable = false, columnDefinition = "double(10,2) default '0.00'")
+    private double resourceSize;
 
     /**
      * 下载数
@@ -94,12 +106,20 @@ public class Resource extends BaseEntity {
         this.dissertationId = dissertationId;
     }
 
-    public String getResourceName() {
-        return resourceName;
+    public String getDesignation() {
+        return designation;
     }
 
-    public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getResourceFileName() {
+        return resourceFileName;
+    }
+
+    public void setResourceFileName(String resourceFileName) {
+        this.resourceFileName = resourceFileName;
     }
 
     public String getDescription() {
@@ -116,6 +136,14 @@ public class Resource extends BaseEntity {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
+    }
+
+    public double getResourceSize() {
+        return resourceSize;
+    }
+
+    public void setResourceSize(double resourceSize) {
+        this.resourceSize = resourceSize;
     }
 
     public int getDownloadNum() {

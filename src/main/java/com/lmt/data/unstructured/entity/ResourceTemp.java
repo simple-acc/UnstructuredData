@@ -20,8 +20,8 @@ public class ResourceTemp extends BaseEntity {
     /**
      * 作者
      */
-    @Column(name="author", nullable = false, length = 36)
-    private String author;
+    @Column(name="authorId", nullable = false, length = 36)
+    private String authorId;
 
     /**
      * 所属分类ID
@@ -70,15 +70,15 @@ public class ResourceTemp extends BaseEntity {
      */
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time", nullable = false, updatable = false)
-    private Date createTime;
+    @Column(name = "upload_time", nullable = false, updatable = false)
+    private Date uploadTime;
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
     }
 
     public String getClassifyId() {
@@ -137,11 +137,11 @@ public class ResourceTemp extends BaseEntity {
         this.md5 = md5;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getUploadTime() {
+        return uploadTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setUploadTime(Date uploadTime) {
+        this.uploadTime = uploadTime;
     }
 }
