@@ -202,7 +202,8 @@ public class AuditServiceImpl implements AuditService {
             return;
         }
         Tag tag = new Tag();
-        BeanUtils.copyProperties(exist, tag, EntityUtils.getNullPropertyNames(exist));
+        tag.setTag(exist.getTag());
+        tag.setCreateTime(exist.getCreateTime());
         tag.setResourceId(resourceId);
         Map result = this.tagService.save(tag);
         if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
