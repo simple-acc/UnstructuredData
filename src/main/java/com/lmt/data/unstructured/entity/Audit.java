@@ -17,10 +17,10 @@ import java.util.List;
 public class Audit extends BaseEntity {
 
     /**
-     * 审核人
+     * 审核人ID
      */
-    @Column(name = "auditor", length = 36)
-    private String auditor;
+    @Column(name = "auditor_id", length = 36)
+    private String auditorId;
 
     /**
      * 审核对象ID
@@ -65,12 +65,12 @@ public class Audit extends BaseEntity {
     @Transient
     private List<ResourceTemp> resourceTemps;
 
-    public String getAuditor() {
-        return auditor;
+    public String getAuditorId() {
+        return auditorId;
     }
 
-    public void setAuditor(String auditor) {
-        this.auditor = auditor;
+    public void setAuditorId(String auditorId) {
+        this.auditorId = auditorId;
     }
 
     public String getObjId() {

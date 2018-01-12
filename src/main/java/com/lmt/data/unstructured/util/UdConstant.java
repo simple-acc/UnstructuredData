@@ -7,6 +7,16 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
+     * 用户登录失败编码
+     */
+    public static final String LOGIN_FAIL = "009002";
+
+    /**
+     * 用户登陆成功编码
+     */
+    public static final String LOGIN_SUCCESS = "009001";
+
+    /**
      * 待审核的状态编码
      */
     public static final String AUDIT_STATUS_WAIT = "005003";
@@ -19,7 +29,12 @@ public class UdConstant {
     /**
      * 新增资源操作的审核编码
      */
-    public static final String OPERATION_ADD_RESOURCE = "004001";
+    public static final String AUDIT_OPERATION_ADD = "004001";
+
+    /**
+     * 删除资源操作的审核编码
+     */
+    public static final String AUDIT_OPERATION_DELETE = "004002";
 
     /**
      * 文件流一次读取的长度

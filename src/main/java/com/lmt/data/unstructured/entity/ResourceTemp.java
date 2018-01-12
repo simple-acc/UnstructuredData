@@ -3,10 +3,7 @@ package com.lmt.data.unstructured.entity;
 import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -20,7 +17,7 @@ public class ResourceTemp extends BaseEntity {
     /**
      * 作者
      */
-    @Column(name="authorId", nullable = false, length = 36)
+    @Column(name="author_id", nullable = false, length = 36)
     private String authorId;
 
     /**
@@ -72,6 +69,9 @@ public class ResourceTemp extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "upload_time", nullable = false, updatable = false)
     private Date uploadTime;
+
+    @Transient
+    private String operationCode;
 
     public String getAuthorId() {
         return authorId;
@@ -143,5 +143,13 @@ public class ResourceTemp extends BaseEntity {
 
     public void setUploadTime(Date uploadTime) {
         this.uploadTime = uploadTime;
+    }
+
+    public String getOperationCode() {
+        return operationCode;
+    }
+
+    public void setOperationCode(String operationCode) {
+        this.operationCode = operationCode;
     }
 }

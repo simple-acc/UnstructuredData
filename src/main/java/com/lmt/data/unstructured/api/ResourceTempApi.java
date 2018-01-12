@@ -84,7 +84,7 @@ public class ResourceTempApi {
     private Map saveAuditData(String resourceTempId) {
         Audit audit = new Audit();
         audit.setObjId(resourceTempId);
-        audit.setOperation(UdConstant.OPERATION_ADD_RESOURCE);
+        audit.setOperation(UdConstant.AUDIT_OPERATION_ADD);
         audit.setStatus(UdConstant.AUDIT_STATUS_WAIT);
         return this.auditService.save(audit);
     }

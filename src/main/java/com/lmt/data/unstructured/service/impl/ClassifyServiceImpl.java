@@ -66,7 +66,7 @@ public class ClassifyServiceImpl implements ClassifyService {
         sql.append("AS classifyType ");
         sql.append("FROM classify AS c WHERE 1=1 ");
         if (!StringUtils.isEmpty(classifySearch.getKeyword())){
-            sql.append("AND c.designation LIKE ? AND c.description LIKE ? AND c.creator LIKE ? ");
+            sql.append("AND (c.designation LIKE ? OR c.description LIKE ? OR c.creator LIKE ?) ");
             classifySearch.setParamsCount(3);
         }
         Map<String, Object> result = entityManagerQuery.paginationSearch("classify", sql, classifySearch);

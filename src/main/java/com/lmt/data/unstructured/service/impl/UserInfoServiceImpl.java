@@ -1,10 +1,13 @@
 package com.lmt.data.unstructured.service.impl;
 
+import com.lmt.data.unstructured.entity.LoginLog;
 import com.lmt.data.unstructured.entity.UserInfo;
 import com.lmt.data.unstructured.entity.search.UserInfoSearch;
 import com.lmt.data.unstructured.repository.UserInfoRepository;
+import com.lmt.data.unstructured.service.LoginLogService;
 import com.lmt.data.unstructured.service.UserInfoService;
 import com.lmt.data.unstructured.util.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,6 +26,9 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     @Autowired
     private UserInfoRepository userInfoRepository;
+
+    @Autowired
+    private LoginLogService loginLogService;
 
     @Autowired
     private EntityManagerQuery entityManagerQuery;
@@ -52,9 +58,15 @@ public class UserInfoServiceImpl implements UserInfoService{
     public Map login(UserInfo userInfo, HttpSession session) {
         UserInfo loginUser = this.userInfoRepository.findByUserName(userInfo.getUserName());
         if (null != loginUser){
+            LoginLog loginLog = new LoginLog();
+            loginLog.setUserId(loginUser.getId());
+            loginLog.setStatus(loginUser.getStatus());
+            loginLog.setPasswordErrorTime(loginUser.getPasswordErrorTime());
             // TODO 在判断密码前应该先判断该用户的密码错误次数是否可以冻结用户，密码错误出错5次或者被管理员冻结
             if (loginUser.getPasswordErrorTime() >= UdConstant.PASSWORD_ERROR_TIME
                     || UdConstant.COUNT_FREEZE_CODE.equals(loginUser.getStatus())){
+                loginLog.setResult(UdConstant.LOGIN_FAIL);
+                this.loginLogService.save(loginLog);
                 return ResultData.newError("该帐号已被冻结");
             }
             String newPassword = EncryptUtil.encrypt(userInfo.getUserPassword());
@@ -71,16 +83,23 @@ public class UserInfoServiceImpl implements UserInfoService{
                     loginUser.setPasswordErrorTime(UdConstant.DEFAULT_PASSWORD_ERROR_TIME);
                     this.userInfoRepository.save(loginUser);
                 }
+                loginLog.setResult(UdConstant.LOGIN_SUCCESS);
+                this.loginLogService.save(loginLog);
                 return ResultData.newOK("登录成功");
             }
             // TODO 密码错误，更新该帐号的密码错误次数
             loginUser.setPasswordErrorTime(loginUser.getPasswordErrorTime() + 1);
+            loginLog.setPasswordErrorTime(loginUser.getPasswordErrorTime());
+            loginLog.setResult(UdConstant.LOGIN_FAIL);
             this.userInfoRepository.save(loginUser);
             if (loginUser.getPasswordErrorTime() >= UdConstant.PASSWORD_ERROR_TIME){
                 loginUser.setStatus(UdConstant.COUNT_FREEZE_CODE);
+                loginLog.setStatus(loginUser.getStatus());
+                this.loginLogService.save(loginLog);
                 this.userInfoRepository.save(loginUser);
                 return ResultData.newError("密码错误次数达到 5 次，该帐号已被冻结，请联系管理员解冻！");
             }
+            this.loginLogService.save(loginLog);
         }
         return ResultData.newError("密码或用户名错误");
     }
@@ -103,7 +122,7 @@ public class UserInfoServiceImpl implements UserInfoService{
         sql.append("AS status ");
         sql.append("FROM user_info AS ui WHERE 1=1 ");
         if (!StringUtils.isEmpty(userInfoSearch.getKeyword())){
-            sql.append("AND ui.user_name LIKE ? AND ui.description LIKE ? AND ui.creator LIKE ? ");
+            sql.append("AND (ui.user_name LIKE ? OR ui.description LIKE ? OR ui.creator LIKE ?) ");
             userInfoSearch.setParamsCount(3);
         }
         Map searchResult = entityManagerQuery.paginationSearch("user_info", sql, userInfoSearch);

@@ -62,7 +62,7 @@ public class DissertationServiceImpl implements DissertationService{
         sql.append("AS parent ");
         sql.append("FROM dissertation AS d WHERE 1 = 1 ");
         if (!StringUtils.isEmpty(dissertationSearch.getKeyword())){
-            sql.append("AND d.designation LIKE ? AND d.description LIKE ? AND d.creator LIKE ? ");
+            sql.append("AND (d.designation LIKE ? OR d.description LIKE ? OR d.creator LIKE ?) ");
             dissertationSearch.setParamsCount(3);
         }
         Map<String, Object> result =

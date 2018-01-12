@@ -44,22 +44,25 @@ public class ResourceTempServiceImpl implements ResourceTempService {
         sql.append("SELECT rt.id, rt.designation, rt.description, ");
         sql.append("rt.resource_size AS resourceSize, ");
         sql.append("rt.upload_time AS uploadTime, ");
-        sql.append("(SELECT uf.user_name FROM user_info AS uf WHERE uf.id = rt.author_id) ");
-        sql.append("AS author, ");
+        sql.append("rt.resource_id AS resourceId, ");
+        sql.append("ui.user_name AS author, ");
         sql.append("(SELECT c.designation FROM classify AS c WHERE c.id = rt.classify_id) ");
         sql.append("AS classify, ");
         sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = rt.resource_type) ");
         sql.append("AS resourceType, ");
         sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = a.operation) ");
-        sql.append("AS operation ");
-        sql.append("FROM resource_temp AS rt, ");
-        sql.append("audit AS a WHERE rt.id = a.obj_id ");
+        sql.append("AS operation, ");
+        sql.append("(SELECT dd.code FROM digital_dictionary AS dd WHERE dd.code = a.operation) ");
+        sql.append("AS operationCode ");
+        sql.append("FROM resource_temp AS rt, audit AS a, user_info AS ui ");
+        sql.append("WHERE rt.id = a.obj_id ");
         sql.append("AND a.status = '005003' ");
+        sql.append("AND ui.id = rt.author_id ");
         if (!StringUtils.isEmpty(resourceTempSearch.getKeyword())){
-            sql.append("AND rt.author LIKE ? AND rt.designation LIKE ? AND rt.description LIKE ? ");
+            sql.append("AND (ui.user_name LIKE ? OR rt.designation LIKE ? OR rt.description LIKE ? ) ");
             resourceTempSearch.setParamsCount(3);
         }
         Map result = this.entityManagerQuery.paginationSearch("resource_temp", sql, resourceTempSearch);
-        return ResultData.newOK("查询待审核资源能成功", result);
+        return ResultData.newOK("查询待审核资源成功", result);
     }
 }

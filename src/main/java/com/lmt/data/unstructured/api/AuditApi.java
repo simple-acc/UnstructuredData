@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.api;
 
 import com.lmt.data.unstructured.entity.Audit;
+import com.lmt.data.unstructured.entity.search.AuditSearch;
 import com.lmt.data.unstructured.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,5 +24,10 @@ public class AuditApi {
     @RequestMapping("/update")
     public Map update(@RequestBody Audit audit){
         return this.auditService.update(audit);
+    }
+
+    @RequestMapping("/search")
+    public Map search(@RequestBody AuditSearch auditSearch){
+        return this.auditService.search(auditSearch);
     }
 }

@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.service;
 
 import com.lmt.data.unstructured.entity.Audit;
+import com.lmt.data.unstructured.entity.search.AuditSearch;
 
 import java.util.Map;
 
@@ -23,4 +24,11 @@ public interface AuditService {
      * @return Map
      */
     Map update(Audit audit);
+
+    /**
+     * @apiNote 搜索审核表
+     * @param auditSearch 搜索条件
+     * @return Map
+     */
+    Map search(AuditSearch auditSearch);
 }
