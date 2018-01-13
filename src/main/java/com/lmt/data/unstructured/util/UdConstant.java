@@ -7,6 +7,11 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
+     * 文件下载连接
+     */
+    public static final String DOWNLOAD_FILE_URL = "/FileApi/download";
+
+    /**
      * 用户登录失败编码
      */
     public static final String LOGIN_FAIL = "009002";

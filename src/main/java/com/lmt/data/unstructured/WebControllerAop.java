@@ -71,8 +71,15 @@ public class WebControllerAop {
 
     @AfterReturning(returning = "object", pointcut = "controllerPointCut()")
     public void doAfterReturn(Object object){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        String url = request.getRequestURL().toString();
         if (null == object){
-            logger.error("The data returned NULL");
+            if (url.endsWith(UdConstant.DOWNLOAD_FILE_URL)){
+                logger.info("Download file request finish");
+            } else {
+                logger.error("The data returned NULL");
+            }
         } else {
             logger.info("response = {}", object.toString());
         }

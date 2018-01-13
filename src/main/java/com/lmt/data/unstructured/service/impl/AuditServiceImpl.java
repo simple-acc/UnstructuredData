@@ -120,7 +120,7 @@ public class AuditServiceImpl implements AuditService {
     }
 
     /**
-     * @apiNote 处理系统资源表
+     * @apiNote 处理资源表
      * @param resourceTemps 待审核资源数据
      * @return Map
      */
@@ -142,12 +142,12 @@ public class AuditServiceImpl implements AuditService {
                 return result;
             }
         }
-        return ResultData.newOK("系统资源数据处理成功");
+        return ResultData.newOK("资源数据处理成功");
     }
 
     /**
-     * @apiNote 删除系统资源
-     * @param resourceTemp 要删除的系统资源对应的待审核资源信息
+     * @apiNote 删除资源
+     * @param resourceTemp 要删除的资源对应的待审核资源信息
      * @return Map
      * TODO 删除资源
      */
@@ -156,12 +156,12 @@ public class AuditServiceImpl implements AuditService {
     }
 
     /**
-     * @apiNote 将待审核资源信息复制到系统资源表
+     * @apiNote 将待审核资源信息复制到资源表
      * @param resourceTemp 审核通过的待审核资源
      * @return Map
      */
     private Map copyToSystemResource(ResourceTemp resourceTemp) {
-        logger.info("开始将待审核资源 [ID="+resourceTemp.getId()+"]信息复制到系统资源表");
+        logger.info("开始将待审核资源 [ID="+resourceTemp.getId()+"]信息复制到资源表");
         ResourceTemp exist = this.resourceTempRepository.findOne(resourceTemp.getId());
         if (null == exist){
             return ResultData.newError("审核的资源 [ID="+resourceTemp.getId()+"] 不存在");
@@ -185,14 +185,14 @@ public class AuditServiceImpl implements AuditService {
         entityManager.merge(old);
         this.resourceTempRepository.save(old);
 
-        // 将待审核资源的标签复制到系统资源标签
+        // 将待审核资源的标签复制到资源标签
         this.copyToSystemResourceTags(resourceTemp.getId(), result.get(UdConstant.RESULT_DATA).toString());
         logger.info("待审核资源 [ID=" + resourceTemp.getId() +"] 信息复制结束");
         return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 复制成功");
     }
 
     /**
-     * @apiNote 将待审核资源的标签复制到系统资源标签表
+     * @apiNote 将待审核资源的标签复制到资源标签表
      * @param resourceTempId 待审核资源ID
      * @param resourceId 资源ID
      */
@@ -208,7 +208,7 @@ public class AuditServiceImpl implements AuditService {
         Map result = this.tagService.save(tag);
         if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
                 != UdConstant.RESULT_CORRECT_CODE){
-            logger.error("系统资源 [ID="+resourceId+"] 标签保存失败："
+            logger.error("资源 [ID="+resourceId+"] 标签保存失败："
                     + result.get(UdConstant.RESULT_MSG));
         }
     }

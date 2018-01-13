@@ -31,6 +31,7 @@ public class FileApi {
         File downloadFile = new File(fileUtil.getFullFilePath(resourceFileName));
         if (!downloadFile.exists()){
             logger.error("文件 [" + resourceFileName + "] 不存在");
+            return;
         }
         BufferedInputStream bis = null;
         OutputStream os = null;
