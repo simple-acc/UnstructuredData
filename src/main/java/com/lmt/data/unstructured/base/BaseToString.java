@@ -15,7 +15,8 @@ public class BaseToString {
         Field[] declaredFields = clazz.getDeclaredFields();
         String className = clazz.getName();
         StringBuffer sb = new StringBuffer();
-        sb.append(className.substring(className.lastIndexOf(".") + 1));
+        // 备份：sb.append(className.substring(className.lastIndexOf(".") + 1))
+        sb.append(className);
         sb.append("{");
         try {
             for (Field field : declaredFields) {
@@ -36,7 +37,7 @@ public class BaseToString {
         } catch (Exception e){
             e.printStackTrace();
         }
-        if (declaredFields.length > 1) {
+        if (declaredFields.length > 0) {
             sb.setLength(sb.length() - 2);
         }
         sb.append("}");

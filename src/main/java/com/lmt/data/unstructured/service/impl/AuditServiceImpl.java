@@ -110,7 +110,7 @@ public class AuditServiceImpl implements AuditService {
         sql.append("AS operation, ");
         sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = a.status) ");
         sql.append("AS status ");
-        sql.append("FROM audit AS a, resource_temp AS rt WHERE 1 = 1 ");
+        sql.append("FROM audit AS a, resource_temp AS rt WHERE rt.id = a.obj_id ");
         if (!StringUtils.isEmpty(auditSearch.getKeyword())){
             sql.append("AND (a.remark LIKE ? OR rt.designation LIKE ? ) ");
             auditSearch.setParamsCount(2);

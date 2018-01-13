@@ -21,6 +21,11 @@ public class FileUtil {
     @Autowired
     private Environment environment;
 
+    public String getFullFilePath(String fileName){
+        String filePath = environment.getProperty(UdConstant.RESOURCE_TEMP);
+        return filePath + fileName;
+    }
+
     public boolean existResourceFile(String resourceFileName){
         String filePath = environment.getProperty(UdConstant.RESOURCE_TEMP);
         File resourceFile = new File(filePath + resourceFileName);
@@ -44,6 +49,7 @@ public class FileUtil {
         String filePath = environment.getProperty(UdConstant.RESOURCE_TEMP);
         File folder = new File(filePath);
         if (!folder.exists()){
+            //noinspection ResultOfMethodCallIgnored
             folder.mkdirs();
         }
         InputStream inputStream = null;
@@ -54,7 +60,7 @@ public class FileUtil {
             outputStream = new FileOutputStream(file);
             int bytesReader;
             byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_LENGTH];
-            while ((bytesReader = inputStream.read(buffer, 0, UdConstant.FILE_READ_BUFFER_LENGTH)) != -1){
+            while ((bytesReader = inputStream.read(buffer, 0, buffer.length)) != -1){
                 outputStream.write(buffer, 0, bytesReader);
             }
         } catch (IOException e) {
