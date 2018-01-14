@@ -7,6 +7,8 @@ import com.lmt.data.unstructured.repository.UserInfoRepository;
 import com.lmt.data.unstructured.service.LoginLogService;
 import com.lmt.data.unstructured.service.UserInfoService;
 import com.lmt.data.unstructured.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import java.util.UUID;
  */
 @Service("UserInfoServiceImpl")
 public class UserInfoServiceImpl implements UserInfoService{
+
+    private Logger logger = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     @Autowired
     private UserInfoRepository userInfoRepository;
@@ -85,7 +89,8 @@ public class UserInfoServiceImpl implements UserInfoService{
                 }
                 loginLog.setResult(UdConstant.LOGIN_SUCCESS);
                 this.loginLogService.save(loginLog);
-                return ResultData.newOK("登录成功");
+                logger.info("用户名：{} ID：{} 登录成功", loginUser.getUserName(), loginUser.getId());
+                return ResultData.newOK("登录成功", loginUser.getUserType());
             }
             // TODO 密码错误，更新该帐号的密码错误次数
             loginUser.setPasswordErrorTime(loginUser.getPasswordErrorTime() + 1);
