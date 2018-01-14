@@ -57,9 +57,10 @@ public class ResourceTempApi {
         // 保存待审核的资源数据
         String resourceMd5 = fileUtil.saveFile(multipartFile);
         if (null == resourceMd5){
-            return ResultData.newError("资源保存失败，请从重试或联系管理员");
+            return ResultData.newError("资源保存失败，请重试或联系管理员");
         }
-        Object saveResourceTempResult= this.saveResourceTemp(resourceMd5, request);
+        Object saveResourceTempResult =
+                this.saveResourceTemp(multipartFile.getOriginalFilename(), resourceMd5, request);
         if (saveResourceTempResult instanceof Map){
             return (Map) saveResourceTempResult;
         }
@@ -119,12 +120,12 @@ public class ResourceTempApi {
      * @param request 带有待审核资源数据的request
      * @return 保存成功返回待审核资源ID，保存失败返回Map
      */
-    private Object saveResourceTemp(String resourceMd5, HttpServletRequest request) {
+    private Object saveResourceTemp(String designation, String resourceMd5, HttpServletRequest request) {
         ResourceTemp resourceTemp = new ResourceTemp();
         String tokenId = request.getSession().getAttribute(UdConstant.USER_LOGIN_EVIDENCE).toString();
         resourceTemp.setAuthorId(redisCache.getUserId(tokenId));
         resourceTemp.setMd5(resourceMd5);
-        resourceTemp.setDesignation(request.getParameter("designation"));
+        resourceTemp.setDesignation(designation);
         resourceTemp.setResourceType(request.getParameter("resourceType"));
         resourceTemp.setResourceSize(Double.parseDouble(request.getParameter("resourceSize")));
         String classifyId = request.getParameter("classifyId");
