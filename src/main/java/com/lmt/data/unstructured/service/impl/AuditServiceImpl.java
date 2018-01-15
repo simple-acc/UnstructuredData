@@ -141,6 +141,7 @@ public class AuditServiceImpl implements AuditService {
                     != UdConstant.RESULT_CORRECT_CODE){
                 return result;
             }
+            // TODO 把数据复制到ElasticSearch
         }
         return ResultData.newOK("资源数据处理成功");
     }
@@ -187,8 +188,8 @@ public class AuditServiceImpl implements AuditService {
 
         // 将待审核资源的标签复制到资源标签
         this.copyToSystemResourceTags(resourceTemp.getId(), result.get(UdConstant.RESULT_DATA).toString());
-        logger.info("待审核资源 [ID=" + resourceTemp.getId() +"] 信息复制结束");
-        return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 复制成功");
+        logger.info("待审核资源 [ID={}] 信息复制结束", resourceTemp.getId());
+        return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 复制成功", resource.getId());
     }
 
     /**

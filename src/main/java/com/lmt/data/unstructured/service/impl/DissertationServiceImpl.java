@@ -112,10 +112,10 @@ public class DissertationServiceImpl implements DissertationService{
         Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
         for (Dissertation dissertation : all) {
             Map<String, Object> tempOption = new HashMap<>(4);
-            tempOption.put(UdConstant.TREE_PROPS_ID, dissertation.getId());
-            tempOption.put(UdConstant.TREE_PROPS_LABEL, dissertation.getDesignation());
+            tempOption.put(UdConstant.PROPS_ID, dissertation.getId());
+            tempOption.put(UdConstant.PROPS_LABEL, dissertation.getDesignation());
             tempOption.put("classifyId", dissertation.getClassifyId());
-            tempOption.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
+            tempOption.put(UdConstant.PROPS_CHILDREN, new ArrayList<>());
             temp.put(dissertation.getId(), tempOption);
             if (null == dissertation.getParentId()){
                 firstLevel.add(dissertation);
@@ -124,7 +124,7 @@ public class DissertationServiceImpl implements DissertationService{
             }
         }
         for (Dissertation child : children) {
-            ((List)temp.get(child.getParentId()).get(UdConstant.TREE_PROPS_CHILDREN)).add(temp.get(child.getId()));
+            ((List)temp.get(child.getParentId()).get(UdConstant.PROPS_CHILDREN)).add(temp.get(child.getId()));
         }
         for (Dissertation dissertation : firstLevel) {
             result.add(temp.get(dissertation.getId()));

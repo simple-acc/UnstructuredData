@@ -18,6 +18,7 @@ import javax.sql.DataSource;
  * @author MT-Lin
  * @date 2018/1/1 21:37
  */
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @SpringBootApplication
 public class UnstructuredDataApplication {
 
@@ -43,7 +44,7 @@ public class UnstructuredDataApplication {
 		fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
 		fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 		fastConverter.setFastJsonConfig(fastJsonConfig);
-		HttpMessageConverter<?> converter = fastConverter;
+		@SuppressWarnings("UnnecessaryLocalVariable") HttpMessageConverter<?> converter = fastConverter;
 		return new HttpMessageConverters(converter);
 	}
 

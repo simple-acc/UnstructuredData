@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,7 +63,7 @@ public class ResourceTempApi {
             return ResultData.newError("资源保存失败，请重试或联系管理员");
         }
         Object saveResourceTempResult =
-                this.saveResourceTemp(multipartFile.getOriginalFilename(), resourceMd5, request);
+                this.saveResourceTemp(multipartFile, resourceMd5, request);
         if (saveResourceTempResult instanceof Map){
             return (Map) saveResourceTempResult;
         }
@@ -73,6 +76,18 @@ public class ResourceTempApi {
         }
         if (!fileUtil.renameFile(multipartFile, resourceTempId)){
             return ResultData.newError("文件重命名失败，请联系管理员");
+        }
+        return ResultData.newOK("上传资源成功");
+    }
+
+    @RequestMapping("/uploadFiles")
+    public Map uploadFiles(HttpServletRequest request){
+        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+        for (MultipartFile multipartFile : files) {
+            Map result = this.upload(multipartFile, request);
+            if (!CheckResult.isCorrect(result)){
+                return result;
+            }
         }
         return ResultData.newOK("上传资源成功");
     }
@@ -120,14 +135,14 @@ public class ResourceTempApi {
      * @param request 带有待审核资源数据的request
      * @return 保存成功返回待审核资源ID，保存失败返回Map
      */
-    private Object saveResourceTemp(String designation, String resourceMd5, HttpServletRequest request) {
+    private Object saveResourceTemp(MultipartFile multipartFile, String resourceMd5, HttpServletRequest request) {
         ResourceTemp resourceTemp = new ResourceTemp();
         String tokenId = request.getSession().getAttribute(UdConstant.USER_LOGIN_EVIDENCE).toString();
         resourceTemp.setAuthorId(redisCache.getUserId(tokenId));
         resourceTemp.setMd5(resourceMd5);
-        resourceTemp.setDesignation(designation);
-        resourceTemp.setResourceType(request.getParameter("resourceType"));
-        resourceTemp.setResourceSize(Double.parseDouble(request.getParameter("resourceSize")));
+        resourceTemp.setDesignation(multipartFile.getOriginalFilename());
+            resourceTemp.setResourceType(request.getParameter("resourceType"));
+        resourceTemp.setResourceSize(multipartFile.getSize() / 1024);
         String classifyId = request.getParameter("classifyId");
         if (!StringUtils.isEmpty(classifyId)){
             resourceTemp.setClassifyId(classifyId);

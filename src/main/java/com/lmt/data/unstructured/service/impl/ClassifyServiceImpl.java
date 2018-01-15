@@ -32,7 +32,7 @@ public class ClassifyServiceImpl implements ClassifyService {
 
     @Override
     public Map getParentTree(String classifyType) {
-        List result = this.getTreeOptions(classifyType);
+        List result = this.getOptions(classifyType);
         return ResultData.newOK("成功获取父节点选择树", result);
     }
 
@@ -100,21 +100,26 @@ public class ClassifyServiceImpl implements ClassifyService {
         return ResultData.newOK("删除成功");
     }
 
-    // TODO 获取树形数据
+    // TODO 获取选择数据
 
     @SuppressWarnings("unchecked")
-    private List getTreeOptions(String classifyType) {
+    private List getOptions(String classifyType) {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Classify> firstLevel = new ArrayList<>();
         List<Classify> children = new ArrayList<>();
+        List<String> parentId = new ArrayList<>();
         List<Classify> all = this.classifyRepository.findByClassifyType(classifyType);
         Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
         for (Classify classify : all) {
-            Map<String, Object> tempOption = new HashMap<>(3);
-            tempOption.put(UdConstant.TREE_PROPS_ID, classify.getId());
-            tempOption.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
-            tempOption.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
+            Map<String, Object> tempOption = new HashMap<>(6);
+            tempOption.put(UdConstant.PROPS_VALUE, classify.getId());
+            tempOption.put(UdConstant.PROPS_ID, classify.getId());
+            tempOption.put(UdConstant.PROPS_LABEL, classify.getDesignation());
+            tempOption.put(UdConstant.PROPS_CHILDREN, new ArrayList<>());
             temp.put(classify.getId(), tempOption);
+            if (classify.getParentId() != null){
+                parentId.add(classify.getParentId());
+            }
             if (null == classify.getParentId()){
                 firstLevel.add(classify);
             } else {
@@ -122,7 +127,10 @@ public class ClassifyServiceImpl implements ClassifyService {
             }
         }
         for (Classify child : children) {
-            ((List)temp.get(child.getParentId()).get(UdConstant.TREE_PROPS_CHILDREN)).add(temp.get(child.getId()));
+            ((List)temp.get(child.getParentId()).get(UdConstant.PROPS_CHILDREN)).add(temp.get(child.getId()));
+            if (!parentId.contains(child.getId())){
+                temp.get(child.getId()).remove(UdConstant.PROPS_CHILDREN);
+            }
         }
         for (Classify classify : firstLevel) {
             result.add(temp.get(classify.getId()));

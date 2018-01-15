@@ -1,10 +1,27 @@
 package com.lmt.data.unstructured.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author MT-Lin
  * @date 2018/1/7 8:30
  */
 public class UdConstant {
+
+    static {
+        UdConstant.DOCUMENT_EXTENSION.add(".txt");
+        UdConstant.DOCUMENT_EXTENSION.add(".pdf");
+        UdConstant.DOCUMENT_EXTENSION.add(".doc");
+        UdConstant.DOCUMENT_EXTENSION.add(".docx");
+        UdConstant.DOCUMENT_EXTENSION.add(".xls");
+        UdConstant.DOCUMENT_EXTENSION.add(".xlxs");
+    }
+
+    /**
+     * 文档类型后缀名
+     */
+    public static List<String> DOCUMENT_EXTENSION = new ArrayList<>();
 
     /**
      * 文件下载连接
@@ -62,7 +79,7 @@ public class UdConstant {
     public static final String RESULT_DATA = "data";
 
     /**
-     * 操作姐夫哦成功编码
+     * 操作结果成功编码
      */
     public static final int RESULT_CORRECT_CODE = 3;
 
@@ -77,24 +94,29 @@ public class UdConstant {
     public static final String RESOURCE_TEMP = "unstructured.data.resource.upload";
 
     /**
-     * 树形控件的子节点的ID标识
+     * 控件节点的value标识
      */
-    public static final String TREE_PROPS_ID = "id";
+    public static final String PROPS_VALUE = "value";
 
     /**
-     * 树形控件的子节点的CODE标识
+     * 控件节点的ID标识
      */
-    public static final String TREE_PROPS_CODE = "code";
+    public static final String PROPS_ID = "id";
 
     /**
-     * 树形控件的子节点属性名称
+     * 控件节点的CODE标识
      */
-    public static final String TREE_PROPS_CHILDREN = "children";
+    public static final String PROPS_CODE = "code";
 
     /**
-     * 树形控件显示节点名的属性名称
+     * 控件节点属性名称
      */
-    public static final String TREE_PROPS_LABEL = "label";
+    public static final String PROPS_CHILDREN = "children";
+
+    /**
+     * 控件显示节点名的属性名称
+     */
+    public static final String PROPS_LABEL = "label";
 
     /**
      * 存储分页查找数据总数的变量名

@@ -126,9 +126,9 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
         Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
         for (DigitalDictionary classify : all) {
             Map<String, Object> tempOption = new HashMap<>(3);
-            tempOption.put(UdConstant.TREE_PROPS_CODE, classify.getCode());
-            tempOption.put(UdConstant.TREE_PROPS_LABEL, classify.getDesignation());
-            tempOption.put(UdConstant.TREE_PROPS_CHILDREN, new ArrayList<>());
+            tempOption.put(UdConstant.PROPS_CODE, classify.getCode());
+            tempOption.put(UdConstant.PROPS_LABEL, classify.getDesignation());
+            tempOption.put(UdConstant.PROPS_CHILDREN, new ArrayList<>());
             temp.put(classify.getCode(), tempOption);
             if (null == classify.getParentCode()){
                 firstLevel.add(classify);
@@ -137,7 +137,7 @@ public class DigitalDictionaryServiceImpl implements DigitalDictionaryService{
             }
         }
         for (DigitalDictionary child : children) {
-            ((List)temp.get(child.getParentCode()).get(UdConstant.TREE_PROPS_CHILDREN)).add(temp.get(child.getCode()));
+            ((List)temp.get(child.getParentCode()).get(UdConstant.PROPS_CHILDREN)).add(temp.get(child.getCode()));
         }
         for (DigitalDictionary classify : firstLevel) {
             result.add(temp.get(classify.getCode()));
