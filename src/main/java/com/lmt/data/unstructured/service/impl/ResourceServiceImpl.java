@@ -5,6 +5,7 @@ import com.lmt.data.unstructured.entity.ResourceTemp;
 import com.lmt.data.unstructured.entity.search.ResourceSearch;
 import com.lmt.data.unstructured.repository.ResourceRepository;
 import com.lmt.data.unstructured.repository.ResourceTempRepository;
+import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.ResourceService;
 import com.lmt.data.unstructured.service.TagService;
 import com.lmt.data.unstructured.util.*;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
@@ -36,16 +36,15 @@ public class ResourceServiceImpl implements ResourceService {
     private TagService tagService;
 
     @Autowired
-    private EntityManagerQuery entityManagerQuery;
+    private ResourceEsService resourceEsService;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerQuery entityManagerQuery;
 
     @Autowired
     private FileUtil fileUtil;
 
     private Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
-
 
     @Override
     public Map save(Resource resource) {
@@ -109,7 +108,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Map addResourceFromResourceTemp(ResourceTemp resourceTemp) {
+    public Map addResourceFromResourceTemp(ResourceTemp resourceTemp, String auditRemark) {
         logger.info("开始将待审核资源 [ID={}]信息复制到资源表", resourceTemp.getId());
         ResourceTemp exist = this.resourceTempRepository.findOne(resourceTemp.getId());
         if (null == exist){
@@ -123,26 +122,24 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setResourceFileName(resourceFileName);
         resource.setId(null);
         Map result = this.save(resource);
-        if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
-                != UdConstant.RESULT_CORRECT_CODE){
+        if (!CheckResult.isOK(result)){
             return result;
         }
-        String resourceId = result.get(UdConstant.RESULT_DATA).toString();
         // 更新待审核资源记录的 resource_id
-        resourceTemp.setResourceId(resourceId);
-        ResourceTemp old = this.resourceTempRepository.findOne(resourceTemp.getId());
-        BeanUtils.copyProperties(resourceTemp, old, EntityUtils.getNullPropertyNames(resourceTemp));
-        entityManager.merge(old);
-        this.resourceTempRepository.save(old);
-
+        exist.setResourceId(resource.getId());
+        this.resourceTempRepository.save(exist);
         // 将待审核资源的标签添加到资源标签
-        Map saveTagResult = this.tagService.addTag(resourceTemp.getId(), resourceId);
-        if (!CheckResult.isOK(saveTagResult)) {
-            return saveTagResult;
+        result = this.tagService.addTag(resourceTemp.getId(), resource.getId());
+        if (!CheckResult.isOK(result)) {
+            return result;
         }
         logger.info("待审核资源 [ID={}] 信息复制结束", resourceTemp.getId());
-        // TODO 将数据复制到ES提供搜索
-
-        return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 复制成功", resource.getId());
+        result = this.resourceEsService.saveResourceES(resource, auditRemark);
+        if (!CheckResult.isOK(result)) {
+            return result;
+        }
+        // 更新es_id
+        this.resourceRepository.save(resource);
+        return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 添加成功", resource.getId());
     }
 }

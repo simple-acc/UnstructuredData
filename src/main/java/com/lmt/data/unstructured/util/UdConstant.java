@@ -7,6 +7,26 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
+     * PDF扩展名
+     */
+    public static final String FILE_TYPE_PDF = "pdf";
+
+    /**
+     * 文件扩展名分隔符
+     */
+    public static final String FILE_EXTENSION_SPLIT = ".";
+
+    /**
+     * ES索引
+     */
+    public static final String ES_INDEX = "unstructured_data";
+
+    /**
+     * ES资源类型
+     */
+    public static final String ES_RESOURCE_TYPE = "resource";
+
+    /**
      * ES节点分隔符
      */
     public static final String CLUSTER_NODES_SPLIT = ",";

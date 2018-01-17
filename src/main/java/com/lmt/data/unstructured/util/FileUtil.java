@@ -1,5 +1,9 @@
 package com.lmt.data.unstructured.util;
 
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
+import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
+import com.itextpdf.text.pdf.parser.TextExtractionStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author MT-Lin
@@ -18,8 +24,52 @@ public class FileUtil {
 
     private Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
+    private List<String> resolutionFileTypes;
+
     @Autowired
     private Environment environment;
+
+    {
+        resolutionFileTypes = new ArrayList<>();
+        resolutionFileTypes.add("pdf");
+        resolutionFileTypes.add("doc");
+        resolutionFileTypes.add("docx");
+        resolutionFileTypes.add("xls");
+        resolutionFileTypes.add("xlsx");
+        resolutionFileTypes.add("txt");
+    }
+
+    public String getFileContent(String resourceFileName) {
+        if (!this.existResourceFile(resourceFileName)){
+            logger.error("资源文件 [resourceFileName={}] 不存在，获取资源内容失败", resourceFileName);
+            return null;
+        }
+        String extention = resourceFileName.substring(resourceFileName.lastIndexOf(UdConstant.FILE_EXTENSION_SPLIT) + 1);
+        if (!this.resolutionFileTypes.contains(extention)){
+            return null;
+        }
+        if (extention.endsWith(UdConstant.FILE_TYPE_PDF)){
+            return this.getPdfFileContent(resourceFileName);
+        }
+        return null;
+    }
+
+    private String getPdfFileContent(String resourceFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            PdfReader pdfReader = new PdfReader(this.getFullFilePath(resourceFileName));
+            PdfReaderContentParser parser = new PdfReaderContentParser(pdfReader);
+            TextExtractionStrategy strategy;
+            for (int i = 1; i < pdfReader.getNumberOfPages(); i++){
+                strategy = parser.processContent(i, new SimpleTextExtractionStrategy());
+                stringBuilder.append(strategy.getResultantText());
+            }
+            pdfReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
 
     public String getFullFilePath(String fileName){
         String filePath = environment.getProperty(UdConstant.RESOURCE_TEMP);

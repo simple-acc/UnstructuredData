@@ -36,7 +36,8 @@ public interface ResourceService {
     /**
      * @apiNote 从待审核资源添加资源信息
      * @param resourceTemp 待审核资源
+     * @param auditRemark 审核备注
      * @return Map
      */
-    Map addResourceFromResourceTemp(ResourceTemp resourceTemp);
+    Map addResourceFromResourceTemp(ResourceTemp resourceTemp, String auditRemark);
 }

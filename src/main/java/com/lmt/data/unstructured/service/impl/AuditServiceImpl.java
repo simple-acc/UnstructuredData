@@ -75,7 +75,7 @@ public class AuditServiceImpl implements AuditService {
         }
         // 审核通过，处理资源信息
         if (UdConstant.AUDIT_STATUS_PASS.equals(audit.getStatus())){
-            Map result = this.handleSystemResource(audit.getResourceTemps());
+            Map result = this.handleSystemResource(audit.getResourceTemps(), audit.getRemark());
             if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
                     != UdConstant.RESULT_CORRECT_CODE) {
                 return result;
@@ -109,14 +109,15 @@ public class AuditServiceImpl implements AuditService {
     /**
      * @apiNote 处理资源表
      * @param resourceTemps 待审核资源数据
+     * @param auditRemark 审核备注
      * @return Map
      */
-    private Map handleSystemResource(List<ResourceTemp> resourceTemps) {
+    private Map handleSystemResource(List<ResourceTemp> resourceTemps, String auditRemark) {
         for (ResourceTemp resourceTemp : resourceTemps) {
             Map result = null;
             if (UdConstant.AUDIT_OPERATION_ADD.equals(resourceTemp.getOperationCode())){
                 // 新增资源通过审核
-                result = this.resourceService.addResourceFromResourceTemp(resourceTemp);
+                result = this.resourceService.addResourceFromResourceTemp(resourceTemp, auditRemark);
             }
             if (UdConstant.AUDIT_OPERATION_DELETE.equals(resourceTemp.getOperationCode())){
                 // 删除资源通过审核

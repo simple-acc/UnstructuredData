@@ -178,4 +178,9 @@ public class UserInfoServiceImpl implements UserInfoService{
         }
         return ResultData.newOK("密码重置成功");
     }
+
+    @Override
+    public String getUserNameById(String id) {
+        return this.userInfoRepository.findOne(id).getUserName();
+    }
 }

@@ -61,4 +61,11 @@ public interface UserInfoService {
      * @return Map
      */
     Map resetPassword(List<UserInfo> userInfoList);
+
+    /**
+     * @apiNote 根据ID获取用户名
+     * @param id 用户ID
+     * @return 用户名
+     */
+    String getUserNameById(String id);
 }

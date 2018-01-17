@@ -15,6 +15,12 @@ import java.util.Date;
 public class Resource extends BaseEntity {
 
     /**
+     * elasticsearchId
+     */
+    @Column(name = "es_id", length = 20)
+    private String esId;
+
+    /**
      * 作者
      */
     @Column(name="author_id", nullable = false, length = 36)
@@ -81,6 +87,14 @@ public class Resource extends BaseEntity {
     @CreationTimestamp
     @Column(name = "upload_time", nullable = false, updatable = false)
     private Date uploadTime;
+
+    public String getEsId() {
+        return esId;
+    }
+
+    public void setEsId(String esId) {
+        this.esId = esId;
+    }
 
     public String getAuthorId() {
         return authorId;
