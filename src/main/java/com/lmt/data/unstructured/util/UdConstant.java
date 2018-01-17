@@ -1,27 +1,20 @@
 package com.lmt.data.unstructured.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author MT-Lin
  * @date 2018/1/7 8:30
  */
 public class UdConstant {
 
-    static {
-        UdConstant.DOCUMENT_EXTENSION.add(".txt");
-        UdConstant.DOCUMENT_EXTENSION.add(".pdf");
-        UdConstant.DOCUMENT_EXTENSION.add(".doc");
-        UdConstant.DOCUMENT_EXTENSION.add(".docx");
-        UdConstant.DOCUMENT_EXTENSION.add(".xls");
-        UdConstant.DOCUMENT_EXTENSION.add(".xlxs");
-    }
+    /**
+     * ES节点分隔符
+     */
+    public static final String CLUSTER_NODES_SPLIT = ",";
 
     /**
-     * 文档类型后缀名
+     * ES地址和端口号分隔符
      */
-    public static List<String> DOCUMENT_EXTENSION = new ArrayList<>();
+    public static final String ADDRESS_PORT_SPLIT = ":";
 
     /**
      * 文件下载连接

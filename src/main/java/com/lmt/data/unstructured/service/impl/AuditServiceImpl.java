@@ -3,8 +3,6 @@ package com.lmt.data.unstructured.service.impl;
 import com.lmt.data.unstructured.entity.*;
 import com.lmt.data.unstructured.entity.search.AuditSearch;
 import com.lmt.data.unstructured.repository.AuditRepository;
-import com.lmt.data.unstructured.repository.ResourceTempRepository;
-import com.lmt.data.unstructured.repository.TagTempRepository;
 import com.lmt.data.unstructured.service.AuditService;
 import com.lmt.data.unstructured.service.ResourceService;
 import com.lmt.data.unstructured.service.TagService;
@@ -32,10 +30,7 @@ public class AuditServiceImpl implements AuditService {
     private AuditRepository auditRepository;
 
     @Autowired
-    private TagTempRepository tagTempRepository;
-
-    @Autowired
-    private ResourceTempRepository resourceTempRepository;
+    private ResourceService resourceService;
 
     @Autowired
     private RedisCache redisCache;
@@ -44,15 +39,7 @@ public class AuditServiceImpl implements AuditService {
     private EntityManager entityManager;
 
     @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private ResourceService resourceService;
-
-    @Autowired
     private EntityManagerQuery entityManagerQuery;
-
-    private Logger logger = LoggerFactory.getLogger(AuditServiceImpl.class);
 
     @Override
     public Map save(Audit audit) {
@@ -129,7 +116,7 @@ public class AuditServiceImpl implements AuditService {
             Map result = null;
             if (UdConstant.AUDIT_OPERATION_ADD.equals(resourceTemp.getOperationCode())){
                 // 新增资源通过审核
-                result = this.copyToSystemResource(resourceTemp);
+                result = this.resourceService.addResourceFromResourceTemp(resourceTemp);
             }
             if (UdConstant.AUDIT_OPERATION_DELETE.equals(resourceTemp.getOperationCode())){
                 // 删除资源通过审核
@@ -137,11 +124,9 @@ public class AuditServiceImpl implements AuditService {
             }
             assert null != result;
             assert null != result.get(UdConstant.RESULT_CODE);
-            if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
-                    != UdConstant.RESULT_CORRECT_CODE){
+            if (!CheckResult.isOK(result)){
                 return result;
             }
-            // TODO 把数据复制到ElasticSearch
         }
         return ResultData.newOK("资源数据处理成功");
     }
@@ -154,64 +139,6 @@ public class AuditServiceImpl implements AuditService {
      */
     private Map deleteSystemResource(ResourceTemp resourceTemp) {
         return null;
-    }
-
-    /**
-     * @apiNote 将待审核资源信息复制到资源表
-     * @param resourceTemp 审核通过的待审核资源
-     * @return Map
-     */
-    private Map copyToSystemResource(ResourceTemp resourceTemp) {
-        logger.info("开始将待审核资源 [ID="+resourceTemp.getId()+"]信息复制到资源表");
-        ResourceTemp exist = this.resourceTempRepository.findOne(resourceTemp.getId());
-        if (null == exist){
-            return ResultData.newError("审核的资源 [ID="+resourceTemp.getId()+"] 不存在");
-        }
-        // 复制待审核资源
-        Resource resource = new Resource();
-        BeanUtils.copyProperties(exist, resource, EntityUtils.getNullPropertyNames(exist));
-        String expandedName = exist.getDesignation().substring(exist.getDesignation().lastIndexOf("."));
-        String resourceFileName = exist.getId() + expandedName;
-        resource.setResourceFileName(resourceFileName);
-        resource.setId(null);
-        Map result = this.resourceService.save(resource);
-        if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
-                != UdConstant.RESULT_CORRECT_CODE){
-            return result;
-        }
-        // 更新待审核资源记录的 resource_id
-        resourceTemp.setResourceId(result.get(UdConstant.RESULT_DATA).toString());
-        ResourceTemp old = this.resourceTempRepository.findOne(resourceTemp.getId());
-        BeanUtils.copyProperties(resourceTemp, old, EntityUtils.getNullPropertyNames(resourceTemp));
-        entityManager.merge(old);
-        this.resourceTempRepository.save(old);
-
-        // 将待审核资源的标签复制到资源标签
-        this.copyToSystemResourceTags(resourceTemp.getId(), result.get(UdConstant.RESULT_DATA).toString());
-        logger.info("待审核资源 [ID={}] 信息复制结束", resourceTemp.getId());
-        return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 复制成功", resource.getId());
-    }
-
-    /**
-     * @apiNote 将待审核资源的标签复制到资源标签表
-     * @param resourceTempId 待审核资源ID
-     * @param resourceId 资源ID
-     */
-    private void copyToSystemResourceTags(String resourceTempId, String resourceId) {
-        TagTemp exist = this.tagTempRepository.findByResourceTempId(resourceTempId);
-        if (null == exist){
-            return;
-        }
-        Tag tag = new Tag();
-        tag.setTag(exist.getTag());
-        tag.setCreateTime(exist.getCreateTime());
-        tag.setResourceId(resourceId);
-        Map result = this.tagService.save(tag);
-        if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
-                != UdConstant.RESULT_CORRECT_CODE){
-            logger.error("资源 [ID="+resourceId+"] 标签保存失败："
-                    + result.get(UdConstant.RESULT_MSG));
-        }
     }
 
 }

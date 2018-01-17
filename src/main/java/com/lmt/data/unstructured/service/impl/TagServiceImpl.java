@@ -1,9 +1,12 @@
 package com.lmt.data.unstructured.service.impl;
 
 import com.lmt.data.unstructured.entity.Tag;
+import com.lmt.data.unstructured.entity.TagTemp;
 import com.lmt.data.unstructured.repository.TagRepository;
+import com.lmt.data.unstructured.repository.TagTempRepository;
 import com.lmt.data.unstructured.service.TagService;
 import com.lmt.data.unstructured.util.ResultData;
+import com.lmt.data.unstructured.util.UdConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private TagTempRepository tagTempRepository;
+
     @Override
     public Map save(Tag tag) {
         Tag exist = tagRepository.findByResourceId(tag.getResourceId());
@@ -30,5 +36,18 @@ public class TagServiceImpl implements TagService {
             return ResultData.newError("系统资源标签保存失败");
         }
         return ResultData.newOK("系统资源标签保存成功");
+    }
+
+    @Override
+    public Map addTag(String resourceTempId, String resourceId) {
+        TagTemp exist = this.tagTempRepository.findByResourceTempId(resourceTempId);
+        if (null == exist){
+            return ResultData.newError("待审核资源信息不存在");
+        }
+        Tag tag = new Tag();
+        tag.setTag(exist.getTag());
+        tag.setCreateTime(exist.getCreateTime());
+        tag.setResourceId(resourceId);
+        return this.save(tag);
     }
 }

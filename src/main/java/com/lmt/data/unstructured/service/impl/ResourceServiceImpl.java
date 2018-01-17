@@ -1,16 +1,21 @@
 package com.lmt.data.unstructured.service.impl;
 
 import com.lmt.data.unstructured.entity.Resource;
+import com.lmt.data.unstructured.entity.ResourceTemp;
 import com.lmt.data.unstructured.entity.search.ResourceSearch;
 import com.lmt.data.unstructured.repository.ResourceRepository;
+import com.lmt.data.unstructured.repository.ResourceTempRepository;
 import com.lmt.data.unstructured.service.ResourceService;
-import com.lmt.data.unstructured.util.EntityManagerQuery;
-import com.lmt.data.unstructured.util.FileUtil;
-import com.lmt.data.unstructured.util.ResultData;
+import com.lmt.data.unstructured.service.TagService;
+import com.lmt.data.unstructured.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +30,22 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceRepository resourceRepository;
 
     @Autowired
+    private ResourceTempRepository resourceTempRepository;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
     private EntityManagerQuery entityManagerQuery;
 
     @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
     private FileUtil fileUtil;
+
+    private Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
+
 
     @Override
     public Map save(Resource resource) {
@@ -89,5 +106,43 @@ public class ResourceServiceImpl implements ResourceService {
             }
         }
         return ResultData.newOK("专题修改成功");
+    }
+
+    @Override
+    public Map addResourceFromResourceTemp(ResourceTemp resourceTemp) {
+        logger.info("开始将待审核资源 [ID={}]信息复制到资源表", resourceTemp.getId());
+        ResourceTemp exist = this.resourceTempRepository.findOne(resourceTemp.getId());
+        if (null == exist){
+            return ResultData.newError("审核的资源 [ID="+resourceTemp.getId()+"] 在数据库中不存在");
+        }
+        // 复制待审核资源
+        Resource resource = new Resource();
+        BeanUtils.copyProperties(exist, resource, EntityUtils.getNullPropertyNames(exist));
+        String expandedName = exist.getDesignation().substring(exist.getDesignation().lastIndexOf("."));
+        String resourceFileName = exist.getId() + expandedName;
+        resource.setResourceFileName(resourceFileName);
+        resource.setId(null);
+        Map result = this.save(resource);
+        if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
+                != UdConstant.RESULT_CORRECT_CODE){
+            return result;
+        }
+        String resourceId = result.get(UdConstant.RESULT_DATA).toString();
+        // 更新待审核资源记录的 resource_id
+        resourceTemp.setResourceId(resourceId);
+        ResourceTemp old = this.resourceTempRepository.findOne(resourceTemp.getId());
+        BeanUtils.copyProperties(resourceTemp, old, EntityUtils.getNullPropertyNames(resourceTemp));
+        entityManager.merge(old);
+        this.resourceTempRepository.save(old);
+
+        // 将待审核资源的标签添加到资源标签
+        Map saveTagResult = this.tagService.addTag(resourceTemp.getId(), resourceId);
+        if (!CheckResult.isOK(saveTagResult)) {
+            return saveTagResult;
+        }
+        logger.info("待审核资源 [ID={}] 信息复制结束", resourceTemp.getId());
+        // TODO 将数据复制到ES提供搜索
+
+        return ResultData.newOK("待审核资源 [ID=" + resourceTemp.getId() + "] 复制成功", resource.getId());
     }
 }

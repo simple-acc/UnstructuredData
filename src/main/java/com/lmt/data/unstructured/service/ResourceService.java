@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.service;
 
 import com.lmt.data.unstructured.entity.Resource;
+import com.lmt.data.unstructured.entity.ResourceTemp;
 import com.lmt.data.unstructured.entity.search.ResourceSearch;
 
 import java.util.Map;
@@ -31,4 +32,11 @@ public interface ResourceService {
      * @return Map
      */
     Map modifyDissertation(ResourceSearch resourceSearch);
+
+    /**
+     * @apiNote 从待审核资源添加资源信息
+     * @param resourceTemp 待审核资源
+     * @return Map
+     */
+    Map addResourceFromResourceTemp(ResourceTemp resourceTemp);
 }

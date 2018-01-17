@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class CheckResult {
 
-    public static boolean isCorrect(Map result){
+    public static boolean isOK(Map result){
         return Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString())
                 == UdConstant.RESULT_CORRECT_CODE;
     }

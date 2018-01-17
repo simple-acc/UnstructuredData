@@ -16,4 +16,12 @@ public interface TagService {
      * @return Map
      */
     Map save(Tag tag);
+
+    /**
+     * @apiNote 添加系统标签
+     * @param resourceTempId 待审核资源ID
+     * @param resourceId 资源ID
+     * @return Map
+     */
+    Map addTag(String resourceTempId, String resourceId);
 }

@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +84,7 @@ public class ResourceTempApi {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         for (MultipartFile multipartFile : files) {
             Map result = this.upload(multipartFile, request);
-            if (!CheckResult.isCorrect(result)){
+            if (!CheckResult.isOK(result)){
                 return result;
             }
         }
