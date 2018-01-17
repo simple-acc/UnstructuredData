@@ -4,6 +4,19 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
 import com.itextpdf.text.pdf.parser.TextExtractionStrategy;
+import org.apache.poi.POITextExtractor;
+import org.apache.poi.extractor.ExtractorFactory;
+import org.apache.poi.hslf.extractor.PowerPointExtractor;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,20 +36,8 @@ public class FileUtil {
 
     private Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
-    private List<String> resolutionFileTypes;
-
     @Autowired
     private Environment environment;
-
-    {
-        resolutionFileTypes = new ArrayList<>();
-        resolutionFileTypes.add("pdf");
-        resolutionFileTypes.add("doc");
-        resolutionFileTypes.add("docx");
-        resolutionFileTypes.add("xls");
-        resolutionFileTypes.add("xlsx");
-        resolutionFileTypes.add("txt");
-    }
 
     public String getFileContent(String resourceFileName) {
         if (!this.existResourceFile(resourceFileName)){
@@ -45,19 +45,234 @@ public class FileUtil {
             return null;
         }
         String extention = resourceFileName.substring(resourceFileName.lastIndexOf(UdConstant.FILE_EXTENSION_SPLIT) + 1);
-        if (!this.resolutionFileTypes.contains(extention)){
-            return null;
+        String filePath = this.getFullFilePath(resourceFileName);
+        String content = null;
+        switch (extention){
+            case UdConstant.FILE_TYPE_PDF:
+                content =  this.getPdfFileContent(filePath);
+                break;
+            case UdConstant.FILE_TYPE_DOC:
+                content = this.getDocFileContent(filePath);
+                break;
+            case UdConstant.FILE_TYPE_DOCX:
+                content = this.getDocxFileContent(filePath);
+                break;
+            case UdConstant.FILE_TYPE_XLS:
+            case UdConstant.FILE_TYPE_XLSX:
+                content = this.getExcelFileContent(filePath);
+                break;
+            case UdConstant.FILE_TYPE_TXT:
+                content = this.getTxtFileContent(filePath);
+                break;
+            case UdConstant.FILE_TYPE_PPT:
+                content = this.getPptFileContent(filePath);
+                break;
+            case UdConstant.FILE_TYPE_PPTX:
+                content = this.getPptxFileContent(filePath);
+                break;
+            default:
+                break;
         }
-        if (extention.endsWith(UdConstant.FILE_TYPE_PDF)){
-            return this.getPdfFileContent(resourceFileName);
-        }
-        return null;
+        return content;
     }
 
-    private String getPdfFileContent(String resourceFileName) {
+    private String getPptxFileContent(String filePath) {
+        // TODO 所有的Office文档，包括2007和2007以下版本的文档都可以使用该方法读取内容，坑爹啊(* ￣︿￣)
+        File file = new File(filePath);
+        POITextExtractor extractor = null;
+        String content = null;
+        try {
+            extractor = ExtractorFactory.createExtractor(file);
+            content = extractor.getText();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != extractor){
+                try {
+                    extractor.close();
+                } catch (IOException e) {
+                    logger.error("读取pptx文件之后关闭POITextExtractor出现IO异常");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content;
+    }
+
+    private String getPptFileContent(String filePath) {
+        PowerPointExtractor extractor = null;
+        String content = null;
+        try {
+            extractor = new PowerPointExtractor(filePath);
+            content = extractor.getText(true, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != extractor){
+                try {
+                    extractor.close();
+                } catch (IOException e) {
+                    logger.error("读取ppt文件之后关闭 PowerPointExtractor 出现IO异常");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content;
+    }
+
+    private String getTxtFileContent(String filePath) {
+        File file = new File(filePath);
+        FileInputStream fis = null;
+        InputStreamReader isr = null;
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            fis = new FileInputStream(file);
+            isr = new InputStreamReader(fis, EncodingDetect.getJavaEncode(filePath));
+            br = new BufferedReader(isr);
+            String line;
+            while ((line = br.readLine()) != null){
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != br){
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    logger.error("读取txt文件之后关闭BufferReader出现IO异常");
+                    e.printStackTrace();
+                }
+            }
+            if (null != isr){
+                try {
+                    isr.close();
+                } catch (IOException e) {
+                    logger.error("读取txt文件之后关闭InputStreamReader出现IO异常");
+                    e.printStackTrace();
+                }
+            }
+            if (null != fis){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("读取txt文件之后关闭FileInputStream出现IO异常");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    private String getExcelFileContent(String filePath) {
+        File file = new File(filePath);
+        Workbook workbook = null;
+        StringBuilder content = new StringBuilder();
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            if (filePath.endsWith(UdConstant.FILE_TYPE_XLS)){
+                workbook = new HSSFWorkbook(fis);
+            } else {
+                workbook = new XSSFWorkbook(file);
+            }
+            for (Sheet rows : workbook) {
+                for (Row row : rows) {
+                    for (Cell cell : row) {
+                        switch (cell.getCellType()) {
+                            case HSSFCell.CELL_TYPE_FORMULA :
+                                break;
+                            case HSSFCell.CELL_TYPE_NUMERIC :
+                                content.append(
+                                        cell.getNumericCellValue())
+                                        .append('\t');
+                                break;
+                            case HSSFCell.CELL_TYPE_STRING :
+                                content.append(
+                                        cell.getStringCellValue())
+                                        .append('\t');
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != fis){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("获取Excel资源文件内容之后关闭文件输入流出现异常");
+                    e.printStackTrace();
+                }
+            }
+            if (null != workbook){
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    logger.error("获取Excel资源文件内容之后关闭workbook出现异常");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content.toString();
+    }
+
+    private String getDocxFileContent(String filePath) {
+        File file = new File(filePath);
+        String content = null;
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            XWPFDocument document = new XWPFDocument(fis);
+            XWPFWordExtractor extractor = new XWPFWordExtractor(document);
+            content = extractor.getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != fis){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("获取docx资源文件内容之后关闭文件输入流出现异常");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content;
+    }
+
+    private String getDocFileContent(String filePath) {
+        File file = new File(filePath);
+        String content = null;
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            WordExtractor wordExtractor = new WordExtractor(fis);
+            content = wordExtractor.getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != fis){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("获取doc资源文件内容之后关闭文件输入流出现异常");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content;
+    }
+
+    private String getPdfFileContent(String filePath) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            PdfReader pdfReader = new PdfReader(this.getFullFilePath(resourceFileName));
+            PdfReader pdfReader = new PdfReader(filePath);
             PdfReaderContentParser parser = new PdfReaderContentParser(pdfReader);
             TextExtractionStrategy strategy;
             for (int i = 1; i < pdfReader.getNumberOfPages(); i++){

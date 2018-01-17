@@ -34,6 +34,11 @@ public class ResourceEsServiceImpl implements ResourceEsService {
     @Autowired
     private TransportClient client;
 
+    /**
+     * resource的ES类型
+     */
+    private final String ES_TYPE = "resource";
+
     @Override
     public Map saveResourceES(Resource resource, String auditRemark) {
         ResourceEs resourceEs = new ResourceEs();
@@ -43,7 +48,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         resourceEs.setAuthor(this.userInfoService.getUserNameById(resource.getAuthorId()));
         resourceEs.setContent(fileUtil.getFileContent(resource.getResourceFileName()));
         resourceEs.setAuditRemark(auditRemark);
-        IndexResponse response = client.prepareIndex(UdConstant.ES_INDEX, UdConstant.ES_RESOURCE_TYPE)
+        IndexResponse response = client.prepareIndex(UdConstant.ES_INDEX, this.ES_TYPE)
                 .setSource(JSON.toJSONString(resourceEs), XContentType.JSON)
                 .get();
         if (null == resource.getId()){
@@ -51,5 +56,9 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         }
         resource.setEsId(response.getId());
         return ResultData.newOK("数据成功保存到ES");
+    }
+
+    public void s(){
+        System.err.println(this.ES_TYPE);
     }
 }

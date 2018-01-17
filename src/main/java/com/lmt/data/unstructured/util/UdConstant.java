@@ -7,8 +7,15 @@ package com.lmt.data.unstructured.util;
 public class UdConstant {
 
     /**
-     * PDF扩展名
+     * 文件扩展名
      */
+    public static final String FILE_TYPE_TXT = "txt";
+    public static final String FILE_TYPE_XLS = "xls";
+    public static final String FILE_TYPE_XLSX = "xlsx";
+    public static final String FILE_TYPE_DOC = "doc";
+    public static final String FILE_TYPE_DOCX = "docx";
+    public static final String FILE_TYPE_PPT = "ppt";
+    public static final String FILE_TYPE_PPTX = "pptx";
     public static final String FILE_TYPE_PDF = "pdf";
 
     /**
@@ -20,11 +27,6 @@ public class UdConstant {
      * ES索引
      */
     public static final String ES_INDEX = "unstructured_data";
-
-    /**
-     * ES资源类型
-     */
-    public static final String ES_RESOURCE_TYPE = "resource";
 
     /**
      * ES节点分隔符
