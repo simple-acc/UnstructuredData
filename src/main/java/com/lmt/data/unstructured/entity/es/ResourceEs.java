@@ -3,6 +3,7 @@ package com.lmt.data.unstructured.entity.es;
 import com.lmt.data.unstructured.base.BaseToString;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @apiNote 资源ES实体
@@ -40,6 +41,11 @@ public class ResourceEs extends BaseToString{
      * 资源描述
      */
     private String description;
+
+    /**
+     * 资源标签
+     */
+    private List<String> tags;
 
     /**
      * 审核备注
@@ -117,6 +123,14 @@ public class ResourceEs extends BaseToString{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public String getAuditRemark() {

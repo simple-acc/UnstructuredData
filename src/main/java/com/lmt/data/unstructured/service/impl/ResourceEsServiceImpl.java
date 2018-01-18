@@ -2,7 +2,9 @@ package com.lmt.data.unstructured.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.lmt.data.unstructured.entity.Resource;
+import com.lmt.data.unstructured.entity.Tag;
 import com.lmt.data.unstructured.entity.es.ResourceEs;
+import com.lmt.data.unstructured.repository.TagRepository;
 import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.UserInfoService;
 import com.lmt.data.unstructured.util.EntityUtils;
@@ -16,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -30,6 +33,9 @@ public class ResourceEsServiceImpl implements ResourceEsService {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @Autowired
     private TransportClient client;
@@ -48,6 +54,10 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         resourceEs.setAuthor(this.userInfoService.getUserNameById(resource.getAuthorId()));
         resourceEs.setContent(fileUtil.getFileContent(resource.getResourceFileName()));
         resourceEs.setAuditRemark(auditRemark);
+        Tag tag = tagRepository.findByResourceId(resource.getId());
+        if (null != tag){
+            resourceEs.setTags(Arrays.asList(tag.getTag().split(",")));
+        }
         IndexResponse response = client.prepareIndex(UdConstant.ES_INDEX, this.ES_TYPE)
                 .setSource(JSON.toJSONString(resourceEs), XContentType.JSON)
                 .get();

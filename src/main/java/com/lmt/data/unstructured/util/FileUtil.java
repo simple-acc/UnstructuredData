@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.List;
 
 /**
  * @author MT-Lin
@@ -44,7 +43,9 @@ public class FileUtil {
             logger.error("资源文件 [resourceFileName={}] 不存在，获取资源内容失败", resourceFileName);
             return null;
         }
-        String extention = resourceFileName.substring(resourceFileName.lastIndexOf(UdConstant.FILE_EXTENSION_SPLIT) + 1);
+        String extention = resourceFileName
+                .substring(resourceFileName.lastIndexOf(UdConstant.FILE_EXTENSION_SPLIT) + 1)
+                .toLowerCase();
         String filePath = this.getFullFilePath(resourceFileName);
         String content = null;
         switch (extention){
@@ -77,7 +78,7 @@ public class FileUtil {
     }
 
     private String getPptxFileContent(String filePath) {
-        // TODO 所有的Office文档，包括2007和2007以下版本的文档都可以使用该方法读取内容，坑爹啊(* ￣︿￣)
+        // TODO 所有的Office文档，包括2007及以下版本的文档都可以使用该方法读取内容，坑爹啊(* ￣︿￣)
         File file = new File(filePath);
         POITextExtractor extractor = null;
         String content = null;
