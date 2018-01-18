@@ -86,7 +86,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceSearch.setParamsCount(4);
         }
         sql.append("ORDER BY r.upload_time DESC, r.designation DESC ");
-        Map result = this.entityManagerQuery.paginationSearch("resource", sql, resourceSearch);
+        Map result = this.entityManagerQuery.paginationSearch(sql, resourceSearch);
         return ResultData.newOK("查询资源成功", result);
     }
 

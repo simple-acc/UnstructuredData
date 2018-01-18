@@ -49,7 +49,7 @@ public class LoginLogServiceImpl implements LoginLogService {
             loginLogSearch.setParamsCount(1);
         }
         sql.append("ORDER BY ll.login_time DESC ");
-        Map result = entityManagerQuery.paginationSearch("login_log", sql, loginLogSearch);
+        Map result = entityManagerQuery.paginationSearch(sql, loginLogSearch);
         return ResultData.newOK("日志查询成功", result);
     }
 }

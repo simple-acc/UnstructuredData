@@ -102,7 +102,7 @@ public class AuditServiceImpl implements AuditService {
             sql.append("AND (a.remark LIKE ? OR rt.designation LIKE ? ) ");
             auditSearch.setParamsCount(2);
         }
-        Map result = this.entityManagerQuery.paginationSearch("audit", sql, auditSearch);
+        Map result = this.entityManagerQuery.paginationSearch(sql, auditSearch);
         return ResultData.newOK("审核记录查询成功", result);
     }
 

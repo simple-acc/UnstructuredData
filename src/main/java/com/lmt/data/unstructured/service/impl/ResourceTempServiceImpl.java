@@ -62,7 +62,7 @@ public class ResourceTempServiceImpl implements ResourceTempService {
             sql.append("AND (ui.user_name LIKE ? OR rt.designation LIKE ? OR rt.description LIKE ? ) ");
             resourceTempSearch.setParamsCount(3);
         }
-        Map result = this.entityManagerQuery.paginationSearch("resource_temp", sql, resourceTempSearch);
+        Map result = this.entityManagerQuery.paginationSearch(sql, resourceTempSearch);
         return ResultData.newOK("查询待审核资源成功", result);
     }
 }

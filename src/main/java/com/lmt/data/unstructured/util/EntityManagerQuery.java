@@ -23,14 +23,17 @@ public class EntityManagerQuery {
     private EntityManager entityManager;
 
     @SuppressWarnings({"SqlNoDataSourceInspection", "SqlDialectInspection"})
-    public Map<String, Object> paginationSearch(String tableName, StringBuffer sql, BaseSearch baseSearch){
+    public Map<String, Object> paginationSearch(StringBuffer sql, BaseSearch baseSearch){
         String keyword = baseSearch.getKeyword();
         int currentPage = baseSearch.getCurrentPage() - 1;
         int pageSize = baseSearch.getPageSize();
         // 获取表中数据的总数量
-        String countSql = "SELECT count(id) AS totalElements FROM " + tableName;
-        Query countQuery = entityManager.createNativeQuery(countSql);
-        Object totalElements = countQuery.getResultList().get(0);
+        Query countQuery = entityManager.createNativeQuery(sql.toString());
+        // 设置参数
+        for (int i = 0; i < baseSearch.getParamsCount(); i++) {
+            countQuery.setParameter(i + 1, keyword);
+        }
+        Object totalElements = countQuery.getResultList().size();
         Query nativeQuery = entityManager.createNativeQuery(sql.toString());
         // 设置参数
         for (int i = 0; i < baseSearch.getParamsCount(); i++) {

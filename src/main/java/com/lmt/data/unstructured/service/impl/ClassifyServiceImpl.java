@@ -69,7 +69,7 @@ public class ClassifyServiceImpl implements ClassifyService {
             sql.append("AND (c.designation LIKE ? OR c.description LIKE ? OR c.creator LIKE ?) ");
             classifySearch.setParamsCount(3);
         }
-        Map<String, Object> result = entityManagerQuery.paginationSearch("classify", sql, classifySearch);
+        Map<String, Object> result = entityManagerQuery.paginationSearch(sql, classifySearch);
         return ResultData.newOK("查询成功", result);
     }
 

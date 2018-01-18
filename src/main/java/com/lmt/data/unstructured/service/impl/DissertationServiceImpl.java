@@ -66,7 +66,7 @@ public class DissertationServiceImpl implements DissertationService{
             dissertationSearch.setParamsCount(3);
         }
         Map<String, Object> result =
-                entityManagerQuery.paginationSearch("dissertation", sql, dissertationSearch);
+                entityManagerQuery.paginationSearch(sql, dissertationSearch);
         return ResultData.newOK("查询专题成功", result);
     }
 
