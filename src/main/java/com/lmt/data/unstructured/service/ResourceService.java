@@ -40,4 +40,10 @@ public interface ResourceService {
      * @return Map
      */
     Map addResourceFromResourceTemp(ResourceTemp resourceTemp, String auditRemark);
+
+    /**
+     * @apiNote 获取每个专题的前五个热门资源
+     * @return Map
+     */
+    Map getTopFiveByDissertation();
 }

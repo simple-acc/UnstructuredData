@@ -77,6 +77,9 @@ public class BaseSearch extends BaseToString{
     }
 
     public int getCurrentPage() {
+        if (currentPage <= 0){
+            currentPage = 1;
+        }
         return currentPage;
     }
 

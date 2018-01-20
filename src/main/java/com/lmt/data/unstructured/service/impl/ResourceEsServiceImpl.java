@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.lmt.data.unstructured.entity.Resource;
 import com.lmt.data.unstructured.entity.Tag;
 import com.lmt.data.unstructured.entity.es.ResourceEs;
+import com.lmt.data.unstructured.entity.search.ResourceEsSearch;
 import com.lmt.data.unstructured.repository.TagRepository;
 import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.UserInfoService;
@@ -66,6 +67,11 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         }
         resource.setEsId(response.getId());
         return ResultData.newOK("数据成功保存到ES");
+    }
+
+    @Override
+    public Map searchFromEs(ResourceEsSearch resourceEsSearch) {
+        return null;
     }
 
     public void s(){

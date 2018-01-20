@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author MT-Lin
@@ -174,5 +175,15 @@ public class Dissertation extends BaseEntity {
 
     public void setModificationTime(Date modificationTime) {
         this.modificationTime = modificationTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

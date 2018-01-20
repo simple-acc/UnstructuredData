@@ -20,6 +20,11 @@ public class ResourceApi {
     @Autowired
     private ResourceService resourceService;
 
+    @RequestMapping("/getTopFiveByDissertation")
+    public Map getTopFiveByDissertation(){
+        return this.resourceService.getTopFiveByDissertation();
+    }
+
     @RequestMapping("/search")
     public Map search(@RequestBody ResourceSearch resourceSearch){
         return this.resourceService.search(resourceSearch);

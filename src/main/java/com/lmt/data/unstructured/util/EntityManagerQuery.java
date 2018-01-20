@@ -27,18 +27,13 @@ public class EntityManagerQuery {
         String keyword = baseSearch.getKeyword();
         int currentPage = baseSearch.getCurrentPage() - 1;
         int pageSize = baseSearch.getPageSize();
-        // 获取表中数据的总数量
-        Query countQuery = entityManager.createNativeQuery(sql.toString());
-        // 设置参数
-        for (int i = 0; i < baseSearch.getParamsCount(); i++) {
-            countQuery.setParameter(i + 1, keyword);
-        }
-        Object totalElements = countQuery.getResultList().size();
         Query nativeQuery = entityManager.createNativeQuery(sql.toString());
         // 设置参数
         for (int i = 0; i < baseSearch.getParamsCount(); i++) {
             nativeQuery.setParameter(i + 1, keyword);
         }
+        // 数据总数量
+        Object totalElements = nativeQuery.getResultList().size();
         nativeQuery.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         nativeQuery.setFirstResult(currentPage * pageSize);
         nativeQuery.setMaxResults(pageSize);
@@ -47,5 +42,17 @@ public class EntityManagerQuery {
         resultMap.put(UdConstant.TOTAL_ELEMENTS, totalElements);
         resultMap.put(UdConstant.CONTENT, resultList);
         return resultMap;
+    }
+
+    public List nativeSqlSearch(StringBuffer sql, List<Object> parameters, int dataSize){
+        Query nativeQuery = this.entityManager.createNativeQuery(sql.toString());
+        int i = 1;
+        for (Object parameter : parameters) {
+            nativeQuery.setParameter(i, parameter);
+            i++;
+        }
+        nativeQuery.setMaxResults(dataSize);
+        nativeQuery.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return nativeQuery.getResultList();
     }
 }

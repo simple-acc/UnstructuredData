@@ -52,4 +52,10 @@ public interface DissertationService {
      * @return Map
      */
     Map getParentTree();
+
+    /**
+     * @apiNote 获取一级专题以下所有子专题的ID
+     * @return Map
+     */
+    Map<Dissertation, List<Object>> getDissertationIdsGroup();
 }

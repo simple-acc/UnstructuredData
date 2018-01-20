@@ -8,7 +8,9 @@ import com.lmt.data.unstructured.util.EntityManagerQuery;
 import com.lmt.data.unstructured.util.RedisCache;
 import com.lmt.data.unstructured.util.ResultData;
 import com.lmt.data.unstructured.util.UdConstant;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +23,7 @@ import java.util.Map;
  * @author MT-Lin
  * @date 2018/1/8 16:28
  */
+@SuppressWarnings("unchecked")
 @Service("DissertationServiceImpl")
 public class DissertationServiceImpl implements DissertationService{
 
@@ -103,7 +106,33 @@ public class DissertationServiceImpl implements DissertationService{
         return ResultData.newOK("父主题树选项获取成功", result);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @Override
+    public Map<Dissertation, List<Object>> getDissertationIdsGroup() {
+        List<Dissertation> all = this.dissertationRepository.findAll();
+        Map<String, Dissertation> firstLevel = new HashMap<>(all.size());
+        List<Dissertation> children = new ArrayList<>();
+        Map<String, List<Object>> temp = new HashMap<>(all.size());
+        for (Dissertation dissertation : all) {
+            if (null == dissertation.getParentId()){
+                firstLevel.put(dissertation.getId(), dissertation);
+                temp.put(dissertation.getId(), new ArrayList<>());
+                temp.get(dissertation.getId()).add(dissertation.getId());
+            } else if (temp.get(dissertation.getParentId()) != null){
+                temp.get(dissertation.getParentId()).add(dissertation.getId());
+            } else {
+                children.add(dissertation);
+            }
+        }
+        for (Dissertation child : children) {
+            temp.get(child.getParentId()).add(child.getId());
+        }
+        Map<Dissertation, List<Object>> result = new HashMap<>(all.size());
+        for (String id : firstLevel.keySet()) {
+            result.put(firstLevel.get(id), temp.get(id));
+        }
+        return result;
+    }
+
     private List getTreeOptions() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Dissertation> firstLevel = new ArrayList<>();

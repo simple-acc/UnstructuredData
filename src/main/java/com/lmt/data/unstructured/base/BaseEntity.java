@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * @author MT-Lin
@@ -38,5 +39,23 @@ public class BaseEntity extends BaseToString implements Serializable{
 
     public void setTokenId(String tokenId) {
         this.tokenId = tokenId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BaseEntity that = (BaseEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
     }
 }

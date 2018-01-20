@@ -3,6 +3,8 @@ package com.lmt.data.unstructured.repository;
 import com.lmt.data.unstructured.entity.Dissertation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * @author MT-Lin
  * @date 2018/1/3 0:12
