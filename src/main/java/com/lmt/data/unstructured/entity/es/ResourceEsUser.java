@@ -1,20 +1,18 @@
 package com.lmt.data.unstructured.entity.es;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.lmt.data.unstructured.base.BaseToString;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * @apiNote 资源ES实体
  * @author MT-Lin
- * @date 2018/1/17 9:59
+ * @date 2018/1/22 9:35
  */
-public class ResourceEs extends BaseToString{
+public class ResourceEsUser {
 
     /**
-     * ES ID
+     * ES id
      */
     private String id;
 
@@ -72,6 +70,11 @@ public class ResourceEs extends BaseToString{
      * 收藏数
      */
     private int collectionNum;
+
+    /**
+     * 返回时存储高亮字段
+     */
+    private String highlight;
 
     /**
      * 上传时间
@@ -175,6 +178,14 @@ public class ResourceEs extends BaseToString{
         this.collectionNum = collectionNum;
     }
 
+    public String getHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(String highlight) {
+        this.highlight = highlight;
+    }
+
     public Date getUploadTime() {
         return uploadTime;
     }
@@ -182,4 +193,6 @@ public class ResourceEs extends BaseToString{
     public void setUploadTime(Date uploadTime) {
         this.uploadTime = uploadTime;
     }
+
+
 }
