@@ -24,6 +24,11 @@ public class UserInfoApi {
     @Autowired
     private UserInfoService userInfoService;
 
+    @RequestMapping("/getUserInfo")
+    public Map getUserInfo(@RequestBody UserInfoSearch userInfoSearch){
+        return this.userInfoService.getUserInfo(userInfoSearch.getTokenId());
+    }
+
     @RequestMapping("/register")
     public Map register(@RequestBody UserInfo userInfo){
         // 用户注册

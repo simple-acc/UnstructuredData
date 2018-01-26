@@ -68,4 +68,11 @@ public interface UserInfoService {
      * @return 用户名
      */
     String getUserNameById(String id);
+
+    /**
+     * @apiNote 获取用户信息
+     * @param tokenId tokenId
+     * @return Map
+     */
+    Map getUserInfo(String tokenId);
 }

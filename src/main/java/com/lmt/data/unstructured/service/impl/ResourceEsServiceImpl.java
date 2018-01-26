@@ -8,52 +8,62 @@ import com.lmt.data.unstructured.entity.es.ResourceEs;
 import com.lmt.data.unstructured.entity.es.ResourceEsUser;
 import com.lmt.data.unstructured.entity.search.ResourceEsSearch;
 import com.lmt.data.unstructured.repository.TagRepository;
+import com.lmt.data.unstructured.service.CollectionService;
 import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.UserInfoService;
-import com.lmt.data.unstructured.util.EntityUtils;
-import com.lmt.data.unstructured.util.FileUtil;
-import com.lmt.data.unstructured.util.ResultData;
-import com.lmt.data.unstructured.util.UdConstant;
+import com.lmt.data.unstructured.util.*;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.elasticsearch.search.sort.SortOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 /**
  * @author MT-Lin
  * @date 2018/1/17 8:52
  */
+@SuppressWarnings("TryWithIdenticalCatches")
 @Service("ResourceEsServiceImpl")
 public class ResourceEsServiceImpl implements ResourceEsService {
 
-    @Autowired
-    private FileUtil fileUtil;
+    private Logger logger = LoggerFactory.getLogger(ResourceEsService.class);
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private CollectionService collectionService;
 
     @Autowired
     private TagRepository tagRepository;
 
     @Autowired
     private TransportClient client;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private FileUtil fileUtil;
 
     /**
      * resource的ES类型
@@ -133,10 +143,63 @@ public class ResourceEsServiceImpl implements ResourceEsService {
                 sourceAsMap.put("highlight", highlight.toString());
                 highlight.setLength(0);
             }
-            resources.add(JSONObject.parseObject(JSON.toJSONString(sourceAsMap), ResourceEsUser.class));
+            ResourceEsUser resourceEsUser =
+                    JSONObject.parseObject(JSON.toJSONString(sourceAsMap), ResourceEsUser.class);
+            // TODO 判断资源是否收藏过
+            resourceEsUser.setCollected(
+                    this.collectionService.isCollected(
+                            redisCache.getUserId(resourceEsSearch), resourceEsUser.getResourceId()));
+            resources.add(resourceEsUser);
         }
         result.put("content", resources);
         result.put("totalElements", hits.getTotalHits());
         return ResultData.newOK("查询成功", result);
+    }
+
+    @Override
+    public void updateDownloadNum(String esId, int downloadNum) {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(UdConstant.ES_INDEX);
+        updateRequest.type(this.ES_TYPE);
+        updateRequest.id(esId);
+        try {
+            updateRequest.doc(jsonBuilder().startObject().field("downloadNum", downloadNum).endObject());
+        } catch (IOException e) {
+            logger.error("updateDownloadNum jsonBuilder 出现IO异常");
+            e.printStackTrace();
+        }
+        try {
+            client.update(updateRequest).get();
+        } catch (InterruptedException e) {
+            logger.error("ES更新下载次数时出现异常");
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            logger.error("ES更新下载次数时出现异常");
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void updateCollectionNum(String esId, int collectionNum) {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(UdConstant.ES_INDEX);
+        updateRequest.type(this.ES_TYPE);
+        updateRequest.id(esId);
+        try {
+            updateRequest.doc(jsonBuilder().startObject().field("collectionNum", collectionNum).endObject());
+        } catch (IOException e) {
+            logger.error("updateCollectionNum jsonBuilder 出现IO异常");
+            e.printStackTrace();
+        }
+        try {
+            client.update(updateRequest).get();
+        } catch (InterruptedException e) {
+            logger.error("ES更新收藏次数时出现异常");
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            logger.error("ES更新收藏次数时出现异常");
+            e.printStackTrace();
+        }
     }
 }

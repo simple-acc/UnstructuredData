@@ -1,7 +1,5 @@
 package com.lmt.data.unstructured.util;
 
-import sun.misc.BASE64Encoder;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

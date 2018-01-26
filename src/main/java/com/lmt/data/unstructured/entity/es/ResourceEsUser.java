@@ -77,6 +77,11 @@ public class ResourceEsUser {
     private String highlight;
 
     /**
+     * 返回时标记该资源是否已经收藏过
+     */
+    private boolean collected;
+
+    /**
      * 上传时间
      */
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
@@ -184,6 +189,14 @@ public class ResourceEsUser {
 
     public void setHighlight(String highlight) {
         this.highlight = highlight;
+    }
+
+    public boolean isCollected() {
+        return collected;
+    }
+
+    public void setCollected(boolean collected) {
+        this.collected = collected;
     }
 
     public Date getUploadTime() {

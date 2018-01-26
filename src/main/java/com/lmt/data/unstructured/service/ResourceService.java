@@ -46,4 +46,23 @@ public interface ResourceService {
      * @return Map
      */
     Map getTopFiveByDissertation();
+
+    /**
+     * @apiNote 根据资源ID查找资源
+     * @param resourceId 资源ID
+     * @return Resource
+     */
+    Resource findOneById(String resourceId);
+
+    /**
+     * @apiNote 更新下载次数
+     * @param id 下载的资源ID
+     */
+    void updateDownloadNum(String id);
+
+    /**
+     * @apiNote 更新资源收藏次数
+     * @param id 收藏的资源ID
+     */
+    void updateCollectionNum(String id);
 }

@@ -1,5 +1,6 @@
 package com.lmt.data.unstructured.util;
 
+import com.graphbuilder.curve.BSpline;
 import com.lmt.data.unstructured.base.BaseEntity;
 import com.lmt.data.unstructured.base.BaseSearch;
 import com.lmt.data.unstructured.entity.UserInfo;
@@ -20,8 +21,12 @@ import javax.annotation.PostConstruct;
 @SuppressWarnings("unchecked")
 public class RedisCache {
 
-    @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     private Logger logger = LoggerFactory.getLogger(RedisCache.class);
 
@@ -43,9 +48,9 @@ public class RedisCache {
         ValueOperations<String, UserInfo> userInfoValueOperations = redisTemplate.opsForValue();
         if (null == userInfoValueOperations){
             logger.error("userInfoValueOperations is NULL");
+            return null;
         }
-        UserInfo user = userInfoValueOperations.get(tokenId);
-        return user;
+        return userInfoValueOperations.get(tokenId);
     }
 
     /**
@@ -54,7 +59,11 @@ public class RedisCache {
      * @return 用户名
      */
     public String getUserName(BaseEntity baseEntity){
-        return this.getUserInfoFromCache(baseEntity.getTokenId()).getUserName();
+        UserInfo userInfo = this.getUserInfoFromCache(baseEntity.getTokenId());
+        if (null == userInfo){
+            return null;
+        }
+        return userInfo.getUserName();
     }
 
     /**
@@ -63,7 +72,11 @@ public class RedisCache {
      * @return 用户名
      */
     public String getUserName(String tokenId){
-        return this.getUserInfoFromCache(tokenId).getUserName();
+        UserInfo userInfo = this.getUserInfoFromCache(tokenId);
+        if (null == userInfo){
+            return null;
+        }
+        return userInfo.getUserName();
     }
 
     /**
@@ -72,12 +85,19 @@ public class RedisCache {
      * @return 用户ID或null
      */
     public String getUserId(Object object){
+        UserInfo userInfo = null;
         if (object instanceof String){
-            return this.getUserInfoFromCache((String) object).getId();
+            userInfo = this.getUserInfoFromCache((String) object);
         }
         if (object instanceof BaseEntity){
-            return this.getUserInfoFromCache(((BaseEntity)object).getTokenId()).getId();
+            userInfo = this.getUserInfoFromCache(((BaseEntity)object).getTokenId());
         }
-        return null;
+        if (object instanceof BaseSearch){
+            userInfo = this.getUserInfoFromCache(((BaseSearch)object).getTokenId());
+        }
+        if (null == userInfo){
+            return null;
+        }
+        return userInfo.getId();
     }
 }

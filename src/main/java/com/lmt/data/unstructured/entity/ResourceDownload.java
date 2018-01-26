@@ -2,7 +2,6 @@ package com.lmt.data.unstructured.entity;
 
 import com.lmt.data.unstructured.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +24,10 @@ public class ResourceDownload extends BaseEntity {
     private String resourceId;
 
     /**
-     * 下载数
+     * 用户ID
      */
-    @Column(name = "download_num")
-    private int downloadNum;
+    @Column(name = "user_id", nullable = false, length = 36)
+    private String userId;
 
     /**
      * 创建时间
@@ -38,14 +37,6 @@ public class ResourceDownload extends BaseEntity {
     @Column(name="create_time", nullable = false, updatable = false)
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
-    @Temporal(TemporalType.TIMESTAMP)
-    @UpdateTimestamp
-    @Column(name="update_time")
-    private Date updateTime;
-
     public String getResourceId() {
         return resourceId;
     }
@@ -54,12 +45,12 @@ public class ResourceDownload extends BaseEntity {
         this.resourceId = resourceId;
     }
 
-    public int getDownloadNum() {
-        return downloadNum;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setDownloadNum(int downloadNum) {
-        this.downloadNum = downloadNum;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Date getCreateTime() {
@@ -68,13 +59,5 @@ public class ResourceDownload extends BaseEntity {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

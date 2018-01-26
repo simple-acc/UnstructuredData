@@ -325,7 +325,7 @@ public class FileUtil {
             inputStream = multipartFile.getInputStream();
             outputStream = new FileOutputStream(file);
             int bytesReader;
-            byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_LENGTH];
+            byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_SIZE];
             while ((bytesReader = inputStream.read(buffer, 0, buffer.length)) != -1){
                 outputStream.write(buffer, 0, bytesReader);
             }

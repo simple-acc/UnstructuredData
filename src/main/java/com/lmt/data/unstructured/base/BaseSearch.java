@@ -1,6 +1,5 @@
 package com.lmt.data.unstructured.base;
 
-import com.lmt.data.unstructured.entity.search.ClassifySearch;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -15,6 +14,11 @@ public class BaseSearch extends BaseToString{
      * 实体ID
      */
     private String id;
+
+    /**
+     * 名称
+     */
+    private String designation;
 
     /**
      * 关键词
@@ -66,6 +70,14 @@ public class BaseSearch extends BaseToString{
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 
     public String getId() {

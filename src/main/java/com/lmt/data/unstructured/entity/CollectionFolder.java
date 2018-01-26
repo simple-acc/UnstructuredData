@@ -12,19 +12,31 @@ import java.util.Date;
 /**
  * @author MT-Lin
  * @date 2018/1/2 10:01
- * @apiNote 收藏分类表
+ * @apiNote 收藏夹
  */
-@Entity(name = "collect_classify")
-public class CollectClassify extends BaseEntity {
+@Entity(name = "collection_folder")
+public class CollectionFolder extends BaseEntity {
 
     /**
-     * 分类名称
+     * 收藏夹名称
      */
     @Column(name = "designation", nullable = false, length = 32)
     private String designation;
 
     /**
-     * 父级分类ID
+     * 收藏的资源数目
+     */
+    @Column(name = "resource_num")
+    private int resourceNum;
+
+    /**
+     * 收藏夹描述
+     */
+    @Column(name = "description", nullable = false, length = 300)
+    private String description;
+
+    /**
+     * 父收藏夹ID
      */
     @Column(name = "parent_id", length = 36)
     private String parentId;
@@ -49,6 +61,22 @@ public class CollectClassify extends BaseEntity {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public int getResourceNum() {
+        return resourceNum;
+    }
+
+    public void setResourceNum(int resourceNum) {
+        this.resourceNum = resourceNum;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getParentId() {

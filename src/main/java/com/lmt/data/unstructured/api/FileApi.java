@@ -1,5 +1,7 @@
 package com.lmt.data.unstructured.api;
 
+import com.lmt.data.unstructured.entity.Resource;
+import com.lmt.data.unstructured.service.ResourceService;
 import com.lmt.data.unstructured.util.FileUtil;
 import com.lmt.data.unstructured.util.UdConstant;
 import org.slf4j.Logger;
@@ -26,8 +28,18 @@ public class FileApi {
     @Autowired
     private FileUtil fileUtil;
 
+    @Autowired
+    private ResourceService resourceService;
+
     @RequestMapping("/download")
-    public void download(@RequestParam String resourceName, @RequestParam String resourceFileName, HttpServletResponse response){
+    public void download(@RequestParam String resourceId, HttpServletResponse response){
+        Resource resource = this.resourceService.findOneById(resourceId);
+        if (null == resource){
+            logger.error("该资源[ID={}]信息不存在", resourceId);
+            return;
+        }
+        String resourceFileName = resource.getResourceFileName();
+        String resourceName = resource.getDesignation();
         File downloadFile = new File(fileUtil.getFullFilePath(resourceFileName));
         if (!downloadFile.exists()){
             logger.error("文件 [" + resourceFileName + "] 不存在");
@@ -43,7 +55,7 @@ public class FileApi {
             os = response.getOutputStream();
             bis = new BufferedInputStream(new FileInputStream(downloadFile));
             int bytesReader;
-            byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_LENGTH];
+            byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_SIZE];
             while ((bytesReader = bis.read(buffer)) != -1){
                 os.write(buffer, 0, bytesReader);
             }

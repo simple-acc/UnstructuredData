@@ -55,7 +55,6 @@ public class BaseEntity extends BaseToString implements Serializable{
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id);
     }
 }

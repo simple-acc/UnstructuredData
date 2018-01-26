@@ -6,6 +6,17 @@ package com.lmt.data.unstructured.util;
  */
 public class UdConstant {
 
+
+    /**
+     * 收藏类型：专题
+     */
+    public static final String COLLECT_TYPE_DISSERTATION = "010002";
+
+    /**
+     * 收藏类型：资源
+     */
+    public static final String COLLECT_TYPE_RESOURCE = "010001";
+
     /**
      * 文件扩展名
      */
@@ -39,9 +50,10 @@ public class UdConstant {
     public static final String ADDRESS_PORT_SPLIT = ":";
 
     /**
-     * 文件下载连接
+     * 返回数据为空的请求链接
      */
     public static final String DOWNLOAD_FILE_URL = "/FileApi/download";
+    public static final String UPDATE_DOWNLOAD_NUM = "/ResourceApi/updateDownloadNum";
 
     /**
      * 用户登录失败编码
@@ -76,7 +88,7 @@ public class UdConstant {
     /**
      * 文件流一次读取的长度
      */
-    public static final int FILE_READ_BUFFER_LENGTH = 3096;
+    public static final int FILE_READ_BUFFER_SIZE = 3096;
 
     /**
      * 返回结果编码标识
@@ -189,5 +201,4 @@ public class UdConstant {
     public static final String KEY_MD5 = "MD5";
 
     public static final String CHARSET_ISO88591 = "ISO-8859-1";
-
 }

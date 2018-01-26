@@ -4,17 +4,19 @@ import com.lmt.data.unstructured.entity.LoginLog;
 import com.lmt.data.unstructured.entity.UserInfo;
 import com.lmt.data.unstructured.entity.search.UserInfoSearch;
 import com.lmt.data.unstructured.repository.UserInfoRepository;
+import com.lmt.data.unstructured.service.CollectionService;
 import com.lmt.data.unstructured.service.LoginLogService;
+import com.lmt.data.unstructured.service.ResourceDownloadService;
 import com.lmt.data.unstructured.service.UserInfoService;
 import com.lmt.data.unstructured.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,7 +34,13 @@ public class UserInfoServiceImpl implements UserInfoService{
     private UserInfoRepository userInfoRepository;
 
     @Autowired
+    private ResourceDownloadService resourceDownloadService;
+
+    @Autowired
     private LoginLogService loginLogService;
+
+    @Autowired
+    private CollectionService collectionService;
 
     @Autowired
     private EntityManagerQuery entityManagerQuery;
@@ -182,5 +190,15 @@ public class UserInfoServiceImpl implements UserInfoService{
     @Override
     public String getUserNameById(String id) {
         return this.userInfoRepository.findOne(id).getUserName();
+    }
+
+    @Override
+    public Map getUserInfo(String tokenId) {
+        UserInfo userInfo = this.redisCache.getUserInfoFromCache(tokenId);
+        Map<String, Object> result = new HashMap<>(3);
+        result.put("userName", userInfo.getUserName());
+        result.put("downloadNum", this.resourceDownloadService.getDownloadNum(userInfo.getId()));
+        result.put("collectNum", this.collectionService.getCollectNum(userInfo.getId()));
+        return ResultData.newOK("用户信息获取成功", result);
     }
 }

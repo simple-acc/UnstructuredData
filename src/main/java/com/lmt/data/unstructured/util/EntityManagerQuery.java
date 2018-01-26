@@ -17,12 +17,38 @@ import java.util.Map;
  * @date 2018/1/7 18:11
  */
 @Component
+@SuppressWarnings({"SqlNoDataSourceInspection", "SqlDialectInspection"})
 public class EntityManagerQuery {
 
-    @Autowired
     private EntityManager entityManager;
 
-    @SuppressWarnings({"SqlNoDataSourceInspection", "SqlDialectInspection"})
+    @Autowired
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public Map<String, Object> paginationSearch(StringBuffer sql, List<Object> parameters, BaseSearch baseSearch){
+        int currentPage = baseSearch.getCurrentPage() - 1;
+        int pageSize = baseSearch.getPageSize();
+        Query nativeQuery = entityManager.createNativeQuery(sql.toString());
+        // 设置参数
+        int position = 1;
+        for (Object parameter : parameters) {
+            nativeQuery.setParameter(position, parameter);
+            position++;
+        }
+        // 数据总数量
+        Object totalElements = nativeQuery.getResultList().size();
+        nativeQuery.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        nativeQuery.setFirstResult(currentPage * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List resultList = nativeQuery.getResultList();
+        Map<String, Object> resultMap = new HashMap<>(2);
+        resultMap.put(UdConstant.TOTAL_ELEMENTS, totalElements);
+        resultMap.put(UdConstant.CONTENT, resultList);
+        return resultMap;
+    }
+
     public Map<String, Object> paginationSearch(StringBuffer sql, BaseSearch baseSearch){
         String keyword = baseSearch.getKeyword();
         int currentPage = baseSearch.getCurrentPage() - 1;
@@ -46,10 +72,10 @@ public class EntityManagerQuery {
 
     public List nativeSqlSearch(StringBuffer sql, List<Object> parameters, int dataSize){
         Query nativeQuery = this.entityManager.createNativeQuery(sql.toString());
-        int i = 1;
+        int position = 1;
         for (Object parameter : parameters) {
-            nativeQuery.setParameter(i, parameter);
-            i++;
+            nativeQuery.setParameter(position, parameter);
+            position++;
         }
         nativeQuery.setMaxResults(dataSize);
         nativeQuery.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);

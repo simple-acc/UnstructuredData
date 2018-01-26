@@ -35,20 +35,22 @@ public class WebControllerAop {
         // TODO 在请求参数中添加tokenId
         HttpSession session = request.getSession();
         Object tokenId = session.getAttribute(UdConstant.USER_LOGIN_EVIDENCE);
+
+        // TODO url要过滤掉登录页面需要的连接请求（未完成）只有在登录页面需要的连接不需要tokenId其他的请求都要
+        // URL
+        String url = request.getRequestURI();
+        logger.info("url = {}", url);
         if (null == tokenId){
             logger.error("tokenId is NULL");
         } else {
             logger.info("tokenId is " + tokenId);
         }
-        // TODO url要过滤掉登录页面需要的连接请求（未完成）只有在登录页面需要的连接不需要tokenId其他的请求都要
-        // URL
-        logger.info("url = {}", request.getRequestURI());
         if (null != tokenId && joinPoint.getArgs().length > 0) {
             Object o = joinPoint.getArgs()[0];
             if (o instanceof BaseSearch) {
-                ((BaseSearch) joinPoint.getArgs()[0]).setTokenId(tokenId.toString());
+                ((BaseSearch) o).setTokenId(tokenId.toString());
             } else if (o instanceof BaseEntity) {
-                ((BaseEntity) joinPoint.getArgs()[0]).setTokenId(tokenId.toString());
+                ((BaseEntity) o).setTokenId(tokenId.toString());
             }
         }
 
@@ -75,8 +77,9 @@ public class WebControllerAop {
         HttpServletRequest request = attributes.getRequest();
         String url = request.getRequestURL().toString();
         if (null == object){
-            if (url.endsWith(UdConstant.DOWNLOAD_FILE_URL)){
-                logger.info("Download file request finish");
+            if (url.endsWith(UdConstant.DOWNLOAD_FILE_URL)
+                    || url.endsWith(UdConstant.UPDATE_DOWNLOAD_NUM)){
+                logger.info("Return type is void");
             } else {
                 logger.error("The data returned NULL");
             }

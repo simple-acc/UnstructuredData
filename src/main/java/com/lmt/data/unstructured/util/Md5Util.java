@@ -17,12 +17,12 @@ public class Md5Util {
             }
             MessageDigest digest;
             FileInputStream in;
-            byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_LENGTH];
+            byte[] buffer = new byte[UdConstant.FILE_READ_BUFFER_SIZE];
             int len;
             try {
                 digest = MessageDigest.getInstance("MD5");
                 in = new FileInputStream(file);
-                while ((len = in.read(buffer, 0, UdConstant.FILE_READ_BUFFER_LENGTH)) != -1) {
+                while ((len = in.read(buffer, 0, UdConstant.FILE_READ_BUFFER_SIZE)) != -1) {
                     digest.update(buffer, 0, len);
                 }
                 in.close();

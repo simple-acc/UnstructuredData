@@ -2,7 +2,6 @@ package com.lmt.data.unstructured.service;
 
 import com.lmt.data.unstructured.entity.Resource;
 import com.lmt.data.unstructured.entity.search.ResourceEsSearch;
-import com.lmt.data.unstructured.entity.search.ResourceSearch;
 
 import java.util.Map;
 
@@ -26,4 +25,18 @@ public interface ResourceEsService {
      * @return Map
      */
     Map searchFromEs(ResourceEsSearch resourceEsSearch);
+
+    /**
+     * @apiNote 更新Es资源下载次数
+     * @param esId EsId
+     * @param downloadNum 下载次数
+     */
+    void updateDownloadNum(String esId, int downloadNum);
+
+    /**
+     * @apiNote 更新Es资源的收藏次数
+     * @param esId EsId
+     * @param collectionNum 收藏次数
+     */
+    void updateCollectionNum(String esId, int collectionNum);
 }

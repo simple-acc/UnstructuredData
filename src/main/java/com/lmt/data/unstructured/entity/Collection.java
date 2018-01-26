@@ -14,20 +14,26 @@ import java.util.Date;
  * @date 2018/1/2 10:07
  * @apiNote 收藏表
  */
-@Entity(name = "collect")
-public class Collect extends BaseEntity {
+@Entity(name = "collection")
+public class Collection extends BaseEntity {
 
     /**
-     * 收藏分类ID
+     * 收藏夹ID
      */
-    @Column(name = "collect_classify_id", nullable = false, length = 36)
-    private String collectClassifyId;
+    @Column(name = "collection_folder_id", nullable = false, length = 36)
+    private String collectionFolderId;
 
     /**
      * 收藏对象ID
      */
     @Column(name = "obj_id", nullable = false, length = 36)
     private String objId;
+
+    /**
+     * 收藏分类类型（代码表010）
+     */
+    @Column(name = "type", nullable = false, length = 6)
+    private String type;
 
     /**
      * 创建人
@@ -43,12 +49,12 @@ public class Collect extends BaseEntity {
     @Column(name = "create_time", nullable = false, updatable = false)
     private Date createTime;
 
-    public String getCollectClassifyId() {
-        return collectClassifyId;
+    public String getCollectionFolderId() {
+        return collectionFolderId;
     }
 
-    public void setCollectClassifyId(String collectClassifyId) {
-        this.collectClassifyId = collectClassifyId;
+    public void setCollectionFolderId(String collectionFolderId) {
+        this.collectionFolderId = collectionFolderId;
     }
 
     public String getObjId() {
@@ -57,6 +63,14 @@ public class Collect extends BaseEntity {
 
     public void setObjId(String objId) {
         this.objId = objId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreator() {
