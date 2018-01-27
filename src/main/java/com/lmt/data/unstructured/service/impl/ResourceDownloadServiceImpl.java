@@ -31,7 +31,7 @@ public class ResourceDownloadServiceImpl implements ResourceDownloadService {
                     resourceDownload.getUserId(), resourceDownload.getResourceId());
             return ResultData.newError("下载记录保存失败");
         }
-        return ResultData.newOK("下载记录保存成功");
+        return ResultData.newOK("");
     }
 
     @Override

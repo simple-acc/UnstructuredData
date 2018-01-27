@@ -29,14 +29,13 @@ public interface ResourceEsService {
     /**
      * @apiNote 更新Es资源下载次数
      * @param esId EsId
-     * @param downloadNum 下载次数
      */
-    void updateDownloadNum(String esId, int downloadNum);
+    void updateDownloadNum(String esId);
 
     /**
      * @apiNote 更新Es资源的收藏次数
-     * @param esId EsId
-     * @param collectionNum 收藏次数
+     * @param resourceId 资源ID
+     * @param collectionOperation 取消收藏资源或收藏资源
      */
-    void updateCollectionNum(String esId, int collectionNum);
+    void updateCollectionNum(String resourceId, int collectionOperation);
 }

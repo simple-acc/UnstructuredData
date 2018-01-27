@@ -31,4 +31,11 @@ public interface CollectionService {
      * @return int
      */
     int getCollectNum(String userId);
+
+    /**
+     * @apiNote 取消收藏
+     * @param collection 收藏信息
+     * @return Map
+     */
+    Map delete(Collection collection);
 }

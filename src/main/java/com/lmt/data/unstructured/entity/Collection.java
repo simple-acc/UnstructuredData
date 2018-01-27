@@ -30,12 +30,6 @@ public class Collection extends BaseEntity {
     private String objId;
 
     /**
-     * 收藏分类类型（代码表010）
-     */
-    @Column(name = "type", nullable = false, length = 6)
-    private String type;
-
-    /**
      * 创建人
      */
     @Column(name = "creator", nullable = false, length = 36)
@@ -63,14 +57,6 @@ public class Collection extends BaseEntity {
 
     public void setObjId(String objId) {
         this.objId = objId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getCreator() {

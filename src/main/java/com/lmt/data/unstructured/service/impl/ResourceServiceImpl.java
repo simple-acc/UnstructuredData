@@ -74,6 +74,7 @@ public class ResourceServiceImpl implements ResourceService {
     public Map search(ResourceSearch resourceSearch) {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT r.id, r.designation, r.description, ");
+        sql.append("r.es_id AS esId, ");
         sql.append("r.resource_file_name AS resourceFileName, ");
         sql.append("r.resource_size AS resourceSize, ");
         sql.append("r.upload_time AS uploadTime, ");
@@ -183,29 +184,5 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public Resource findOneById(String id) {
         return this.resourceRepository.findOne(id);
-    }
-
-    @Override
-    public void updateDownloadNum(String id) {
-        Resource resource = this.resourceRepository.findOne(id);
-        if (null == resource){
-            logger.error("更新资源下载次数时发现资源[ID={}]不存在", id);
-            return;
-        }
-        resource.setDownloadNum(resource.getDownloadNum() + 1);
-        this.resourceRepository.save(resource);
-        this.resourceEsService.updateDownloadNum(resource.getEsId(), resource.getDownloadNum());
-    }
-
-    @Override
-    public void updateCollectionNum(String id) {
-        Resource resource = this.resourceRepository.findOne(id);
-        if (null == resource){
-            logger.error("更新资源收藏次数时发现资源[ID={}]不存在", id);
-            return;
-        }
-        resource.setCollectionNum(resource.getCollectionNum() + 1);
-        this.resourceRepository.save(resource);
-        this.resourceEsService.updateCollectionNum(resource.getEsId(), resource.getCollectionNum());
     }
 }

@@ -6,17 +6,6 @@ package com.lmt.data.unstructured.util;
  */
 public class UdConstant {
 
-
-    /**
-     * 收藏类型：专题
-     */
-    public static final String COLLECT_TYPE_DISSERTATION = "010002";
-
-    /**
-     * 收藏类型：资源
-     */
-    public static final String COLLECT_TYPE_RESOURCE = "010001";
-
     /**
      * 文件扩展名
      */
@@ -48,6 +37,21 @@ public class UdConstant {
      * ES地址和端口号分隔符
      */
     public static final String ADDRESS_PORT_SPLIT = ":";
+
+    /**
+     * EsResponse 成功状态码
+     */
+    public static final int ES_RESPONSE_SUCCESS = 200;
+
+    /**
+     * 收藏操作编码
+     */
+    public static final int COLLECTION_OPERATION_ADD = 1;
+
+    /**
+     * 取消收藏操作编码
+     */
+    public static final int COLLECTION_OPERATION_CANCEL = -1;
 
     /**
      * 返回数据为空的请求链接

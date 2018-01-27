@@ -50,7 +50,7 @@ public class Dissertation extends BaseEntity {
     private int collectionNum;
 
     /**
-     * 下载数
+     * 文档数量
      */
     @Column(name = "download_num")
     private int downloadNum;
@@ -58,8 +58,8 @@ public class Dissertation extends BaseEntity {
     /**
      * 上传数
      */
-    @Column(name = "upload_num")
-    private int uploadNum;
+    @Column(name = "document_num")
+    private int documentNum;
 
     /**
      * 创建者
@@ -137,12 +137,12 @@ public class Dissertation extends BaseEntity {
         this.downloadNum = downloadNum;
     }
 
-    public int getUploadNum() {
-        return uploadNum;
+    public int getDocumentNum() {
+        return documentNum;
     }
 
-    public void setUploadNum(int uploadNum) {
-        this.uploadNum = uploadNum;
+    public void setDocumentNum(int documentNum) {
+        this.documentNum = documentNum;
     }
 
     public String getCreator() {

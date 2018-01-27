@@ -56,7 +56,7 @@ public class DissertationServiceImpl implements DissertationService{
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT d.id, d.designation, d.description, d.creator, ");
         sql.append("d.collection_num AS collectionNum, ");
-        sql.append("d.upload_num AS uploadNum, ");
+        sql.append("d.document_num AS documentNum, ");
         sql.append("d.download_num AS downloadNum, ");
         sql.append("d.create_time AS createTime, ");
         sql.append("(SELECT c.designation FROM classify AS c WHERE c.id = d.classify_id) ");

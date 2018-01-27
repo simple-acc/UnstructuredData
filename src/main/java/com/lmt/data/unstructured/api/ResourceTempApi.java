@@ -151,7 +151,7 @@ public class ResourceTempApi {
             resourceTemp.setDescription(description);
         }
         Map result = this.resourceTempService.save(resourceTemp);
-        if (Integer.valueOf(result.get(UdConstant.RESULT_CODE).toString()) != UdConstant.RESULT_CORRECT_CODE) {
+        if (!CheckResult.isOK(result)) {
             return result;
         }
         return result.get(UdConstant.RESULT_DATA).toString();

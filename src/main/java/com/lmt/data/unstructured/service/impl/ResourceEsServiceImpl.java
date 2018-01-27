@@ -10,6 +10,7 @@ import com.lmt.data.unstructured.entity.search.ResourceEsSearch;
 import com.lmt.data.unstructured.repository.TagRepository;
 import com.lmt.data.unstructured.service.CollectionService;
 import com.lmt.data.unstructured.service.ResourceEsService;
+import com.lmt.data.unstructured.service.ResourceService;
 import com.lmt.data.unstructured.service.UserInfoService;
 import com.lmt.data.unstructured.util.*;
 import org.elasticsearch.action.index.IndexResponse;
@@ -17,10 +18,12 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -48,10 +51,13 @@ public class ResourceEsServiceImpl implements ResourceEsService {
     private Logger logger = LoggerFactory.getLogger(ResourceEsService.class);
 
     @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
     private UserInfoService userInfoService;
 
     @Autowired
-    private CollectionService collectionService;
+    private ResourceService resourceService;
 
     @Autowired
     private TagRepository tagRepository;
@@ -73,7 +79,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
     /**
      * 查询字段
      */
-    private final String[] fieldNames = {"auditRemark", "author", "content", "description", "designation", "tags"};
+    private final String[] fieldNames = {"id","auditRemark", "author", "content", "description", "designation", "tags"};
 
     @Override
     public Map saveResourceES(Resource resource, String auditRemark) {
@@ -121,9 +127,12 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         Map<String, Object> sourceAsMap;
         StringBuilder highlight = new StringBuilder();
         SearchHits hits = searchResponse.getHits();
+        String id;
         for (SearchHit hit : hits) {
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             sourceAsMap = hit.getSourceAsMap();
+            id = hit.getId();
+            // 处理高亮字段
             for (String s : highlightFields.keySet()) {
                 Text[] fragments = highlightFields.get(s).getFragments();
                 for (Text fragment : fragments) {
@@ -143,6 +152,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
                 sourceAsMap.put("highlight", highlight.toString());
                 highlight.setLength(0);
             }
+            sourceAsMap.put("id", id);
             ResourceEsUser resourceEsUser =
                     JSONObject.parseObject(JSON.toJSONString(sourceAsMap), ResourceEsUser.class);
             // TODO 判断资源是否收藏过
@@ -157,48 +167,55 @@ public class ResourceEsServiceImpl implements ResourceEsService {
     }
 
     @Override
-    public void updateDownloadNum(String esId, int downloadNum) {
-        UpdateRequest updateRequest = new UpdateRequest();
-        updateRequest.index(UdConstant.ES_INDEX);
-        updateRequest.type(this.ES_TYPE);
-        updateRequest.id(esId);
+    public void updateDownloadNum(String esId) {
+        UpdateRequest updateRequest = new UpdateRequest(UdConstant.ES_INDEX, this.ES_TYPE, esId)
+                .script(new Script("ctx._source.downloadNum += 1"));
         try {
-            updateRequest.doc(jsonBuilder().startObject().field("downloadNum", downloadNum).endObject());
-        } catch (IOException e) {
-            logger.error("updateDownloadNum jsonBuilder 出现IO异常");
-            e.printStackTrace();
-        }
-        try {
-            client.update(updateRequest).get();
+            UpdateResponse updateResponse = client.update(updateRequest).get();
+            int responseStatus = updateResponse.status().getStatus();
+            if (responseStatus != UdConstant.ES_RESPONSE_SUCCESS){
+                logger.error("ES更新下载次数出错，返回的状态码：{}", responseStatus);
+            }
         } catch (InterruptedException e) {
-            logger.error("ES更新下载次数时出现异常");
+            logger.error("ES更新下载次数时出现异常: InterruptedException");
             e.printStackTrace();
         } catch (ExecutionException e) {
-            logger.error("ES更新下载次数时出现异常");
+            logger.error("ES更新下载次数时出现异常: ExecutionException");
             e.printStackTrace();
         }
-
     }
 
     @Override
-    public void updateCollectionNum(String esId, int collectionNum) {
-        UpdateRequest updateRequest = new UpdateRequest();
-        updateRequest.index(UdConstant.ES_INDEX);
-        updateRequest.type(this.ES_TYPE);
-        updateRequest.id(esId);
-        try {
-            updateRequest.doc(jsonBuilder().startObject().field("collectionNum", collectionNum).endObject());
-        } catch (IOException e) {
-            logger.error("updateCollectionNum jsonBuilder 出现IO异常");
-            e.printStackTrace();
+    public void updateCollectionNum(String resourceId, int collectionOperation) {
+        Resource resource = this.resourceService.findOneById(resourceId);
+        if (null == resource) {
+            logger.error("收藏操作的资源[ID={}]不存在", resourceId);
+            return;
         }
+        UpdateRequest updateRequest = new UpdateRequest(UdConstant.ES_INDEX, this.ES_TYPE, resource.getEsId());
+        Script script;
+        switch (collectionOperation) {
+            case UdConstant.COLLECTION_OPERATION_ADD:
+                script = new Script("ctx._source.collectionNum += 1");
+                break;
+            case UdConstant.COLLECTION_OPERATION_CANCEL:
+                script = new Script("ctx._source.collectionNum -= 1");
+                break;
+            default:
+                return;
+        }
+        updateRequest.script(script);
         try {
-            client.update(updateRequest).get();
+            UpdateResponse updateResponse = client.update(updateRequest).get();
+            int responseStatus = updateResponse.status().getStatus();
+            if (responseStatus != UdConstant.ES_RESPONSE_SUCCESS){
+                logger.error("ES更新收藏次数出错，返回的状态码：{}", responseStatus);
+            }
         } catch (InterruptedException e) {
-            logger.error("ES更新收藏次数时出现异常");
+            logger.error("ES更新收藏次数时出现异常：InterruptedException");
             e.printStackTrace();
         } catch (ExecutionException e) {
-            logger.error("ES更新收藏次数时出现异常");
+            logger.error("ES更新收藏次数时出现异常：ExecutionException");
             e.printStackTrace();
         }
     }

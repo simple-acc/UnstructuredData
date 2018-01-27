@@ -24,4 +24,11 @@ public interface ResourceTempService {
      * @return Map
      */
     Map search(ResourceTempSearch resourceTempSearch);
+
+    /**
+     * @apiNote 根据Id查询待审核资源
+     * @param resourceTempId 待审核资源ID
+     * @return ResourceTemp
+     */
+    ResourceTemp findOneById(String resourceTempId);
 }

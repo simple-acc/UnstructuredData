@@ -29,7 +29,7 @@ public class CollectionServiceImpl implements CollectionService {
         if (null == collection.getId()){
             return ResultData.newError("收藏失败，请反馈，谢谢！");
         }
-        return ResultData.newOK("收藏成功");
+        return ResultData.newOK("资源收藏成功");
     }
 
     @Override
@@ -42,5 +42,16 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public int getCollectNum(String userId) {
         return this.collectionRepository.countByCreator(userId);
+    }
+
+    @Override
+    public Map delete(Collection collection) {
+        Collection exist = this.collectionRepository
+                .findByObjIdAndAndCreator(collection.getObjId(), collection.getCreator());
+        if (exist == null){
+            return ResultData.newError("该资源还未收藏取消收藏失败");
+        }
+        this.collectionRepository.delete(exist);
+        return ResultData.newOK("成功取消收藏");
     }
 }

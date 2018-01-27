@@ -2,6 +2,7 @@ package com.lmt.data.unstructured.api;
 
 import com.lmt.data.unstructured.entity.Collection;
 import com.lmt.data.unstructured.service.CollectionService;
+import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.ResourceService;
 import com.lmt.data.unstructured.util.CheckResult;
 import com.lmt.data.unstructured.util.RedisCache;
@@ -25,18 +26,27 @@ public class CollectionApi {
     private CollectionService collectionService;
 
     @Autowired
-    private ResourceService resourceService;
+    private ResourceEsService resourceEsService;
 
     @Autowired
     private RedisCache redisCache;
 
     @RequestMapping("/collectResource")
     public Map collectResource(@RequestBody Collection collection){
-        collection.setType(UdConstant.COLLECT_TYPE_RESOURCE);
         collection.setCreator(redisCache.getUserId(collection));
         Map result = this.collectionService.save(collection);
         if (CheckResult.isOK(result)) {
-            this.resourceService.updateCollectionNum(collection.getObjId());
+            this.resourceEsService.updateCollectionNum(collection.getObjId(), UdConstant.COLLECTION_OPERATION_ADD);
+        }
+        return result;
+    }
+
+    @RequestMapping("/cancelCollectResource")
+    public Map cancelCollectResource(@RequestBody Collection collection){
+        collection.setCreator(redisCache.getUserId(collection));
+        Map result = this.collectionService.delete(collection);
+        if (CheckResult.isOK(result)) {
+            this.resourceEsService.updateCollectionNum(collection.getObjId(), UdConstant.COLLECTION_OPERATION_CANCEL);
         }
         return result;
     }
