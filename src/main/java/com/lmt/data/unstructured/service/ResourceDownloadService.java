@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.service;
 
 import com.lmt.data.unstructured.entity.ResourceDownload;
+import com.lmt.data.unstructured.entity.search.ResourceDownloadSearch;
 
 import java.util.Map;
 
@@ -23,4 +24,11 @@ public interface ResourceDownloadService {
      * @return 下载次数
      */
     int getDownloadNum(String userId);
+
+    /**
+     * @apiNote 查询下载记录
+     * @param resourceDownloadSearch 查询参数
+     * @return Map
+     */
+    Map search(ResourceDownloadSearch resourceDownloadSearch);
 }

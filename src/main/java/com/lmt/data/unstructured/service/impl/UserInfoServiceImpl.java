@@ -4,10 +4,7 @@ import com.lmt.data.unstructured.entity.LoginLog;
 import com.lmt.data.unstructured.entity.UserInfo;
 import com.lmt.data.unstructured.entity.search.UserInfoSearch;
 import com.lmt.data.unstructured.repository.UserInfoRepository;
-import com.lmt.data.unstructured.service.CollectionService;
-import com.lmt.data.unstructured.service.LoginLogService;
-import com.lmt.data.unstructured.service.ResourceDownloadService;
-import com.lmt.data.unstructured.service.UserInfoService;
+import com.lmt.data.unstructured.service.*;
 import com.lmt.data.unstructured.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +31,16 @@ public class UserInfoServiceImpl implements UserInfoService{
     private UserInfoRepository userInfoRepository;
 
     @Autowired
-    private ResourceDownloadService resourceDownloadService;
-
-    @Autowired
     private LoginLogService loginLogService;
 
     @Autowired
     private CollectionService collectionService;
+
+    @Autowired
+    private ResourceTempService resourceTempService;
+
+    @Autowired
+    private ResourceDownloadService resourceDownloadService;
 
     @Autowired
     private EntityManagerQuery entityManagerQuery;
@@ -197,6 +197,7 @@ public class UserInfoServiceImpl implements UserInfoService{
         UserInfo userInfo = this.redisCache.getUserInfoFromCache(tokenId);
         Map<String, Object> result = new HashMap<>(3);
         result.put("userName", userInfo.getUserName());
+        result.put("uploadNum", this.resourceTempService.getUploadNum(userInfo.getId()));
         result.put("downloadNum", this.resourceDownloadService.getDownloadNum(userInfo.getId()));
         result.put("collectNum", this.collectionService.getCollectNum(userInfo.getId()));
         return ResultData.newOK("用户信息获取成功", result);

@@ -31,4 +31,11 @@ public interface ResourceTempService {
      * @return ResourceTemp
      */
     ResourceTemp findOneById(String resourceTempId);
+
+    /**
+     * @apiNote 查询某个作者上传资源数
+     * @param authorId 作者ID
+     * @return 上传资源数
+     */
+    int getUploadNum(String authorId);
 }

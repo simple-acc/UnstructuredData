@@ -70,4 +70,9 @@ public class ResourceTempServiceImpl implements ResourceTempService {
     public ResourceTemp findOneById(String resourceTempId) {
         return this.resourceTempRepository.findOne(resourceTempId);
     }
+
+    @Override
+    public int getUploadNum(String authorId) {
+        return this.resourceTempRepository.countByAuthorId(authorId);
+    }
 }

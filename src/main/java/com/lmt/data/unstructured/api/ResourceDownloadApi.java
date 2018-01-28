@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.api;
 
 import com.lmt.data.unstructured.entity.ResourceDownload;
+import com.lmt.data.unstructured.entity.search.ResourceDownloadSearch;
 import com.lmt.data.unstructured.service.ResourceDownloadService;
 import com.lmt.data.unstructured.util.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class ResourceDownloadApi {
     public Map save(@RequestBody ResourceDownload resourceDownload){
         resourceDownload.setUserId(redisCache.getUserId(resourceDownload));
         return this.resourceDownloadService.save(resourceDownload);
+    }
+
+    @RequestMapping("/search")
+    public Map search(@RequestBody ResourceDownloadSearch resourceDownloadSearch){
+        resourceDownloadSearch.setUserId(redisCache.getUserId(resourceDownloadSearch));
+        return this.resourceDownloadService.search(resourceDownloadSearch);
     }
 
 }

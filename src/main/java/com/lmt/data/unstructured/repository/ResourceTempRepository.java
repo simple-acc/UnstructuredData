@@ -15,4 +15,11 @@ public interface ResourceTempRepository extends JpaRepository<ResourceTemp, Stri
      * @return ResourceTemp
      */
     ResourceTemp findByMd5(String md5);
+
+    /**
+     * @apiNote 获取用户上传资源数
+     * @param authorId 作者ID
+     * @return 上传资源数
+     */
+    int countByAuthorId(String authorId);
 }
