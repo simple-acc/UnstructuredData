@@ -107,7 +107,7 @@ public class DissertationServiceImpl implements DissertationService{
     }
 
     @Override
-    public Map<Dissertation, List<Object>> getDissertationIdsGroup() {
+    public Map<Dissertation, List<Object>> getHasResourceDissertationIdsGroup() {
         List<Dissertation> all = this.dissertationRepository.findAll();
         Map<String, Dissertation> firstLevel = new HashMap<>(all.size());
         List<Dissertation> children = new ArrayList<>();

@@ -11,7 +11,6 @@ import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.ResourceService;
 import com.lmt.data.unstructured.service.TagService;
 import com.lmt.data.unstructured.util.*;
-import org.elasticsearch.client.transport.TransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -154,7 +153,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Map getTopFiveByDissertation() {
-        Map<Dissertation, List<Object>> dissertationIds = this.dissertationService.getDissertationIdsGroup();
+        Map<Dissertation, List<Object>> dissertationIds = this.dissertationService.getHasResourceDissertationIdsGroup();
         List<Object> result = new ArrayList<>();
         Map<String, Object> temp;
         StringBuffer sql = new StringBuffer();

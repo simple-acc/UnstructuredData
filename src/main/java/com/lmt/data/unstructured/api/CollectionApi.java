@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.api;
 
 import com.lmt.data.unstructured.entity.Collection;
+import com.lmt.data.unstructured.entity.search.CollectionSearch;
 import com.lmt.data.unstructured.service.CollectionService;
 import com.lmt.data.unstructured.service.ResourceEsService;
 import com.lmt.data.unstructured.service.ResourceService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,22 @@ public class CollectionApi {
 
     @Autowired
     private RedisCache redisCache;
+
+    @RequestMapping("/delete")
+    public Map delete(@RequestBody List<Collection> collections){
+        return this.collectionService.delete(collections);
+    }
+
+    @RequestMapping("/update")
+    public Map update(@RequestBody Collection collection){
+        return this.collectionService.update(collection);
+    }
+
+    @RequestMapping("/search")
+    public Map search(@RequestBody CollectionSearch collectionSearch){
+        collectionSearch.setCreator(redisCache.getUserId(collectionSearch));
+        return this.collectionService.search(collectionSearch);
+    }
 
     @RequestMapping("/collectResource")
     public Map collectResource(@RequestBody Collection collection){

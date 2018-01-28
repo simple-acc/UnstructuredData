@@ -57,5 +57,5 @@ public interface DissertationService {
      * @apiNote 获取一级专题以下所有子专题的ID
      * @return Map
      */
-    Map<Dissertation, List<Object>> getDissertationIdsGroup();
+    Map<Dissertation, List<Object>> getHasResourceDissertationIdsGroup();
 }
