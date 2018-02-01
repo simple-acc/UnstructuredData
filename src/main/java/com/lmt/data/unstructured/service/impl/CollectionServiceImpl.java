@@ -42,13 +42,6 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public boolean isCollected(String userId, String resourceId) {
-        Collection exist = this.collectionRepository
-                .findByObjIdAndAndCreator(resourceId, userId);
-        return exist != null;
-    }
-
-    @Override
     public int getCollectNum(String userId) {
         return this.collectionRepository.countByCreator(userId);
     }
@@ -111,5 +104,26 @@ public class CollectionServiceImpl implements CollectionService {
             }
         }
         return ResultData.newOK("成功取消收藏");
+    }
+
+    @Override
+    public List getCollected(String userId, List<String> resourceIdList) {
+        if (resourceIdList.size() == 0){
+            return resourceIdList;
+        }
+        StringBuffer sql = new StringBuffer();
+        List<Object> parameters = new ArrayList<>();
+        sql.append("SELECT c.obj_id AS resourceId ");
+        sql.append("FROM collection AS c ");
+        sql.append("WHERE c.creator = ? ");
+        parameters.add(userId);
+        sql.append("AND obj_id IN (");
+        for (String resourceId : resourceIdList) {
+            sql.append("?, ");
+            parameters.add(resourceId);
+        }
+        sql.setLength(sql.length() - 2);
+        sql.append(" )");
+        return this.entityManagerQuery.nativeSqlSearchOneColumn(sql, parameters);
     }
 }

@@ -34,7 +34,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -44,14 +43,11 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  * @author MT-Lin
  * @date 2018/1/17 8:52
  */
-@SuppressWarnings("TryWithIdenticalCatches")
+@SuppressWarnings({"TryWithIdenticalCatches", "unchecked"})
 @Service("ResourceEsServiceImpl")
 public class ResourceEsServiceImpl implements ResourceEsService {
 
     private Logger logger = LoggerFactory.getLogger(ResourceEsService.class);
-
-    @Autowired
-    private CollectionService collectionService;
 
     @Autowired
     private UserInfoService userInfoService;
@@ -60,16 +56,19 @@ public class ResourceEsServiceImpl implements ResourceEsService {
     private ResourceService resourceService;
 
     @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
     private TagRepository tagRepository;
 
     @Autowired
-    private TransportClient client;
+    private FileUtil fileUtil;
 
     @Autowired
     private RedisCache redisCache;
 
     @Autowired
-    private FileUtil fileUtil;
+    private TransportClient transportClient;
 
     /**
      * resource的ES类型
@@ -94,7 +93,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         if (null != tag){
             resourceEs.setTags(Arrays.asList(tag.getTag().split(",")));
         }
-        IndexResponse response = client.prepareIndex(UdConstant.ES_INDEX, this.ES_TYPE)
+        IndexResponse response = transportClient.prepareIndex(UdConstant.ES_INDEX, this.ES_TYPE)
                 .setSource(JSON.toJSONString(resourceEs), XContentType.JSON)
                 .get();
         if (null == resource.getId()){
@@ -107,7 +106,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
     @Override
     public Map searchFromEs(ResourceEsSearch resourceEsSearch) {
         String keyword = resourceEsSearch.getKeyword().replace("%","");
-        SearchRequestBuilder searchRequestBuilder = client.prepareSearch(UdConstant.ES_INDEX);
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch(UdConstant.ES_INDEX);
         searchRequestBuilder
                 .setFrom(resourceEsSearch.getCurrentPage() - 1)
                 .setSize(resourceEsSearch.getPageSize())
@@ -122,8 +121,8 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         searchRequestBuilder.highlighter(highlightBuilder);
         // 获取返回数据
         SearchResponse searchResponse = searchRequestBuilder.get();
-        Map<String, Object> result = new HashMap<>(2);
-        List<Object> resources = new ArrayList<>();
+        List<ResourceEsUser> resourceEsUsers = new ArrayList<>();
+        List<String> resourceIdList = new ArrayList<>();
         Map<String, Object> sourceAsMap;
         StringBuilder highlight = new StringBuilder();
         SearchHits hits = searchResponse.getHits();
@@ -133,15 +132,15 @@ public class ResourceEsServiceImpl implements ResourceEsService {
             sourceAsMap = hit.getSourceAsMap();
             id = hit.getId();
             // 处理高亮字段
-            for (String s : highlightFields.keySet()) {
-                Text[] fragments = highlightFields.get(s).getFragments();
+            for (String fieled : highlightFields.keySet()) {
+                Text[] fragments = highlightFields.get(fieled).getFragments();
                 for (Text fragment : fragments) {
-                    if ("designation".equals(s)){
+                    if ("designation".equals(fieled)){
                         String replace = fragment.string()
                                 .replace("<span style=\"color:red\">", "")
                                 .replace("</span>", "");
-                        String newStr = sourceAsMap.get(s).toString().replace(replace, fragment.string());
-                        sourceAsMap.replace(s, newStr);
+                        String newStr = sourceAsMap.get(fieled).toString().replace(replace, fragment.string());
+                        sourceAsMap.replace(fieled, newStr);
                     } else {
                         highlight.append(fragment.string());
                     }
@@ -155,13 +154,18 @@ public class ResourceEsServiceImpl implements ResourceEsService {
             sourceAsMap.put("id", id);
             ResourceEsUser resourceEsUser =
                     JSONObject.parseObject(JSON.toJSONString(sourceAsMap), ResourceEsUser.class);
-            // TODO 判断资源是否收藏过
-            resourceEsUser.setCollected(
-                    this.collectionService.isCollected(
-                            redisCache.getUserId(resourceEsSearch), resourceEsUser.getResourceId()));
-            resources.add(resourceEsUser);
+            resourceIdList.add(resourceEsUser.getResourceId());
+            resourceEsUsers.add(resourceEsUser);
         }
-        result.put("content", resources);
+        // 资源收藏情况设置
+        resourceIdList = this.collectionService.getCollected(redisCache.getUserId(resourceEsSearch), resourceIdList);
+        for (ResourceEsUser resourceEsUser : resourceEsUsers) {
+            if (resourceIdList.contains(resourceEsUser.getResourceId())){
+                resourceEsUser.setCollected(true);
+            }
+        }
+        Map<String, Object> result = new HashMap<>(3);
+        result.put("content", resourceEsUsers);
         result.put("totalElements", hits.getTotalHits());
         return ResultData.newOK("查询成功", result);
     }
@@ -171,7 +175,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         UpdateRequest updateRequest = new UpdateRequest(UdConstant.ES_INDEX, this.ES_TYPE, esId)
                 .script(new Script("ctx._source.downloadNum += 1"));
         try {
-            UpdateResponse updateResponse = client.update(updateRequest).get();
+            UpdateResponse updateResponse = transportClient.update(updateRequest).get();
             int responseStatus = updateResponse.status().getStatus();
             if (responseStatus != UdConstant.ES_RESPONSE_SUCCESS){
                 logger.error("ES更新下载次数出错，返回的状态码：{}", responseStatus);
@@ -206,7 +210,7 @@ public class ResourceEsServiceImpl implements ResourceEsService {
         }
         updateRequest.script(script);
         try {
-            UpdateResponse updateResponse = client.update(updateRequest).get();
+            UpdateResponse updateResponse = transportClient.update(updateRequest).get();
             int responseStatus = updateResponse.status().getStatus();
             if (responseStatus != UdConstant.ES_RESPONSE_SUCCESS){
                 logger.error("ES更新收藏次数出错，返回的状态码：{}", responseStatus);

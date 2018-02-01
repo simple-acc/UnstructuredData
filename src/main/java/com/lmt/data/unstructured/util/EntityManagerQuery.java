@@ -67,7 +67,7 @@ public class EntityManagerQuery {
         nativeQuery.setFirstResult(currentPage * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List resultList = nativeQuery.getResultList();
-        Map<String, Object> resultMap = new HashMap<>(2);
+        Map<String, Object> resultMap = new HashMap<>(3);
         resultMap.put(UdConstant.TOTAL_ELEMENTS, totalElements);
         resultMap.put(UdConstant.CONTENT, resultList);
         return resultMap;
@@ -80,8 +80,20 @@ public class EntityManagerQuery {
             nativeQuery.setParameter(position, parameter);
             position++;
         }
-        nativeQuery.setMaxResults(dataSize);
+        if (dataSize > 0) {
+            nativeQuery.setMaxResults(dataSize);
+        }
         nativeQuery.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return nativeQuery.getResultList();
+    }
+
+    public List nativeSqlSearchOneColumn(StringBuffer sql, List<Object> parameters){
+        Query nativeQuery = this.entityManager.createNativeQuery(sql.toString());
+        int position = 1;
+        for (Object parameter : parameters) {
+            nativeQuery.setParameter(position, parameter);
+            position++;
+        }
         return nativeQuery.getResultList();
     }
 }

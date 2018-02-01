@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured.service;
 
 import com.lmt.data.unstructured.entity.Collection;
+import com.lmt.data.unstructured.entity.es.ResourceEsUser;
 import com.lmt.data.unstructured.entity.search.CollectionSearch;
 
 import java.util.List;
@@ -18,14 +19,6 @@ public interface CollectionService {
      * @return Map
      */
     Map save(Collection collection);
-
-    /**
-     * @apiNote 判断用户是否收藏过该资源
-     * @param userId 用户ID
-     * @param resourceId 资源ID
-     * @return boolean
-     */
-    boolean isCollected(String userId, String resourceId);
 
     /**
      * @apiNote 获取用收藏的资源数量
@@ -61,4 +54,12 @@ public interface CollectionService {
      * @return Map
      */
     Map delete(List<Collection> collections);
+
+    /**
+     * @apiNote 获取用户收藏的资源ID
+     * @param userId 用户ID
+     * @param resourceIdList 资源ID集合
+     * @return List
+     */
+    List getCollected(String userId, List<String> resourceIdList);
 }
