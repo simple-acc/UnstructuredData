@@ -1,13 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -17,47 +19,49 @@ import java.util.Date;
 @Entity(name = "tag")
 public class Tag extends BaseEntity {
 
-    /**
-     * 所属资源ID
-     */
-    @Column(name = "resource_id", nullable = false, length = 36)
-    private String resourceId;
+	private static final long serialVersionUID = -4741298463953801402L;
 
-    /**
-     * 标签
-     */
-    @Column(name = "tag", length = 300)
-    private String tag;
+	/**
+	 * 所属资源ID
+	 */
+	@Column(name = "resource_id", nullable = false, length = 36)
+	private String resourceId;
 
-    /**
-     * 创建时间
-     */
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time", nullable = false, updatable = false)
-    private Date createTime;
+	/**
+	 * 标签
+	 */
+	@Column(name = "tag", length = 300)
+	private String tag;
 
-    public String getResourceId() {
-        return resourceId;
-    }
+	/**
+	 * 创建时间
+	 */
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_time", nullable = false, updatable = false)
+	private Date createTime;
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
-    }
+	public String getResourceId() {
+		return resourceId;
+	}
 
-    public String getTag() {
-        return tag;
-    }
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
+	public String getTag() {
+		return tag;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
 }

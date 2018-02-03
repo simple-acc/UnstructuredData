@@ -1,10 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -14,131 +19,133 @@ import java.util.Date;
 @Entity(name = "classify")
 public class Classify extends BaseEntity {
 
-    /**
-     * 父级分类ID
-     */
-    @Column(name = "parent_id", length = 36)
-    private String parentId;
+	private static final long serialVersionUID = -8209639296765351122L;
 
-    /**
-     * 创建者
-     */
-    @Column(name = "creator", nullable = false, length = 36)
-    private String creator;
+	/**
+	 * 父级分类ID
+	 */
+	@Column(name = "parent_id", length = 36)
+	private String parentId;
 
-    /**
-     * 分类名称
-     */
-    @Column(name = "designation", nullable = false, length = 32)
-    private String designation;
+	/**
+	 * 创建者
+	 */
+	@Column(name = "creator", nullable = false, length = 36)
+	private String creator;
 
-    /**
-     * 描述
-     */
-    @Column(name = "description", length = 300)
-    private String description;
+	/**
+	 * 分类名称
+	 */
+	@Column(name = "designation", nullable = false, length = 32)
+	private String designation;
 
-    /**
-     * 分类类型（代码表006）
-     */
-    @Column(name = "classifyType", nullable = false, length = 6)
-    private String classifyType;
+	/**
+	 * 描述
+	 */
+	@Column(name = "description", length = 300)
+	private String description;
 
-    /**
-     * 收藏数
-     */
-    @Column(name = "collection_num")
-    private int collectionNum;
+	/**
+	 * 分类类型（代码表006）
+	 */
+	@Column(name = "classifyType", nullable = false, length = 6)
+	private String classifyType;
 
-    /**
-     * 下载数
-     */
-    @Column(name = "download_num")
-    private int downloadNum;
+	/**
+	 * 收藏数
+	 */
+	@Column(name = "collection_num")
+	private int collectionNum;
 
-    /**
-     * 上传数
-     */
-    @Column(name = "upload_num")
-    private int uploadNum;
+	/**
+	 * 下载数
+	 */
+	@Column(name = "download_num")
+	private int downloadNum;
 
-    /**
-     * 创建时间
-     */
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    @Column(name="create_time", nullable = false, updatable = false)
-    private Date createTime;
+	/**
+	 * 上传数
+	 */
+	@Column(name = "upload_num")
+	private int uploadNum;
 
-    public String getParentId() {
-        return parentId;
-    }
+	/**
+	 * 创建时间
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name = "create_time", nullable = false, updatable = false)
+	private Date createTime;
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
+	public String getParentId() {
+		return parentId;
+	}
 
-    public String getCreator() {
-        return creator;
-    }
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+	public String getCreator() {
+		return creator;
+	}
 
-    public String getDesignation() {
-        return designation;
-    }
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
 
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
+	public String getDesignation() {
+		return designation;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getClassifyType() {
-        return classifyType;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setClassifyType(String classifyType) {
-        this.classifyType = classifyType;
-    }
+	public String getClassifyType() {
+		return classifyType;
+	}
 
-    public int getCollectionNum() {
-        return collectionNum;
-    }
+	public void setClassifyType(String classifyType) {
+		this.classifyType = classifyType;
+	}
 
-    public void setCollectionNum(int collectionNum) {
-        this.collectionNum = collectionNum;
-    }
+	public int getCollectionNum() {
+		return collectionNum;
+	}
 
-    public int getDownloadNum() {
-        return downloadNum;
-    }
+	public void setCollectionNum(int collectionNum) {
+		this.collectionNum = collectionNum;
+	}
 
-    public void setDownloadNum(int downloadNum) {
-        this.downloadNum = downloadNum;
-    }
+	public int getDownloadNum() {
+		return downloadNum;
+	}
 
-    public int getUploadNum() {
-        return uploadNum;
-    }
+	public void setDownloadNum(int downloadNum) {
+		this.downloadNum = downloadNum;
+	}
 
-    public void setUploadNum(int uploadNum) {
-        this.uploadNum = uploadNum;
-    }
+	public int getUploadNum() {
+		return uploadNum;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setUploadNum(int uploadNum) {
+		this.uploadNum = uploadNum;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 }

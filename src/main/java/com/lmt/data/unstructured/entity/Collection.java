@@ -1,13 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -17,61 +19,63 @@ import java.util.Date;
 @Entity(name = "collection")
 public class Collection extends BaseEntity {
 
-    /**
-     * 收藏夹ID
-     */
-    @Column(name = "collection_folder_id", nullable = false, length = 36)
-    private String collectionFolderId;
+	private static final long serialVersionUID = -4789273720057198557L;
 
-    /**
-     * 收藏对象ID
-     */
-    @Column(name = "obj_id", nullable = false, length = 36)
-    private String objId;
+	/**
+	 * 收藏夹ID
+	 */
+	@Column(name = "collection_folder_id", nullable = false, length = 36)
+	private String collectionFolderId;
 
-    /**
-     * 创建人
-     */
-    @Column(name = "creator", nullable = false, length = 36)
-    private String creator;
+	/**
+	 * 收藏对象ID
+	 */
+	@Column(name = "obj_id", nullable = false, length = 36)
+	private String objId;
 
-    /**
-     * 创建时间
-     */
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time", nullable = false, updatable = false)
-    private Date createTime;
+	/**
+	 * 创建人
+	 */
+	@Column(name = "creator", nullable = false, length = 36)
+	private String creator;
 
-    public String getCollectionFolderId() {
-        return collectionFolderId;
-    }
+	/**
+	 * 创建时间
+	 */
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_time", nullable = false, updatable = false)
+	private Date createTime;
 
-    public void setCollectionFolderId(String collectionFolderId) {
-        this.collectionFolderId = collectionFolderId;
-    }
+	public String getCollectionFolderId() {
+		return collectionFolderId;
+	}
 
-    public String getObjId() {
-        return objId;
-    }
+	public void setCollectionFolderId(String collectionFolderId) {
+		this.collectionFolderId = collectionFolderId;
+	}
 
-    public void setObjId(String objId) {
-        this.objId = objId;
-    }
+	public String getObjId() {
+		return objId;
+	}
 
-    public String getCreator() {
-        return creator;
-    }
+	public void setObjId(String objId) {
+		this.objId = objId;
+	}
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+	public String getCreator() {
+		return creator;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 }

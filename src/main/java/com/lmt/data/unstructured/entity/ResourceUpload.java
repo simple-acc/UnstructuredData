@@ -1,9 +1,9 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -12,31 +12,33 @@ import javax.persistence.Entity;
 @Entity(name = "resource_upload")
 public class ResourceUpload extends BaseEntity {
 
-    /**
-     * 用户ID
-     */
-    @Column(name = "user_id", nullable = false, length = 36)
-    private String userId;
+	private static final long serialVersionUID = -4093526740593915304L;
 
-    /**
-     * 待审核资源ID
-     */
-    @Column(name = "resource_temp_id", nullable = false, length = 36)
-    private String resourceTempId;
+	/**
+	 * 用户ID
+	 */
+	@Column(name = "user_id", nullable = false, length = 36)
+	private String userId;
 
-    public String getUserId() {
-        return userId;
-    }
+	/**
+	 * 待审核资源ID
+	 */
+	@Column(name = "resource_temp_id", nullable = false, length = 36)
+	private String resourceTempId;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public String getResourceTempId() {
-        return resourceTempId;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public void setResourceTempId(String resourceTempId) {
-        this.resourceTempId = resourceTempId;
-    }
+	public String getResourceTempId() {
+		return resourceTempId;
+	}
+
+	public void setResourceTempId(String resourceTempId) {
+		this.resourceTempId = resourceTempId;
+	}
 }

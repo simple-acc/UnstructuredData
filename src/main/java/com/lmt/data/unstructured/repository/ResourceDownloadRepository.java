@@ -1,7 +1,8 @@
 package com.lmt.data.unstructured.repository;
 
-import com.lmt.data.unstructured.entity.ResourceDownload;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.lmt.data.unstructured.entity.ResourceDownload;
 
 /**
  * @author MT-Lin
@@ -9,18 +10,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ResourceDownloadRepository extends JpaRepository<ResourceDownload, String> {
 
-    /**
-     * @apiNote 根据资源ID和用户ID查找下载记录
-     * @param resourceId 资源ID
-     * @param userId 用户ID
-     * @return ResourceDownload
-     */
-    ResourceDownload findByResourceIdAndAndUserId(String resourceId, String userId);
+	/**
+	 * @apiNote 根据资源ID和用户ID查找下载记录
+	 * @param resourceId
+	 *            资源ID
+	 * @param userId
+	 *            用户ID
+	 * @return ResourceDownload
+	 */
+	ResourceDownload findByResourceIdAndAndUserId(String resourceId, String userId);
 
-    /**
-     * @apiNote 获取用户的下载次数
-     * @param userId 用户ID
-     * @return 下载次数
-     */
-    int countByUserId(String userId);
+	/**
+	 * @apiNote 获取用户的下载次数
+	 * @param userId
+	 *            用户ID
+	 * @return 下载次数
+	 */
+	int countByUserId(String userId);
 }

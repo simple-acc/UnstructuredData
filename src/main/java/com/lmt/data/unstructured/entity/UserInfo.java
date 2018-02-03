@@ -1,12 +1,17 @@
 package com.lmt.data.unstructured.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.lmt.data.unstructured.base.BaseEntity;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
-import java.util.UUID;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -16,200 +21,202 @@ import java.util.UUID;
 @Entity(name = "user_info")
 public class UserInfo extends BaseEntity {
 
-    /**
-     * 地址
-     */
-    @Column(name="address_code", nullable = false, length = 36)
-    private String addressCode;
+	private static final long serialVersionUID = 8551521706061982617L;
 
-    /**
-     * 用户名
-     */
-    @Column(name="user_name", nullable = false, unique = true, length = 8)
-    private String userName;
+	/**
+	 * 地址
+	 */
+	@Column(name = "address_code", nullable = false, length = 36)
+	private String addressCode;
 
-    /**
-     * 密码
-     */
-    @Column(name="user_password", nullable = false, length = 32)
-    @JSONField(serialize = false)
-    private String userPassword;
+	/**
+	 * 用户名
+	 */
+	@Column(name = "user_name", nullable = false, unique = true, length = 8)
+	private String userName;
 
-    /**
-     * 用户状态
-     */
-    @Column(name = "status", nullable = false, length = 6)
-    private String status;
+	/**
+	 * 密码
+	 */
+	@Column(name = "user_password", nullable = false, length = 32)
+	@JSONField(serialize = false)
+	private String userPassword;
 
-    /**
-     * 密码错误次数
-     */
-    @Column(name = "password_error_time")
-    private int passwordErrorTime;
+	/**
+	 * 用户状态
+	 */
+	@Column(name = "status", nullable = false, length = 6)
+	private String status;
 
-    /**
-     * 性别
-     */
-    @Column(name="sex", nullable = false, length = 6)
-    private String sex;
+	/**
+	 * 密码错误次数
+	 */
+	@Column(name = "password_error_time")
+	private int passwordErrorTime;
 
-    /**
-     * 出生日期
-     */
-    @Temporal(TemporalType.DATE)
-    @Column(name="birthday")
-    private Date birthday;
+	/**
+	 * 性别
+	 */
+	@Column(name = "sex", nullable = false, length = 6)
+	private String sex;
 
-    /**
-     * 个人简介
-     */
-    @Column(name="description", length = 100)
-    private String description;
+	/**
+	 * 出生日期
+	 */
+	@Temporal(TemporalType.DATE)
+	@Column(name = "birthday")
+	private Date birthday;
 
-    /**
-     * 用户类型
-     */
-    @Column(name = "user_type", nullable = false, length = 6)
-    private String userType;
+	/**
+	 * 个人简介
+	 */
+	@Column(name = "description", length = 100)
+	private String description;
 
-    /**
-     * 职业
-     */
-    @Column(name="profession", nullable = false, length = 6)
-    private String profession;
+	/**
+	 * 用户类型
+	 */
+	@Column(name = "user_type", nullable = false, length = 6)
+	private String userType;
 
-    /**
-     * 邮箱
-     */
-    @Column(name="email", nullable = false, length = 32)
-    private String email;
+	/**
+	 * 职业
+	 */
+	@Column(name = "profession", nullable = false, length = 6)
+	private String profession;
 
-    /**
-     * 电话号码
-     */
-    @Column(name="phone_number", length = 11)
-    private String phoneNumber;
+	/**
+	 * 邮箱
+	 */
+	@Column(name = "email", nullable = false, length = 32)
+	private String email;
 
-    /**
-     * 注册时间
-     */
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="register_time", nullable = false, updatable = false)
-    private Date registerTime;
+	/**
+	 * 电话号码
+	 */
+	@Column(name = "phone_number", length = 11)
+	private String phoneNumber;
 
-    @Transient
-    private String sessionId;
+	/**
+	 * 注册时间
+	 */
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "register_time", nullable = false, updatable = false)
+	private Date registerTime;
 
-    public String getAddressCode() {
-        return addressCode;
-    }
+	@Transient
+	private String sessionId;
 
-    public void setAddressCode(String addressCode) {
-        this.addressCode = addressCode;
-    }
+	public String getAddressCode() {
+		return addressCode;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setAddressCode(String addressCode) {
+		this.addressCode = addressCode;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public String getUserPassword() {
-        return userPassword;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
+	public String getUserPassword() {
+		return userPassword;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public int getPasswordErrorTime() {
-        return passwordErrorTime;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setPasswordErrorTime(int passwordErrorTime) {
-        this.passwordErrorTime = passwordErrorTime;
-    }
+	public int getPasswordErrorTime() {
+		return passwordErrorTime;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setPasswordErrorTime(int passwordErrorTime) {
+		this.passwordErrorTime = passwordErrorTime;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getSex() {
-        return sex;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
+	public String getSex() {
+		return sex;
+	}
 
-    public Date getBirthday() {
-        return birthday;
-    }
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+	public Date getBirthday() {
+		return birthday;
+	}
 
-    public String getUserType() {
-        return userType;
-    }
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
 
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
+	public String getUserType() {
+		return userType;
+	}
 
-    public String getProfession() {
-        return profession;
-    }
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 
-    public void setProfession(String profession) {
-        this.profession = profession;
-    }
+	public String getProfession() {
+		return profession;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setProfession(String profession) {
+		this.profession = profession;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public Date getRegisterTime() {
-        return registerTime;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public void setRegisterTime(Date registerTime) {
-        this.registerTime = registerTime;
-    }
+	public Date getRegisterTime() {
+		return registerTime;
+	}
 
-    public String getSessionId() {
-        return sessionId;
-    }
+	public void setRegisterTime(Date registerTime) {
+		this.registerTime = registerTime;
+	}
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 }

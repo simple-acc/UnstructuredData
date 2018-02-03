@@ -1,13 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -17,47 +19,49 @@ import java.util.Date;
 @Entity(name = "resource_download")
 public class ResourceDownload extends BaseEntity {
 
-    /**
-     * 资源ID
-     */
-    @Column(name = "resource_id", nullable = false, length = 36)
-    private String resourceId;
+	private static final long serialVersionUID = 500147888974909316L;
 
-    /**
-     * 用户ID
-     */
-    @Column(name = "user_id", nullable = false, length = 36)
-    private String userId;
+	/**
+	 * 资源ID
+	 */
+	@Column(name = "resource_id", nullable = false, length = 36)
+	private String resourceId;
 
-    /**
-     * 创建时间
-     */
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    @Column(name="create_time", nullable = false, updatable = false)
-    private Date createTime;
+	/**
+	 * 用户ID
+	 */
+	@Column(name = "user_id", nullable = false, length = 36)
+	private String userId;
 
-    public String getResourceId() {
-        return resourceId;
-    }
+	/**
+	 * 创建时间
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name = "create_time", nullable = false, updatable = false)
+	private Date createTime;
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
-    }
+	public String getResourceId() {
+		return resourceId;
+	}
 
-    public String getUserId() {
-        return userId;
-    }
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 }

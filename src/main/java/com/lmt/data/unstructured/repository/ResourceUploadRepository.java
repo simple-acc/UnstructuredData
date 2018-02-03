@@ -1,7 +1,8 @@
 package com.lmt.data.unstructured.repository;
 
-import com.lmt.data.unstructured.entity.ResourceUpload;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.lmt.data.unstructured.entity.ResourceUpload;
 
 /**
  * @author MT-Lin

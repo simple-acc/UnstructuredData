@@ -1,13 +1,14 @@
 package com.lmt.data.unstructured.api;
 
-import com.lmt.data.unstructured.entity.search.ResourceSearch;
-import com.lmt.data.unstructured.service.ResourceService;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.lmt.data.unstructured.entity.search.ResourceSearch;
+import com.lmt.data.unstructured.service.ResourceService;
 
 /**
  * @author MT-Lin
@@ -15,23 +16,24 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/ResourceApi")
+@SuppressWarnings("rawtypes")
 public class ResourceApi {
 
-    @Autowired
-    private ResourceService resourceService;
+	@Autowired
+	private ResourceService resourceService;
 
-    @RequestMapping("/getTopFiveByDissertation")
-    public Map getTopFiveByDissertation(){
-        return this.resourceService.getTopFiveByDissertation();
-    }
+	@RequestMapping("/getTopFiveByDissertation")
+	public Map getTopFiveByDissertation() {
+		return this.resourceService.getTopFiveByDissertation();
+	}
 
-    @RequestMapping("/search")
-    public Map search(@RequestBody ResourceSearch resourceSearch){
-        return this.resourceService.search(resourceSearch);
-    }
+	@RequestMapping("/search")
+	public Map search(@RequestBody ResourceSearch resourceSearch) {
+		return this.resourceService.search(resourceSearch);
+	}
 
-    @RequestMapping("/modifyDissertation")
-    public Map modifyDissertation(@RequestBody ResourceSearch resourceSearch){
-        return this.resourceService.modifyDissertation(resourceSearch);
-    }
+	@RequestMapping("/modifyDissertation")
+	public Map modifyDissertation(@RequestBody ResourceSearch resourceSearch) {
+		return this.resourceService.modifyDissertation(resourceSearch);
+	}
 }

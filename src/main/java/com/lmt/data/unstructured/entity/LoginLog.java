@@ -1,13 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -16,84 +18,86 @@ import java.util.Date;
 @Entity(name = "login_log")
 public class LoginLog extends BaseEntity {
 
-    /**
-     * 用户ID
-     */
-    @Column(name = "user_id", nullable = false, length = 36)
-    private String userId;
+	private static final long serialVersionUID = -3002650188183948661L;
 
-    /**
-     * 用户状态
-     */
-    @Column(name = "status", nullable = false, length = 6)
-    private String status;
+	/**
+	 * 用户ID
+	 */
+	@Column(name = "user_id", nullable = false, length = 36)
+	private String userId;
 
-    /**
-     * 密码错误次数
-     */
-    @Column(name = "password_error_time")
-    private int passwordErrorTime;
+	/**
+	 * 用户状态
+	 */
+	@Column(name = "status", nullable = false, length = 6)
+	private String status;
 
-    /**
-     * 登录结果（代码表009）
-     */
-    @Column(name = "result", nullable = false, length = 6)
-    private String result;
+	/**
+	 * 密码错误次数
+	 */
+	@Column(name = "password_error_time")
+	private int passwordErrorTime;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "login_time", nullable = false, updatable = false)
-    private Date loginTime;
+	/**
+	 * 登录结果（代码表009）
+	 */
+	@Column(name = "result", nullable = false, length = 6)
+	private String result;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "exit_time")
-    private Date exitTime;
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "login_time", nullable = false, updatable = false)
+	private Date loginTime;
 
-    public String getUserId() {
-        return userId;
-    }
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "exit_time")
+	private Date exitTime;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public int getPasswordErrorTime() {
-        return passwordErrorTime;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setPasswordErrorTime(int passwordErrorTime) {
-        this.passwordErrorTime = passwordErrorTime;
-    }
+	public int getPasswordErrorTime() {
+		return passwordErrorTime;
+	}
 
-    public String getResult() {
-        return result;
-    }
+	public void setPasswordErrorTime(int passwordErrorTime) {
+		this.passwordErrorTime = passwordErrorTime;
+	}
 
-    public void setResult(String result) {
-        this.result = result;
-    }
+	public String getResult() {
+		return result;
+	}
 
-    public Date getLoginTime() {
-        return loginTime;
-    }
+	public void setResult(String result) {
+		this.result = result;
+	}
 
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
-    }
+	public Date getLoginTime() {
+		return loginTime;
+	}
 
-    public Date getExitTime() {
-        return exitTime;
-    }
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = loginTime;
+	}
 
-    public void setExitTime(Date exitTime) {
-        this.exitTime = exitTime;
-    }
+	public Date getExitTime() {
+		return exitTime;
+	}
+
+	public void setExitTime(Date exitTime) {
+		this.exitTime = exitTime;
+	}
 }

@@ -1,13 +1,14 @@
 package com.lmt.data.unstructured.api;
 
-import com.lmt.data.unstructured.entity.search.LoginLogSearch;
-import com.lmt.data.unstructured.service.LoginLogService;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.lmt.data.unstructured.entity.search.LoginLogSearch;
+import com.lmt.data.unstructured.service.LoginLogService;
 
 /**
  * @author MT-Lin
@@ -15,13 +16,14 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/LoginLogApi")
+@SuppressWarnings("rawtypes")
 public class LoginLogApi {
 
-    @Autowired
-    private LoginLogService loginLogService;
+	@Autowired
+	private LoginLogService loginLogService;
 
-    @RequestMapping("/search")
-    public Map search(@RequestBody LoginLogSearch loginLogSearch){
-        return this.loginLogService.search(loginLogSearch);
-    }
+	@RequestMapping("/search")
+	public Map search(@RequestBody LoginLogSearch loginLogSearch) {
+		return this.loginLogService.search(loginLogSearch);
+	}
 }

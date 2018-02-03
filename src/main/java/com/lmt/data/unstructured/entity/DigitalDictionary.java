@@ -1,11 +1,16 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -15,118 +20,120 @@ import java.util.Date;
 @Entity(name = "digital_dictionary")
 public class DigitalDictionary extends BaseEntity {
 
-    /**
-     * 名称
-     */
-    @Column(name = "designation", length = 32)
-    private String designation;
+	private static final long serialVersionUID = -1633270402884142916L;
 
-    /**
-     * 编码
-     */
-    @Column(name = "code", nullable = false, length = 6, unique = true)
-    private String code;
+	/**
+	 * 名称
+	 */
+	@Column(name = "designation", length = 32)
+	private String designation;
 
-    /**
-     * 父类编码
-     */
-    @Column(name = "parent_code", length = 6)
-    private String parentCode;
+	/**
+	 * 编码
+	 */
+	@Column(name = "code", nullable = false, length = 6, unique = true)
+	private String code;
 
-    /**
-     * 描述
-     */
-    @Column(name = "description", nullable = false, length = 100)
-    private String description;
+	/**
+	 * 父类编码
+	 */
+	@Column(name = "parent_code", length = 6)
+	private String parentCode;
 
-    /**
-     * 创建人
-     */
-    @Column(name = "creator", nullable = false, length = 36)
-    private String creator;
+	/**
+	 * 描述
+	 */
+	@Column(name = "description", nullable = false, length = 100)
+	private String description;
 
-    /**
-     * 创建时间
-     */
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time", nullable = false, updatable = false)
-    private Date createTime;
+	/**
+	 * 创建人
+	 */
+	@Column(name = "creator", nullable = false, length = 36)
+	private String creator;
 
-    /**
-     * 修改人
-     */
-    private String modifier;
+	/**
+	 * 创建时间
+	 */
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_time", nullable = false, updatable = false)
+	private Date createTime;
 
-    /**
-     * 修改时间
-     */
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modification_time")
-    private Date modificationTime;
+	/**
+	 * 修改人
+	 */
+	private String modifier;
 
-    public String getDesignation() {
-        return designation;
-    }
+	/**
+	 * 修改时间
+	 */
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modification_time")
+	private Date modificationTime;
 
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
+	public String getDesignation() {
+		return designation;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public String getParentCode() {
-        return parentCode;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
-    }
+	public String getParentCode() {
+		return parentCode;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public String getCreator() {
-        return creator;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+	public String getCreator() {
+		return creator;
+	}
 
-    public String getModifier() {
-        return modifier;
-    }
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
 
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
+	public String getModifier() {
+		return modifier;
+	}
 
-    public Date getModificationTime() {
-        return modificationTime;
-    }
+	public void setModifier(String modifier) {
+		this.modifier = modifier;
+	}
 
-    public void setModificationTime(Date modificationTime) {
-        this.modificationTime = modificationTime;
-    }
+	public Date getModificationTime() {
+		return modificationTime;
+	}
+
+	public void setModificationTime(Date modificationTime) {
+		this.modificationTime = modificationTime;
+	}
 }

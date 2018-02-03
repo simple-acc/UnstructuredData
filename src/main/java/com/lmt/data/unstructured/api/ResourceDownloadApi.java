@@ -1,15 +1,16 @@
 package com.lmt.data.unstructured.api;
 
-import com.lmt.data.unstructured.entity.ResourceDownload;
-import com.lmt.data.unstructured.entity.search.ResourceDownloadSearch;
-import com.lmt.data.unstructured.service.ResourceDownloadService;
-import com.lmt.data.unstructured.util.RedisCache;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.lmt.data.unstructured.entity.ResourceDownload;
+import com.lmt.data.unstructured.entity.search.ResourceDownloadSearch;
+import com.lmt.data.unstructured.service.ResourceDownloadService;
+import com.lmt.data.unstructured.util.RedisCache;
 
 /**
  * @author MT-Lin
@@ -17,24 +18,25 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/ResourceDownloadApi")
+@SuppressWarnings("rawtypes")
 public class ResourceDownloadApi {
 
-    @Autowired
-    private ResourceDownloadService resourceDownloadService;
+	@Autowired
+	private ResourceDownloadService resourceDownloadService;
 
-    @Autowired
-    private RedisCache redisCache;
+	@Autowired
+	private RedisCache redisCache;
 
-    @RequestMapping("/save")
-    public Map save(@RequestBody ResourceDownload resourceDownload){
-        resourceDownload.setUserId(redisCache.getUserId(resourceDownload));
-        return this.resourceDownloadService.save(resourceDownload);
-    }
+	@RequestMapping("/save")
+	public Map save(@RequestBody ResourceDownload resourceDownload) {
+		resourceDownload.setUserId(redisCache.getUserId(resourceDownload));
+		return this.resourceDownloadService.save(resourceDownload);
+	}
 
-    @RequestMapping("/search")
-    public Map search(@RequestBody ResourceDownloadSearch resourceDownloadSearch){
-        resourceDownloadSearch.setUserId(redisCache.getUserId(resourceDownloadSearch));
-        return this.resourceDownloadService.search(resourceDownloadSearch);
-    }
+	@RequestMapping("/search")
+	public Map search(@RequestBody ResourceDownloadSearch resourceDownloadSearch) {
+		resourceDownloadSearch.setUserId(redisCache.getUserId(resourceDownloadSearch));
+		return this.resourceDownloadService.search(resourceDownloadSearch);
+	}
 
 }

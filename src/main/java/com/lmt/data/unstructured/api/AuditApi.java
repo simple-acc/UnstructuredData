@@ -1,14 +1,15 @@
 package com.lmt.data.unstructured.api;
 
-import com.lmt.data.unstructured.entity.Audit;
-import com.lmt.data.unstructured.entity.search.AuditSearch;
-import com.lmt.data.unstructured.service.AuditService;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.lmt.data.unstructured.entity.Audit;
+import com.lmt.data.unstructured.entity.search.AuditSearch;
+import com.lmt.data.unstructured.service.AuditService;
 
 /**
  * @author MT-Lin
@@ -16,18 +17,19 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/AuditApi")
+@SuppressWarnings("rawtypes")
 public class AuditApi {
 
-    @Autowired
-    private AuditService auditService;
+	@Autowired
+	private AuditService auditService;
 
-    @RequestMapping("/update")
-    public Map update(@RequestBody Audit audit){
-        return this.auditService.update(audit);
-    }
+	@RequestMapping("/update")
+	public Map update(@RequestBody Audit audit) {
+		return this.auditService.update(audit);
+	}
 
-    @RequestMapping("/search")
-    public Map search(@RequestBody AuditSearch auditSearch){
-        return this.auditService.search(auditSearch);
-    }
+	@RequestMapping("/search")
+	public Map search(@RequestBody AuditSearch auditSearch) {
+		return this.auditService.search(auditSearch);
+	}
 }

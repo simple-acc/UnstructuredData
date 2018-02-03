@@ -1,10 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -14,173 +19,175 @@ import java.util.Date;
 @Entity(name = "resource")
 public class Resource extends BaseEntity {
 
-    /**
-     * elasticsearchId
-     */
-    @Column(name = "es_id", length = 20)
-    private String esId;
+	private static final long serialVersionUID = -1812499915810928814L;
 
-    /**
-     * 作者
-     */
-    @Column(name="author_id", nullable = false, length = 36)
-    private String authorId;
+	/**
+	 * elasticsearchId
+	 */
+	@Column(name = "es_id", length = 20)
+	private String esId;
 
-    /**
-     * 所属分类ID
-     */
-    @Column(name="classify_id", nullable = false, length = 36)
-    private String classifyId;
+	/**
+	 * 作者
+	 */
+	@Column(name = "author_id", nullable = false, length = 36)
+	private String authorId;
 
-    /**
-     * 所属专题ID
-     */
-    @Column(name="dissertation_id", length = 36)
-    private String dissertationId;
+	/**
+	 * 所属分类ID
+	 */
+	@Column(name = "classify_id", nullable = false, length = 36)
+	private String classifyId;
 
-    /**
-     * 资源名称
-     */
-    @Column(name="designation", nullable = false, length = 32)
-    private String designation;
+	/**
+	 * 所属专题ID
+	 */
+	@Column(name = "dissertation_id", length = 36)
+	private String dissertationId;
 
-    /**
-     * 资源文件名
-     */
-    @Column(name="resource_file_name", nullable = false, unique = true, length = 50)
-    private String resourceFileName;
+	/**
+	 * 资源名称
+	 */
+	@Column(name = "designation", nullable = false, length = 32)
+	private String designation;
 
-    /**
-     * 资源描述
-     */
-    @Column(name="description", length = 100)
-    private String description;
+	/**
+	 * 资源文件名
+	 */
+	@Column(name = "resource_file_name", nullable = false, unique = true, length = 50)
+	private String resourceFileName;
 
-    /**
-     * 资源类型
-     */
-    @Column(name="resource_type", nullable = false, length = 6)
-    private String resourceType;
+	/**
+	 * 资源描述
+	 */
+	@Column(name = "description", length = 100)
+	private String description;
 
-    /**
-     * 资源大小（单位KB）
-     */
-    @Column(name = "resource_size", nullable = false, columnDefinition = "double(10,2) default '0.00'")
-    private double resourceSize;
+	/**
+	 * 资源类型
+	 */
+	@Column(name = "resource_type", nullable = false, length = 6)
+	private String resourceType;
 
-    /**
-     * 下载数
-     */
-    @Column(name = "download_num")
-    private int downloadNum;
+	/**
+	 * 资源大小（单位KB）
+	 */
+	@Column(name = "resource_size", nullable = false, columnDefinition = "double(10,2) default '0.00'")
+	private double resourceSize;
 
-    /**
-     * 收藏数
-     */
-    @Column(name = "collection_num")
-    private int collectionNum;
+	/**
+	 * 下载数
+	 */
+	@Column(name = "download_num")
+	private int downloadNum;
 
-    /**
-     * 上传时间
-     */
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    @Column(name = "upload_time", nullable = false, updatable = false)
-    private Date uploadTime;
+	/**
+	 * 收藏数
+	 */
+	@Column(name = "collection_num")
+	private int collectionNum;
 
-    public String getEsId() {
-        return esId;
-    }
+	/**
+	 * 上传时间
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name = "upload_time", nullable = false, updatable = false)
+	private Date uploadTime;
 
-    public void setEsId(String esId) {
-        this.esId = esId;
-    }
+	public String getEsId() {
+		return esId;
+	}
 
-    public String getAuthorId() {
-        return authorId;
-    }
+	public void setEsId(String esId) {
+		this.esId = esId;
+	}
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
-    }
+	public String getAuthorId() {
+		return authorId;
+	}
 
-    public String getClassifyId() {
-        return classifyId;
-    }
+	public void setAuthorId(String authorId) {
+		this.authorId = authorId;
+	}
 
-    public void setClassifyId(String classifyId) {
-        this.classifyId = classifyId;
-    }
+	public String getClassifyId() {
+		return classifyId;
+	}
 
-    public String getDissertationId() {
-        return dissertationId;
-    }
+	public void setClassifyId(String classifyId) {
+		this.classifyId = classifyId;
+	}
 
-    public void setDissertationId(String dissertationId) {
-        this.dissertationId = dissertationId;
-    }
+	public String getDissertationId() {
+		return dissertationId;
+	}
 
-    public String getDesignation() {
-        return designation;
-    }
+	public void setDissertationId(String dissertationId) {
+		this.dissertationId = dissertationId;
+	}
 
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
+	public String getDesignation() {
+		return designation;
+	}
 
-    public String getResourceFileName() {
-        return resourceFileName;
-    }
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
 
-    public void setResourceFileName(String resourceFileName) {
-        this.resourceFileName = resourceFileName;
-    }
+	public String getResourceFileName() {
+		return resourceFileName;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setResourceFileName(String resourceFileName) {
+		this.resourceFileName = resourceFileName;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getResourceType() {
-        return resourceType;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
-    }
+	public String getResourceType() {
+		return resourceType;
+	}
 
-    public double getResourceSize() {
-        return resourceSize;
-    }
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
+	}
 
-    public void setResourceSize(double resourceSize) {
-        this.resourceSize = resourceSize;
-    }
+	public double getResourceSize() {
+		return resourceSize;
+	}
 
-    public int getDownloadNum() {
-        return downloadNum;
-    }
+	public void setResourceSize(double resourceSize) {
+		this.resourceSize = resourceSize;
+	}
 
-    public void setDownloadNum(int downloadNum) {
-        this.downloadNum = downloadNum;
-    }
+	public int getDownloadNum() {
+		return downloadNum;
+	}
 
-    public int getCollectionNum() {
-        return collectionNum;
-    }
+	public void setDownloadNum(int downloadNum) {
+		this.downloadNum = downloadNum;
+	}
 
-    public void setCollectionNum(int collectionNum) {
-        this.collectionNum = collectionNum;
-    }
+	public int getCollectionNum() {
+		return collectionNum;
+	}
 
-    public Date getUploadTime() {
-        return uploadTime;
-    }
+	public void setCollectionNum(int collectionNum) {
+		this.collectionNum = collectionNum;
+	}
 
-    public void setUploadTime(Date uploadTime) {
-        this.uploadTime = uploadTime;
-    }
+	public Date getUploadTime() {
+		return uploadTime;
+	}
+
+	public void setUploadTime(Date uploadTime) {
+		this.uploadTime = uploadTime;
+	}
 }

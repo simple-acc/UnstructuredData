@@ -1,13 +1,15 @@
 package com.lmt.data.unstructured.entity;
 
-import com.lmt.data.unstructured.base.BaseEntity;
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.lmt.data.unstructured.base.BaseEntity;
 
 /**
  * @author MT-Lin
@@ -17,89 +19,91 @@ import java.util.Date;
 @Entity(name = "collection_folder")
 public class CollectionFolder extends BaseEntity {
 
-    /**
-     * 收藏夹名称
-     */
-    @Column(name = "designation", nullable = false, length = 32)
-    private String designation;
+	private static final long serialVersionUID = 1021670479552159429L;
 
-    /**
-     * 收藏的资源数目
-     */
-    @Column(name = "resource_num")
-    private int resourceNum;
+	/**
+	 * 收藏夹名称
+	 */
+	@Column(name = "designation", nullable = false, length = 32)
+	private String designation;
 
-    /**
-     * 收藏夹描述
-     */
-    @Column(name = "description", nullable = false, length = 300)
-    private String description;
+	/**
+	 * 收藏的资源数目
+	 */
+	@Column(name = "resource_num")
+	private int resourceNum;
 
-    /**
-     * 父收藏夹ID
-     */
-    @Column(name = "parent_id", length = 36)
-    private String parentId;
+	/**
+	 * 收藏夹描述
+	 */
+	@Column(name = "description", nullable = false, length = 300)
+	private String description;
 
-    /**
-     * 创建人
-     */
-    @Column(name = "creator", nullable = false, length = 36)
-    private String creator;
+	/**
+	 * 父收藏夹ID
+	 */
+	@Column(name = "parent_id", length = 36)
+	private String parentId;
 
-    /**
-     * 创建时间
-     */
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time", nullable = false, updatable = false)
-    private Date createTime;
+	/**
+	 * 创建人
+	 */
+	@Column(name = "creator", nullable = false, length = 36)
+	private String creator;
 
-    public String getDesignation() {
-        return designation;
-    }
+	/**
+	 * 创建时间
+	 */
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_time", nullable = false, updatable = false)
+	private Date createTime;
 
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
+	public String getDesignation() {
+		return designation;
+	}
 
-    public int getResourceNum() {
-        return resourceNum;
-    }
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
 
-    public void setResourceNum(int resourceNum) {
-        this.resourceNum = resourceNum;
-    }
+	public int getResourceNum() {
+		return resourceNum;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setResourceNum(int resourceNum) {
+		this.resourceNum = resourceNum;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getParentId() {
-        return parentId;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
+	public String getParentId() {
+		return parentId;
+	}
 
-    public String getCreator() {
-        return creator;
-    }
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+	public String getCreator() {
+		return creator;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 }
