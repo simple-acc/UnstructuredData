@@ -20,8 +20,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "digital_dictionary")
 public class DigitalDictionary extends BaseEntity {
 
-	private static final long serialVersionUID = -1633270402884142916L;
-
 	/**
 	 * 名称
 	 */

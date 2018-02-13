@@ -19,8 +19,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "classify")
 public class Classify extends BaseEntity {
 
-	private static final long serialVersionUID = -8209639296765351122L;
-
 	/**
 	 * 父级分类ID
 	 */

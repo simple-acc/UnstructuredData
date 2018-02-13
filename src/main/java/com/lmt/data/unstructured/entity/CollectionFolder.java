@@ -19,8 +19,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "collection_folder")
 public class CollectionFolder extends BaseEntity {
 
-	private static final long serialVersionUID = 1021670479552159429L;
-
 	/**
 	 * 收藏夹名称
 	 */

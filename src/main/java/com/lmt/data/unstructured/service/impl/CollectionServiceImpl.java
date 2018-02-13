@@ -128,4 +128,11 @@ public class CollectionServiceImpl implements CollectionService {
 		sql.append(" )");
 		return this.entityManagerQuery.nativeSqlSearchOneColumn(sql, parameters);
 	}
+
+	@Override
+	public Map isCollected(CollectionSearch collectionSearch) {
+        Collection exist = this.collectionRepository.findByObjIdAndAndCreator(
+                collectionSearch.getObjId(), collectionSearch.getCreator());
+        return ResultData.newOK("是否收藏查询成功", exist != null);
+	}
 }

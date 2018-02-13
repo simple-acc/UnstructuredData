@@ -70,4 +70,11 @@ public interface CollectionService {
 	 * @return List
 	 */
 	List getCollected(String userId, List<String> resourceIdList);
+
+	/**
+	 * @apiNote 查询是否收藏过该资源
+	 * @param collectionSearch 查询条件
+	 * @return Map
+	 */
+    Map isCollected(CollectionSearch collectionSearch);
 }

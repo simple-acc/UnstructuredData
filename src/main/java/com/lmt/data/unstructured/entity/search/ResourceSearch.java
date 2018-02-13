@@ -15,6 +15,8 @@ public class ResourceSearch extends BaseSearch {
 
     private String dissertationId;
 
+    private String resourceId;
+
     public List<Resource> getResources() {
         return resources;
     }
@@ -29,5 +31,13 @@ public class ResourceSearch extends BaseSearch {
 
     public void setDissertationId(String dissertationId) {
         this.dissertationId = dissertationId;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 }

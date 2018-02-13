@@ -20,8 +20,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "dissertation")
 public class Dissertation extends BaseEntity {
 
-	private static final long serialVersionUID = 3594556822949842160L;
-
 	/**
 	 * 所属分类ID
 	 */

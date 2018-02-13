@@ -60,4 +60,18 @@ public interface ResourceService {
 	 * @return Resource
 	 */
 	Resource findOneById(String resourceId);
+
+	/**
+	 * @apiNote 根据ID查找资源的详细信息
+	 * @param id 资源ID
+	 * @return Map
+	 */
+    Map getResourceDetail(String id);
+
+	/**
+	 * @apiNote 获取作者基本信息
+	 * @param resourceSearch 查询条件
+	 * @return Map
+	 */
+	Map getAuthorInfo(ResourceSearch resourceSearch);
 }

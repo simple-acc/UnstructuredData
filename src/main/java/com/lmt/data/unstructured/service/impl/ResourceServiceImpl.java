@@ -164,22 +164,22 @@ public class ResourceServiceImpl implements ResourceService {
 		Map<String, Object> temp;
 		StringBuffer sql = new StringBuffer();
 		for (Dissertation dissertation : dissertationIds.keySet()) {
-			List<Object> paramters = dissertationIds.get(dissertation);
-			if (paramters.size() == 0) {
+			List<Object> parameters = dissertationIds.get(dissertation);
+			if (parameters.size() == 0) {
 				continue;
 			}
 			sql.append("SELECT r.id, r.designation, ");
 			sql.append("r.upload_time AS uploadTime ");
 			sql.append("FROM resource AS r ");
 			sql.append("WHERE r.dissertation_id IN (");
-			for (int i = 0; i < paramters.size(); i++) {
+			for (int i = 0; i < parameters.size(); i++) {
 				sql.append("?, ");
 			}
 			sql.setLength(sql.length() - 2);
 			sql.append(") ORDER BY r.upload_time DESC, r.download_num DESC, r.collection_num DESC ");
 			temp = new HashMap<>(2);
 			temp.put("dissertation", dissertation);
-			temp.put("resource", this.entityManagerQuery.nativeSqlSearch(sql, paramters, 6));
+			temp.put("resource", this.entityManagerQuery.nativeSqlSearch(sql, parameters, 6));
 			result.add(temp);
 			sql.setLength(0);
 		}
@@ -190,4 +190,48 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource findOneById(String id) {
 		return this.resourceRepository.findOne(id);
 	}
+
+	@Override
+	public Map getResourceDetail(String id) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT r.id, r.designation, r.description, ");
+		sql.append("r.es_id AS esId, ");
+		sql.append("r.resource_size AS resourceSize, ");
+		sql.append("r.download_num AS downloadNum, ");
+		sql.append("r.collection_num AS collectionNum, ");
+		sql.append("r.upload_time AS uploadTime, ");
+		sql.append("(SELECT ui.user_name FROM user_info AS ui WHERE ui.id = r.id) AS author, ");
+		sql.append("(SELECT c.designation FROM classify AS c WHERE c.id = r.classify_id) AS classify, ");
+		sql.append("(SELECT d.designation FROM dissertation AS d WHERE d.id = r.dissertation_id) AS dissertation, ");
+		sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = r.resource_type) AS type, ");
+		sql.append("(SELECT t.tag FROM tag AS t WHERE t.resource_id = r.id) AS tag ");
+		sql.append("FROM resource AS r ");
+		sql.append("WHERE r.id = ? ");
+		List<Object> parameters = new ArrayList<>();
+		parameters.add(id);
+        List result = this.entityManagerQuery.nativeSqlSearch(sql, parameters, 0);
+        if (result!= null && result.size() > 0) {
+            return ResultData.newOK("资源详细信息查询成功", result.get(0));
+        } else {
+            return ResultData.newError("资源详细信息查询失败");
+        }
+	}
+
+    @Override
+    public Map getAuthorInfo(ResourceSearch resourceSearch) {
+	    StringBuffer sql = new StringBuffer();
+	    List<Object> parameters = new ArrayList<>();
+	    sql.append("SELECT ui.description, ui.email, ");
+	    sql.append("ui.user_name AS authorName, ");
+        sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = ui.profession) AS profession, ");
+	    sql.append("(SELECT dd.designation FROM digital_dictionary AS dd WHERE dd.code = ui.sex) AS sex ");
+	    sql.append("FROM user_info AS ui, resource AS r ");
+	    sql.append("WHERE r.author_id = ui.id AND r.id = ? ");
+	    parameters.add(resourceSearch.getResourceId());
+        List result = this.entityManagerQuery.nativeSqlSearch(sql, parameters, 0);
+        if (result == null || result.size() == 0){
+            return ResultData.newError("作者信息查询失败");
+        }
+        return ResultData.newOK("", result.get(0));
+    }
 }

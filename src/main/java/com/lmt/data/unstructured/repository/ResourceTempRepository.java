@@ -3,11 +3,13 @@ package com.lmt.data.unstructured.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.lmt.data.unstructured.entity.ResourceTemp;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author MT-Lin
  * @date 2018/1/3 0:13
  */
+@Repository
 public interface ResourceTempRepository extends JpaRepository<ResourceTemp, String> {
 
 	/**

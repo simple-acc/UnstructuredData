@@ -3,11 +3,13 @@ package com.lmt.data.unstructured.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.lmt.data.unstructured.entity.ResourceDownload;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author MT-Lin
  * @date 2018/1/3 0:14
  */
+@Repository
 public interface ResourceDownloadRepository extends JpaRepository<ResourceDownload, String> {
 
 	/**

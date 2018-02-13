@@ -12,8 +12,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "resource_upload")
 public class ResourceUpload extends BaseEntity {
 
-	private static final long serialVersionUID = -4093526740593915304L;
-
 	/**
 	 * 用户ID
 	 */

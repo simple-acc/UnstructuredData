@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.lmt.data.unstructured.entity.Classify;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author MT-Lin
  * @date 2018/1/3 0:08
  */
+@Repository
 public interface ClassifyRepository extends JpaRepository<Classify, String> {
 
 	/**

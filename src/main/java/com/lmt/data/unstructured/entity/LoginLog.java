@@ -18,8 +18,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "login_log")
 public class LoginLog extends BaseEntity {
 
-	private static final long serialVersionUID = -3002650188183948661L;
-
 	/**
 	 * 用户ID
 	 */

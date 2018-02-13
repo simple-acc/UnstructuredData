@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.lmt.data.unstructured.entity.CollectionFolder;
 import com.lmt.data.unstructured.entity.search.CollectionFolderSearch;
-import com.lmt.data.unstructured.repository.CollectionFloderRepository;
+import com.lmt.data.unstructured.repository.CollectionFolderRepository;
 import com.lmt.data.unstructured.service.CollectionFolderService;
 import com.lmt.data.unstructured.util.EntityManagerQuery;
 import com.lmt.data.unstructured.util.ResultData;
@@ -26,19 +26,19 @@ import com.lmt.data.unstructured.util.UdConstant;
 public class CollectionFolderServiceImpl implements CollectionFolderService {
 
 	@Autowired
-	private CollectionFloderRepository collectionFloderRepository;
+	private CollectionFolderRepository collectionFolderRepository;
 
 	@Autowired
 	private EntityManagerQuery entityManagerQuery;
 
 	@Override
 	public Map save(CollectionFolder collectionFolder) {
-		CollectionFolder exist = this.collectionFloderRepository.findByCreatorAndDesignationAndParentId(
+		CollectionFolder exist = this.collectionFolderRepository.findByCreatorAndDesignationAndParentId(
 				collectionFolder.getCreator(), collectionFolder.getDesignation(), collectionFolder.getParentId());
 		if (null != exist) {
 			return ResultData.newError("所属收藏夹下已有该名称的收藏夹");
 		}
-		this.collectionFloderRepository.save(collectionFolder);
+		this.collectionFolderRepository.save(collectionFolder);
 		if (null == collectionFolder.getId()) {
 			return ResultData.newError("收藏夹创建失败");
 		}
@@ -75,22 +75,22 @@ public class CollectionFolderServiceImpl implements CollectionFolderService {
 	@Override
 	public Map delete(List<CollectionFolder> collectionFolders) {
 		for (CollectionFolder collectionFolder : collectionFolders) {
-			List<CollectionFolder> children = this.collectionFloderRepository.findByParentId(collectionFolder.getId());
+			List<CollectionFolder> children = this.collectionFolderRepository.findByParentId(collectionFolder.getId());
 			if (children.size() > 0) {
 				this.delete(children);
 			}
-			this.collectionFloderRepository.delete(collectionFolder.getId());
+			this.collectionFolderRepository.delete(collectionFolder.getId());
 		}
 		return ResultData.newOK("成功删除收藏夹");
 	}
 
 	@Override
 	public Map update(CollectionFolder collectionFolder) {
-		CollectionFolder exist = this.collectionFloderRepository.findOne(collectionFolder.getId());
+		CollectionFolder exist = this.collectionFolderRepository.findOne(collectionFolder.getId());
 		if (null == exist) {
 			return ResultData.newError("修改的收藏夹不存在");
 		}
-		this.collectionFloderRepository.save(collectionFolder);
+		this.collectionFolderRepository.save(collectionFolder);
 		return ResultData.newOK("收藏夹修改成功");
 	}
 
@@ -99,7 +99,7 @@ public class CollectionFolderServiceImpl implements CollectionFolderService {
 		List<CollectionFolder> firstLevel = new ArrayList<>();
 		List<CollectionFolder> children = new ArrayList<>();
 		List<String> parentId = new ArrayList<>();
-		List<CollectionFolder> all = this.collectionFloderRepository.findAll();
+		List<CollectionFolder> all = this.collectionFolderRepository.findAll();
 		Map<String, Map<String, Object>> temp = new HashMap<>(all.size());
 		for (CollectionFolder collectionFolder : all) {
 			Map<String, Object> tempOption = new HashMap<>(9);

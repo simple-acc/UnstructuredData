@@ -19,8 +19,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "tag_temp")
 public class TagTemp extends BaseEntity {
 
-	private static final long serialVersionUID = -8040915598744190564L;
-
 	/**
 	 * 待审核资源ID
 	 */

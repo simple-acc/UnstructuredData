@@ -18,8 +18,6 @@ import org.hibernate.annotations.GenericGenerator;
 @MappedSuperclass
 public class BaseEntity extends BaseToString implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")

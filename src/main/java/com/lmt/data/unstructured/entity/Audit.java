@@ -22,8 +22,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "audit")
 public class Audit extends BaseEntity {
 
-	private static final long serialVersionUID = 133194927910205594L;
-
 	/**
 	 * 审核人ID
 	 */

@@ -20,8 +20,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "resource_temp")
 public class ResourceTemp extends BaseEntity {
 
-	private static final long serialVersionUID = -4230551596586829368L;
-
 	/**
 	 * 作者
 	 */

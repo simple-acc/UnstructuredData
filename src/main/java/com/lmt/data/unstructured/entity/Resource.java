@@ -19,8 +19,6 @@ import com.lmt.data.unstructured.base.BaseEntity;
 @Entity(name = "resource")
 public class Resource extends BaseEntity {
 
-	private static final long serialVersionUID = -1812499915810928814L;
-
 	/**
 	 * elasticsearchId
 	 */

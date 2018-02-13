@@ -50,6 +50,12 @@ public class CollectionApi {
 		return this.collectionService.search(collectionSearch);
 	}
 
+	@RequestMapping("/isCollected")
+	public Map isCollected(@RequestBody CollectionSearch collectionSearch) {
+		collectionSearch.setCreator(redisCache.getUserId(collectionSearch));
+		return this.collectionService.isCollected(collectionSearch);
+	}
+
 	@RequestMapping("/collectResource")
 	public Map collectResource(@RequestBody Collection collection) {
 		collection.setCreator(redisCache.getUserId(collection));
