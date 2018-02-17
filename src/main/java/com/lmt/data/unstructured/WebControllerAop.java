@@ -1,6 +1,7 @@
 package com.lmt.data.unstructured;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
@@ -18,6 +19,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.lmt.data.unstructured.base.BaseEntity;
 import com.lmt.data.unstructured.base.BaseSearch;
 import com.lmt.data.unstructured.util.UdConstant;
+
+import java.io.IOException;
 
 /**
  * @author MT-Lin
@@ -40,13 +43,14 @@ public class WebControllerAop {
 		// TODO 在请求参数中添加tokenId
 		HttpSession session = request.getSession();
 		Object tokenId = session.getAttribute(UdConstant.USER_LOGIN_EVIDENCE);
-
-		// TODO url要过滤掉登录页面需要的连接请求（未完成）只有在登录页面需要的连接不需要tokenId其他的请求都要
 		// URL
 		String url = request.getRequestURI();
 		logger.info("url = {}", url);
 		if (null == tokenId) {
-			logger.error("tokenId is NULL");
+			if ("/DigitalDictionaryApi/getChildrenForSelect".equals(url)
+                    || "/UserInfoApi/login".equals(url)){
+                logger.error("tokenId is NULL，用户还未登录");
+			}
 		} else {
 			logger.info("tokenId is " + tokenId);
 		}
@@ -82,9 +86,7 @@ public class WebControllerAop {
 		HttpServletRequest request = attributes.getRequest();
 		String url = request.getRequestURL().toString();
 		if (null == object) {
-			if (url.endsWith(UdConstant.DOWNLOAD_FILE_URL) || url.endsWith(UdConstant.UPDATE_DOWNLOAD_NUM)) {
-				logger.info("Return type is void");
-			} else {
+			if (!url.endsWith(UdConstant.DOWNLOAD_FILE_URL)) {
 				logger.error("The data returned NULL");
 			}
 		} else {

@@ -57,7 +57,6 @@ public class UdConstant {
      * 返回数据为空的请求链接
      */
     public static final String DOWNLOAD_FILE_URL = "/FileApi/download";
-    public static final String UPDATE_DOWNLOAD_NUM = "/ResourceApi/updateDownloadNum";
 
     /**
      * 用户登录失败编码
@@ -195,7 +194,7 @@ public class UdConstant {
     public static final String USER_TYPE_USER_CODE = "008002";
 
     /**
-     * 用户登录凭证
+     * 用户登录凭证字段
      */
     public static final String USER_LOGIN_EVIDENCE = "tokenId";
 

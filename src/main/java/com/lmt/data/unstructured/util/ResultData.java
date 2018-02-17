@@ -38,7 +38,6 @@ public class ResultData {
 	}
 
 	public static Map newError(String message) {
-		logger.error(message);
 		return new ResultData(message, ERROR_CODE).toMap();
 	}
 
