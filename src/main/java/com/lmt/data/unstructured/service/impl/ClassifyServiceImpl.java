@@ -104,8 +104,11 @@ public class ClassifyServiceImpl implements ClassifyService {
 		return ResultData.newOK("删除成功");
 	}
 
-	// TODO 获取选择数据
-
+	/**
+	 * @apiNote 获取选择项的数据
+	 * @param classifyType 分类类型
+	 * @return List
+	 */
 	private List getOptions(String classifyType) {
 		List<Map<String, Object>> result = new ArrayList<>();
 		List<Classify> firstLevel = new ArrayList<>();

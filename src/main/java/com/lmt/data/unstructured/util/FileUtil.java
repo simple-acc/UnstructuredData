@@ -86,7 +86,7 @@ public class FileUtil {
 	}
 
 	private String getPptxFileContent(String filePath) {
-		// TODO 所有的Office文档，包括2007及以下版本的文档都可以使用该方法读取内容，坑爹啊(* ￣︿￣)
+		// 所有的Office文档，包括2007及以下版本的文档都可以使用该方法读取内容，坑爹啊(* ￣︿￣)
 		File file = new File(filePath);
 		POITextExtractor extractor = null;
 		String content = null;

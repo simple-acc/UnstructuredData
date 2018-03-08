@@ -26,8 +26,7 @@ public class DigitalDictionaryApi {
 	private DigitalDictionaryService digitalDictionaryService;
 
 	/**
-	 * TODO 从缓存中获取当前登陆人信息的功能已完成
-	 * 
+	 *
 	 * @apiNote 保存数据字典
 	 * @param digitalDictionary
 	 *            保存的数据字典

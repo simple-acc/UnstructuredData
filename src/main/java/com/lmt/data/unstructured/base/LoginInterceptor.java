@@ -20,7 +20,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        // TODO 获取tokenId，判断用户是否登录
+        // 获取tokenId，判断用户是否登录
         HttpSession session = request.getSession();
         Object tokenId = session.getAttribute(UdConstant.USER_LOGIN_EVIDENCE);
         if (null == tokenId) {

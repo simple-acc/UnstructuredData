@@ -40,7 +40,7 @@ public class WebControllerAop {
 	public void doBefore(JoinPoint joinPoint) {
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = attributes.getRequest();
-		// TODO 在请求参数中添加tokenId
+		// 在请求参数中添加tokenId
 		HttpSession session = request.getSession();
 		Object tokenId = session.getAttribute(UdConstant.USER_LOGIN_EVIDENCE);
 		// URL
