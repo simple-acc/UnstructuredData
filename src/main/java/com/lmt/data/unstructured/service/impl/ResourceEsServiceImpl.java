@@ -136,14 +136,14 @@ public class ResourceEsServiceImpl implements ResourceEsService {
 			sourceAsMap = hit.getSourceAsMap();
 			id = hit.getId();
 			// 处理高亮字段
-			for (String fieled : highlightFields.keySet()) {
-				Text[] fragments = highlightFields.get(fieled).getFragments();
+			for (String field : highlightFields.keySet()) {
+				Text[] fragments = highlightFields.get(field).getFragments();
 				for (Text fragment : fragments) {
-					if ("designation".equals(fieled)) {
+					if ("designation".equals(field)) {
 						String replace = fragment.string().replace("<span style=\"color:red\">", "").replace("</span>",
 								"");
-						String newStr = sourceAsMap.get(fieled).toString().replace(replace, fragment.string());
-						sourceAsMap.replace(fieled, newStr);
+						String newStr = sourceAsMap.get(field).toString().replace(replace, fragment.string());
+						sourceAsMap.replace(field, newStr);
 					} else {
 						highlight.append(fragment.string());
 					}

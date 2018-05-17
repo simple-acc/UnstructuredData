@@ -11,7 +11,7 @@
     <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>./logs/unstructured-data.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>./logs/unstructured-data.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<FileNamePattern>./../logs/unstructured-data.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
 			<MaxHistory>7</MaxHistory>
 			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<MaxFileSize>10MB</MaxFileSize>
